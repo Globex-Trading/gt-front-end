@@ -1,5 +1,6 @@
 import React from 'react';
-import Header from "../common/header";
+import Header from '../common/header';
+import PreLoader from '../common/loader';
 
 const Home = () => {
 	console.log('in home');
@@ -7,62 +8,7 @@ const Home = () => {
 		<React.Fragment>
 			<>
 				{/*====== Preloader Area Start ======*/}
-				<div id="preloader">
-					{/* Digimax Preloader */}
-					<div id="digimax-preloader" className="digimax-preloader">
-						{/* Preloader Animation */}
-						<div className="preloader-animation">
-							{/* Spinner */}
-							<div className="spinner" />
-							{/* Loader */}
-							<div className="loader">
-								<span data-text-preloader="D" className="animated-letters">
-            D
-								</span>
-								<span data-text-preloader="I" className="animated-letters">
-            I
-								</span>
-								<span data-text-preloader="G" className="animated-letters">
-            G
-								</span>
-								<span data-text-preloader="I" className="animated-letters">
-            I
-								</span>
-								<span data-text-preloader="M" className="animated-letters">
-            M
-								</span>
-								<span data-text-preloader="A" className="animated-letters">
-            A
-								</span>
-								<span data-text-preloader="X" className="animated-letters">
-            X
-								</span>
-							</div>
-							<p className="fw-5 text-center text-uppercase">Loading</p>
-						</div>
-						{/* Loader Animation */}
-						<div className="loader-animation">
-							<div className="row h-100">
-								{/* Single Loader */}
-								<div className="col-3 single-loader p-0">
-									<div className="loader-bg" />
-								</div>
-								{/* Single Loader */}
-								<div className="col-3 single-loader p-0">
-									<div className="loader-bg" />
-								</div>
-								{/* Single Loader */}
-								<div className="col-3 single-loader p-0">
-									<div className="loader-bg" />
-								</div>
-								{/* Single Loader */}
-								<div className="col-3 single-loader p-0">
-									<div className="loader-bg" />
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				<PreLoader/>
 				{/*====== Preloader Area End ======*/}
 				{/*====== Scroll To Top Area Start ======*/}
 				<div id="scrollUp" title="Scroll To Top">
@@ -651,7 +597,7 @@ const Home = () => {
 								<div className="col-12 col-lg-5">
 									{/* Section Heading */}
 									<div className="section-heading text-center mb-3">
-										<h2>Let's connect!</h2>
+										<h2>Lets connect!</h2>
 										<p className="d-none d-sm-block mt-4">
                                             Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                                             Laborum obcaecati dignissimos quae quo ad iste ipsum officiis

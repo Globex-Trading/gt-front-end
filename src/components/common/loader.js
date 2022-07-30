@@ -62,3 +62,5 @@ const PreLoader = () => {
 		</Fragment>
 	);
 };
+
+export default PreLoader;

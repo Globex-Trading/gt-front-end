@@ -1,6 +1,10 @@
 import React, {Fragment} from 'react';
+import AOS from 'aos';
+
+AOS.init();
 
 const Header = () => {
+	console.log('header');
 	return (
 		<Fragment>
 			<header id="header">

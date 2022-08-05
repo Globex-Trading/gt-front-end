@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import AOS from 'aos';
+import {Link, NavLink} from 'react-router-dom';
 
 AOS.init();
 
@@ -113,9 +114,7 @@ const Header = () => {
 								</ul>
 							</li>
 							<li className="nav-item">
-								<a href="about.html" className="nav-link">
-                                    About
-								</a>
+								<Link to={'/chart'} className='nav-link'>Charts</Link>
 							</li>
 							<li className="nav-item">
 								<a href="services.html" className="nav-link">

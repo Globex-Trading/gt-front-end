@@ -1,0 +1,37 @@
+name: Build and Publish GT Frontend
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Use Node 16.16.0 LTS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.16.0
+
+      - name: Install NPM packages
+        run: npm install
+
+      - name: Build the React Application
+        run: CI=false npm run build --if-present
+
+      - name: Prepare the Build
+        run: |
+          mkdir build-tmp
+          cp -r ./build/ ./build-tmp/
+
+      - name: Publish the Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: gt-front-end-1.0.0
+          path: ./build-tmp/

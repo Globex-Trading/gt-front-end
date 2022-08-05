@@ -1,5 +1,6 @@
 import { createChart, CrosshairMode } from 'lightweight-charts';
-import React, {useEffect, useRef} from 'react';
+import React, {Fragment, useEffect, useRef} from 'react';
+import PreLoader from './loader';
 
 const addSeriesFunction = {
 	candleStick: 'addCandleStickSeries',
@@ -7,6 +8,7 @@ const addSeriesFunction = {
 };
 
 const Chart = (props) => {
+	const [isLoading, setIsLoading] = React.useState(true);
 
 	const chartContainerRef = useRef();
 
@@ -54,11 +56,19 @@ const Chart = (props) => {
 				wickUpColor: 'rgba(255, 144, 0, 1)',
 			}
 		);
+
 		chartInstance.setData(props.data);
+		setInterval(() => {
+			setIsLoading(false);
+		}, 2000);
 	}, [props.data, props.chartType]);
 
 	return (
-		<div ref={chartContainerRef}/>
+		<Fragment>
+			<PreLoader isLoading={isLoading} />
+			<div ref={chartContainerRef}/>
+		</Fragment>
+
 	);
 
 };

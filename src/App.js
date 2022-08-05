@@ -11,19 +11,13 @@ import PreLoader from './components/common/loader';
 import Header from './components/common/header';
 
 function App() {
-	const [isLoading, setIsLoading] = React.useState(true);
-
-
 	return (
 		<BrowserRouter>
 			<div className="App">
-				{/*====== Preloader Area Start ======*/}
-				<PreLoader isLoading={isLoading}/>
-				{/*====== Preloader Area End ======*/}
 				<div className="main overflow-hidden">
 					<Header/>
 					<Routes>
-						<Route path="/login" element={<Login setIsLoading={setIsLoading}/>}/>
+						<Route path="/login" element={<Login/>}/>
 						<Route path="/chart" element={<TradingChart/>}/>
 						<Route path="/" element={<Home/>}/>
 					</Routes>

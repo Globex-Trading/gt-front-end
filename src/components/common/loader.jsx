@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 
 const PreLoader = (props) => {
+	console.log('preloader', props.isLoading);
 	return(
 		props.isLoading &&
 		<Fragment>

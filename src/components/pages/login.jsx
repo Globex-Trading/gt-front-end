@@ -1,8 +1,18 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import PreLoader from '../common/loader';
 
-const Login = (props) => {
+const Login = () => {
+	const [isLoading, setIsLoading] = React.useState(true);
+
+	useEffect(() => {
+
+		setInterval(() => {
+			setIsLoading(false);
+		}, 3000);
+	});
 	return (
 		<div>
+			<PreLoader isLoading={isLoading} />
 			<h1>Login</h1>
 			<form>
 				<label>

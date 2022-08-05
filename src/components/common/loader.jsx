@@ -1,7 +1,8 @@
 import React, {Fragment} from 'react';
 
-const PreLoader = () => {
+const PreLoader = (props) => {
 	return(
+		props.isLoading &&
 		<Fragment>
 			<div id="preloader">
 				{/* Digimax Preloader */}

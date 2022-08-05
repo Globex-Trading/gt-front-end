@@ -17,7 +17,7 @@ const Header = () => {
 				>
 					<div className="container header">
 						{/* Navbar Brand*/}
-						<a className="navbar-brand" href="/">
+						<Link className="navbar-brand" to="/">
 							<img
 								className="navbar-brand-regular"
 								src="assets/img/logo/logo-white.png"
@@ -28,14 +28,14 @@ const Header = () => {
 								src="assets/img/logo/logo.png"
 								alt="sticky brand-logo"
 							/>
-						</a>
+						</Link>
 						<div className="ml-auto" />
 						{/* Navbar */}
 						<ul className="navbar-nav items">
 							<li className="nav-item dropdown">
-								<a className="nav-link" href="#">
+								<Link className="nav-link" to="/">
                                     Home <i className="fas fa-angle-down ml-1" />
-								</a>
+								</Link>
 								<ul className="dropdown-menu">
 									<li className="nav-item dropdown">
 										<a className="nav-link" href="#">
@@ -45,31 +45,6 @@ const Header = () => {
 											<li className="nav-item">
 												<a href="index.html" className="nav-link">
                                                     Homepage 1
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-2.html" className="nav-link">
-                                                    Homepage 2
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-3.html" className="nav-link">
-                                                    Homepage 3
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-4.html" className="nav-link">
-                                                    Homepage 4
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-5.html" className="nav-link">
-                                                    Homepage 5
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-6.html" className="nav-link">
-                                                    Homepage 6
 												</a>
 											</li>
 										</ul>
@@ -84,37 +59,15 @@ const Header = () => {
                                                     Homepage 1
 												</a>
 											</li>
-											<li className="nav-item">
-												<a href="index-2-one-page.html" className="nav-link">
-                                                    Homepage 2
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-3-one-page.html" className="nav-link">
-                                                    Homepage 3
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-4-one-page.html" className="nav-link">
-                                                    Homepage 4
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-5-one-page.html" className="nav-link">
-                                                    Homepage 5
-												</a>
-											</li>
-											<li className="nav-item">
-												<a href="index-6-one-page.html" className="nav-link">
-                                                    Homepage 6
-												</a>
-											</li>
 										</ul>
 									</li>
 								</ul>
 							</li>
 							<li className="nav-item">
-								<Link to={'/chart'} className='nav-link'>Charts</Link>
+								<Link to='/chart' className='nav-link'>Charts</Link>
+							</li>
+							<li className="nav-item">
+								<Link to='/login' className='nav-link'>Login</Link>
 							</li>
 							<li className="nav-item">
 								<a href="services.html" className="nav-link">

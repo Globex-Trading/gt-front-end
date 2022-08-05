@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import AOS from 'aos';
-import {Link, NavLink} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 AOS.init();
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from '../common/header';
 import PreLoader from '../common/loader';
-import Chart from '../common/chart';
 
 const Home = () => {
 	console.log('in home');

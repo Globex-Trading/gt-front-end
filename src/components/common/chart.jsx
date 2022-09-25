@@ -1,11 +1,14 @@
-import { createChart, CrosshairMode } from 'lightweight-charts';
+import { createChart } from 'lightweight-charts';
 import React, {Fragment, useEffect, useRef} from 'react';
 import PreLoader from './loader';
 
 const addSeriesFunction = {
-	candleStick: 'addCandleStickSeries',
+	candleStick: 'addCandlestickSeries',
 	line: 'addLineSeries'
 };
+
+let chart;
+let chartInstance;
 
 const Chart = (props) => {
 	const [isLoading, setIsLoading] = React.useState(true);
@@ -13,55 +16,56 @@ const Chart = (props) => {
 	const chartContainerRef = useRef();
 
 	useEffect(() => {
-		const chart = createChart(chartContainerRef.current,
+		console.log('useEffect 1');
+
+		chart = createChart(chartContainerRef.current,
 			{
-				width: 1000,
-				height: 600,
-				layout: {
-					backgroundColor: '#000000',
-					textColor: 'rgba(255, 255, 255, 0.9)',
-				},
-				grid: {
-					vertLines: {
-						color: 'rgba(197, 203, 206, 0.5)',
-					},
-					horzLines: {
-						color: 'rgba(197, 203, 206, 0.5)',
-					},
-				},
-				crosshair: {
-					mode: CrosshairMode.Normal,
-				},
-				rightPriceScale: {
-					borderColor: 'rgba(197, 203, 206, 0.8)',
-				},
+				width:1500,
+				height:600,
 				timeScale: {
-					borderColor: 'rgba(197, 203, 206, 0.8)',
-				},
-			}
-		);
-		chart.timeScale().fitContent();
-
-		const func = addSeriesFunction[props.chartType];
-
-		console.log(func);
-		console.log(chart,'-----');
-		const chartInstance = chart['addCandlestickSeries'](
-			{
-				upColor: 'rgba(255, 144, 0, 1)',
-				downColor: '#000',
-				borderDownColor: 'rgba(255, 144, 0, 1)',
-				borderUpColor: 'rgba(255, 144, 0, 1)',
-				wickDownColor: 'rgba(255, 144, 0, 1)',
-				wickUpColor: 'rgba(255, 144, 0, 1)',
+					timeVisible: true,
+					secondsVisible: false,
+				}
 			}
 		);
 
-		chartInstance.setData(props.data);
+	},[]);
+
+	useEffect(() => {
+		const func = 'addCandlestickSeries';
+
+		// if (chartInstance) {
+		// 	chart.removeSeries(chartInstance);
+		// }
+
+		// chartInstance = chart[func]();
+		chartInstance = chart.addCandlestickSeries();
+
+		// chartInstance.setData(props.initData);
+		console.log(chartInstance,'-----', props.initData);
 		setInterval(() => {
 			setIsLoading(false);
 		}, 2000);
-	}, [props.data, props.chartType]);
+	}, []);
+
+	useEffect(() => {
+		// console.log('useEffect 3', props.lastData);
+		if (props.lastData) {
+			// console.log('last data -------------------------', props.lastData);
+			// chartInstance.update(props.lastData);
+			chartInstance.update(props.lastData);
+		}
+	}, [props]);
+
+	useEffect(() => {
+		const handler = () => {
+			chart.resize(chartContainerRef.current.offsetWidth, 500);
+		};
+		window.addEventListener('resize', handler);
+		return () => {
+			window.removeEventListener('resize', handler);
+		};
+	}, );
 
 	return (
 		<Fragment>
@@ -70,7 +74,6 @@ const Chart = (props) => {
 		</Fragment>
 
 	);
-
 };
 
 export default Chart;

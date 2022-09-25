@@ -600,7 +600,7 @@ img {
 }
 
 .color-3 {
-    color: #fc573b;
+    color: #ec6850;
 }
 
 .color-4 {
@@ -715,21 +715,21 @@ img {
 }
 
 /*BACKGROUND IMAGES*/
-.welcome-area {
-    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg.jpg") no-repeat fixed center center / cover;
-}
+/*.welcome-area {*/
+/*    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg.jpg") no-repeat fixed center center / cover;*/
+/*}*/
 
-.homepage-2 .welcome-area {
-    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_2.png") no-repeat scroll center center / cover;
-}
+/*.homepage-2 .welcome-area {*/
+/*    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_2.png") no-repeat scroll center center / cover;*/
+/*}*/
 
-.homepage-3 .welcome-area {
-    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_3.jpg") no-repeat scroll center center / cover;
-}
+/*.homepage-3 .welcome-area {*/
+/*    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_3.jpg") no-repeat scroll center center / cover;*/
+/*}*/
 
-.homepage-4 .welcome-area {
-    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_4.jpg") no-repeat fixed center center / cover;
-}
+/*.homepage-4 .welcome-area {*/
+/*    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_4.jpg") no-repeat fixed center center / cover;*/
+/*}*/
 
 .cta-area {
     background: rgba(0, 0, 0, 0) url("../img/bg/cta_bg.jpg") no-repeat fixed center center / cover;
@@ -1493,6 +1493,10 @@ body.dark,
     -webkit-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
     overflow: hidden;
+}
+
+.border-shape {
+    border-radius: 5px;
 }
 
 .bg-hover {
@@ -2960,4 +2964,12 @@ body.dark,
 .rtl .bg-overlay::after,
 .rtl .grad-hover::before {
     background: linear-gradient(135deg, #E0040B 0%, #fc5130 100%);
+}
+
+.logincontainer{
+    position: relative;
+    width: 450px;
+    height:auto;
+    /*margin-top: 120px;*/
+    border-radius: 50px;
 }

@@ -6,7 +6,7 @@ const PreLoader = (props) => {
 		props.isLoading &&
 		<Fragment>
 			<div id="preloader">
-				{/* Digimax Preloader */}
+				{/*  Preloader */}
 				<div id="digimax-preloader" className="digimax-preloader">
 					{/* Preloader Animation */}
 					<div className="preloader-animation">
@@ -14,29 +14,27 @@ const PreLoader = (props) => {
 						<div className="spinner" />
 						{/* Loader */}
 						<div className="loader">
-							<span data-text-preloader="D" className="animated-letters">
-            D
-							</span>
-							<span data-text-preloader="I" className="animated-letters">
-            I
-							</span>
 							<span data-text-preloader="G" className="animated-letters">
             G
 							</span>
-							<span data-text-preloader="I" className="animated-letters">
-            I
+							<span data-text-preloader="L" className="animated-letters">
+            L
 							</span>
-							<span data-text-preloader="M" className="animated-letters">
-            M
+							<span data-text-preloader="O" className="animated-letters">
+            O
 							</span>
-							<span data-text-preloader="A" className="animated-letters">
-            A
+							<span data-text-preloader="B" className="animated-letters">
+            B
+							</span>
+							<span data-text-preloader="E" className="animated-letters">
+            E
 							</span>
 							<span data-text-preloader="X" className="animated-letters">
             X
 							</span>
+
 						</div>
-						<p className="fw-5 text-center text-uppercase">Loading</p>
+						<p className="fw-5 text-center text-uppercase">TRADING</p>
 					</div>
 					{/* Loader Animation */}
 					<div className="loader-animation">

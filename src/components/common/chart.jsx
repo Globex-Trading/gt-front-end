@@ -2,10 +2,6 @@ import { createChart } from 'lightweight-charts';
 import React, {Fragment, useEffect, useRef} from 'react';
 import PreLoader from './loader';
 
-const addSeriesFunction = {
-	candleStick: 'addCandlestickSeries',
-	line: 'addLineSeries'
-};
 
 let chart;
 let chartInstance;
@@ -32,28 +28,27 @@ const Chart = (props) => {
 	},[]);
 
 	useEffect(() => {
-		const func = 'addCandlestickSeries';
 
-		// if (chartInstance) {
-		// 	chart.removeSeries(chartInstance);
-		// }
+		const addSeriesFunction = {
+			candleStick: 'addCandlestickSeries',
+			line: 'addLineSeries'
+		};
 
-		// chartInstance = chart[func]();
-		chartInstance = chart.addCandlestickSeries();
+		const func = addSeriesFunction[props.chartType];
 
-		// chartInstance.setData(props.initData);
-		console.log(chartInstance,'-----', props.initData);
+		if (chartInstance) {
+			chart.removeSeries(chartInstance);
+		}
+		chartInstance = chart[func]();
+
 		setInterval(() => {
 			setIsLoading(false);
 		}, 2000);
-	}, []);
+	}, [props.chartType, props.interval]);
 
 	useEffect(() => {
-		// console.log('useEffect 3', props.lastData);
 		if (props.lastData) {
-			// console.log('last data -------------------------', props.lastData);
-			// chartInstance.update(props.lastData);
-			chartInstance.update(props.lastData);
+			chartInstance.update(reFormatData(props.lastData));
 		}
 	}, [props]);
 
@@ -66,6 +61,30 @@ const Chart = (props) => {
 			window.removeEventListener('resize', handler);
 		};
 	}, );
+
+
+	const reFormatData = (tradingData) => {
+		let chartData = {};
+
+		switch (props.chartType) {
+		case('candleStick'):
+			chartData = {
+				time: tradingData.openTime,
+				open: tradingData.openPrice,
+				high: tradingData.highPrice,
+				low: tradingData.lowPrice,
+				close: tradingData.closePrice
+			};
+			break;
+		case('line'):
+			chartData = {
+				time: tradingData.openTime,
+				value: tradingData.closePrice
+			};
+			break;
+		}
+		return chartData;
+	};
 
 	return (
 		<Fragment>

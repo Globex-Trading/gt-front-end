@@ -714,22 +714,6 @@ img {
     background-color: #00b489 !important;
 }
 
-/*BACKGROUND IMAGES*/
-/*.welcome-area {*/
-/*    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg.jpg") no-repeat fixed center center / cover;*/
-/*}*/
-
-/*.homepage-2 .welcome-area {*/
-/*    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_2.png") no-repeat scroll center center / cover;*/
-/*}*/
-
-/*.homepage-3 .welcome-area {*/
-/*    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_3.jpg") no-repeat scroll center center / cover;*/
-/*}*/
-
-/*.homepage-4 .welcome-area {*/
-/*    background: rgba(0, 0, 0, 0) url("../img/bg/welcome_bg_4.jpg") no-repeat fixed center center / cover;*/
-/*}*/
 
 .cta-area {
     background: rgba(0, 0, 0, 0) url("../img/bg/cta_bg.jpg") no-repeat fixed center center / cover;
@@ -1257,7 +1241,7 @@ header {
 :: 8.0 WELCOME AREA CSS
 ****************************** */
 .welcome-area {
-    height: 800px;
+    height: 100vh;
     z-index: 1;
 }
 
@@ -2972,6 +2956,15 @@ body.dark,
     height:auto;
     /*margin-top: 120px;*/
     border-radius: 50px;
+}
+
+.register-container {
+    position: relative;
+    width: 900px;
+    height: auto;
+    /*margin-top: 120px;*/
+    border-radius: 30px;
+    padding-top: 100px;
 }
 
 .top-pad {

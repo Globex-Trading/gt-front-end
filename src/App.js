@@ -9,6 +9,7 @@ import TradingChart from './components/pages/tradingChart';
 import Login from './components/pages/login';
 import PreLoader from './components/common/loader';
 import Header from './components/common/header';
+import Register from './components/pages/register';
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 				<div className="main overflow-hidden">
 					<Header/>
 					<Routes>
+						<Route path="/register" element={<Register/>}/>
 						<Route path="/login" element={<Login/>}/>
 						<Route path="/chart" element={<TradingChart/>}/>
 						<Route path="/" element={<Home/>}/>

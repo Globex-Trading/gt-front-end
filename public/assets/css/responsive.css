@@ -190,7 +190,7 @@
 @media (max-width: 991px) {
     .welcome-area,
     .inner .welcome-area {
-        height: 700px !important;
+        height: 100vh !important;
     }
 
     .welcome-thumb-2 {
@@ -217,7 +217,7 @@
 
 @media (max-width: 767px) {
     .welcome-area {
-        height: 100% !important;
+        height: 100vh !important;
         padding-top: 90px;
     }
 

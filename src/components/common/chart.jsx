@@ -21,13 +21,19 @@ const Chart = (props) => {
 				timeScale: {
 					timeVisible: true,
 					secondsVisible: false,
+				},
+				rightPriceScale: {
+					autoScale: true,
 				}
 			}
 		);
 
+
 	},[]);
 
 	useEffect(() => {
+
+		setIsLoading(true);
 
 		const addSeriesFunction = {
 			candleStick: 'addCandlestickSeries',
@@ -41,15 +47,22 @@ const Chart = (props) => {
 		}
 		chartInstance = chart[func]();
 
+
+		if(props.initData) {
+			console.log('^^^^^^^^^^^^^^^^^^^^^^', props.initData);
+
+			chartInstance.setData(reFormatPastData(props.initData));
+		}
+
 		setInterval(() => {
 			setIsLoading(false);
 		}, 2000);
-	}, [props.chartType, props.interval]);
+
+	}, [props.chartType, props.interval, props.tradinPair, props.initData]);
 
 	useEffect(() => {
-		if (props.lastData) {
-			chartInstance.update(reFormatData(props.lastData));
-		}
+		if (props.lastData) chartInstance.update(reFormatData(props.lastData));
+
 	}, [props]);
 
 	useEffect(() => {
@@ -65,7 +78,6 @@ const Chart = (props) => {
 
 	const reFormatData = (tradingData) => {
 		let chartData = {};
-
 		switch (props.chartType) {
 		case('candleStick'):
 			chartData = {
@@ -81,6 +93,37 @@ const Chart = (props) => {
 				time: tradingData.openTime,
 				value: tradingData.closePrice
 			};
+			break;
+		}
+		return chartData;
+	};
+
+
+	const reFormatPastData = (tradingDataList) => {
+		let chartData = [];
+
+		switch (props.chartType) {
+		case('candleStick'):
+			tradingDataList.map(tradingData => {
+				let data = {
+					time: tradingData.open_time,
+					open: tradingData.open_price,
+					high: tradingData.high_price,
+					low: tradingData.low_price,
+					close: tradingData.close_price
+				};
+				chartData.push(data);
+			});
+			break;
+		case('line'):
+			tradingDataList.map(tradingData => {
+				let data = {
+					time: tradingData.open_time,
+					value: tradingData.close_price
+				};
+
+				chartData.push(data);
+			});
 			break;
 		}
 		return chartData;

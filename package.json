@@ -10,6 +10,7 @@
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "firebase": "^9.9.1",
+    "json-loader": "^0.5.7",
     "lightweight-charts": "^3.8.0",
     "net": "^1.0.2",
     "react": "^18.2.0",

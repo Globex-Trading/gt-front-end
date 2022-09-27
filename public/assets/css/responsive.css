@@ -480,3 +480,15 @@
         top: 70%;
     }
 }
+
+@media only screen and (max-width: 992px) {
+    .top-pad {
+        padding-top: 90px;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .top-pad {
+        padding-top: 95px;
+    }
+}

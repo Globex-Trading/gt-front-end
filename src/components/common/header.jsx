@@ -8,7 +8,7 @@ const Header = (props) => {
 
 	const [state, setState] = React.useState(false);
 
-	const pathsToAvoid = ['/chart'];
+	const pathsToAvoid = [];
 
 	const updateComponent = () => {
 		setState(!state);

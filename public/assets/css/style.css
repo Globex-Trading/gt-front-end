@@ -2973,3 +2973,7 @@ body.dark,
     /*margin-top: 120px;*/
     border-radius: 50px;
 }
+
+.top-pad {
+    padding-top: 50px;
+}

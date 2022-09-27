@@ -1,40 +1,58 @@
-import React, {Fragment, useEffect, useState, useRef} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import Chart from '../common/chart';
 import SockJS from 'sockjs-client';
 import {over} from 'stompjs';
 import {Link} from 'react-router-dom';
 import {Modal, Button} from 'react-bootstrap';
+import {getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/trader/chartService';
 
 let stompClient = null;
 
 
 const TradingChart = () => {
 	const [selectedChartType, setSelectedChartType] = useState('candleStick');
-	const [selectedInterval, setSelectedInterval] = useState('1m');
-	const [selectedTradingPair, setSelectedTradingPair] = useState('BTCUSDT');
-	const [selectedTradeType, setselectedTradeType] = useState('crypto');
+	const [selectedInterval, setSelectedInterval] = useState('');
+	const [selectedTradingPair, setSelectedTradingPair] = useState({});
+	const [selectedProvider, setSelectedProvider] = useState({});
 
-	const [tradingPairs, setTradingPairs] = useState(['BTCUSDT', 'BTCUSD', 'ETHBTC', 'ETHUSDT', 'ETHUSD', 'LTCBTC', 'LTCUSDT', 'LTCUSD', 'XRPBTC', 'XRPUSDT', 'XRPUSD']);
+	const [tradingPairs, setTradingPairs] = useState([]);
 	const [chartTypes, setChartTypes] = useState([{name:'CandleStick', slug:'candleStick'},  {name:'Line', slug:'line'}]);
-	const [intervals, setIntervals] = useState(['1m', '5m', '30m', '1h',  '1d', '1w', '1M']);
-	const [techIndicators, setTechIndicators] = useState(['BBANDS', 'EMA' , 'MA' , 'SMA' , 'WMA' , 'MACD' , 'ROC', 'RSI', 'STOCH', 'OBV' ]);
+	const [intervals, setIntervals] = useState([]);
+	const [techIndicators, setTechIndicators] = useState([]);
+	const [providers, setProviders] = useState([]);
 
-	const [initData, setInitData] = useState([]);
+	const [initData, setInitData] = useState(null);
 	const [lastData, setLastData] = useState(null);
 
 	const [show, setShow] = useState(false);
 
 
+	useEffect(() => {
+		const fetchdata = async () => {
+			await getProviders();
+		};
+		fetchdata();
+
+	},[]);
+
+
 
 	useEffect(() => {
-		console.log('useEffect 2 ', stompClient);
+		const fetchPastData = async () => {
+			await getPastData();
+		};
 
 		if(stompClient)  stompClient.disconnect();
-		connectToServer();
 
+		if(selectedTradingPair && selectedInterval) {
+			fetchPastData();
+			connectToServer();
+		}
 	}, [selectedTradingPair, selectedInterval]);
 
 
+
+	//function for connecting to WebSocket server
 	const connectToServer = () => {
 		let sock = new SockJS('http://ec2-54-82-7-139.compute-1.amazonaws.com:8080/ws');
 		stompClient = over(sock);
@@ -45,18 +63,17 @@ const TradingChart = () => {
 	const onConnected = (frame) => {
 
 		const baseURL = '/topic/';
-		const topic = baseURL + 'binance_' + selectedTradingPair + '_' + selectedInterval;
+		const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
 		console.log('topic', topic);
 		subscribeToTopic(topic);
 	};
 
 	const onError = (error) => {
-		console.log(error,'00000000000000000');
+		console.log(error);
 
 	};
 
 	const subscribeToTopic = (topic) => {
-		console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%', selectedTradingPair);
 		stompClient.subscribe(topic, (message) => {
 			const tradingData = JSON.parse(message.body);
 
@@ -67,19 +84,28 @@ const TradingChart = () => {
 		});
 	};
 
-	// useEffect(() => {
-	// 	console.log('running useEffect', lastData);
-	// 	data = candleData;
-	// 	console.log('data', data);
-	// });
-	useEffect(() => {
-		getPastData();
-		console.log('running useEffect', initData);
-	},[]);
+	const getPastData = async () => {
+		const data = {
+			symbol: selectedTradingPair._id,
+			interval: selectedInterval,
+			start: Date.now() - 200000000,
+			end: Date.now()
+		};
+		const {data: tradingData} = await getPastTradingData(data);
+		console.log('tradingData', tradingData);
+		setInitData(tradingData);
+		// setInitData();
+	};
 
-	const getPastData = () => {
-		//TODO: call api to get past data
-		// setInitData(candleData);
+	const getProviders = async () => {
+		const {data} = await getAvailableProviders();
+		setProviders(data);
+		setSelectedProvider(data[0]);
+		setTradingPairs(data[0].symbols);
+		setIntervals(data[0].providedTimeFrames);
+		setSelectedTradingPair(data[0].symbols[0]);
+		setSelectedInterval(data[0].providedTimeFrames[0]);
+		console.log('response', data);
 	};
 
 	const handleChangeChartType = (value) => {
@@ -102,13 +128,23 @@ const TradingChart = () => {
 
 	const handleClose = () => setShow(false);
 
+	const handleChangeProvider = (value) => {
+		setSelectedProvider(value);
+		setTradingPairs(value.symbols);
+		setIntervals(value.providedTimeFrames);
+		setSelectedTradingPair(value.symbols[0]);
+		setSelectedInterval(value.providedTimeFrames[0]);
+	};
+
+
+
 	return (
 		<Fragment>
 			<section
 				id="chart"
 				className="section bg-overlay overflow-hidden"
 			>
-				<div className="container my-lg-3 my-md-2 my-sm-0">
+				<div className="container mt-lg-5 my-md-2 my-sm-0 top-pad">
 					<div className="row">
 						<div className="col-lg-2 col-md-4 col-sm-6 p-1">
 							<div className="dropdown ">
@@ -118,12 +154,15 @@ const TradingChart = () => {
 									type="button"
 									data-bs-toggle="dropdown" aria-expanded="false"
 								>
-										Actions
+										Providers
 								</button>
 								<ul className="dropdown-menu">
-									<li><Link className="dropdown-item" to="/">Home</Link></li>
-									<li><Link className="dropdown-item" to="/login">Login</Link></li>
-									<li><Link className="dropdown-item" to="/services">Service</Link></li>
+									{providers.map(provider => (
+										<li key={provider.slug} className="dropdown-item"
+											onClick={() => handleChangeProvider(provider)}>
+											{provider.name}
+										</li>
+									))}
 								</ul>
 							</div>
 						</div>
@@ -142,7 +181,7 @@ const TradingChart = () => {
 										<li
 											className="dropdown-item"
 											onClick={() => handleChangeTradingPair(pair)}
-											key={pair}>{pair}
+											key={pair._id}>{pair.name}
 										</li>
 									))}
 								</ul>
@@ -221,13 +260,12 @@ const TradingChart = () => {
 								<ul className="dropdown-menu">
 									<li className="dropdown-item" onClick={handleShow}>Add alert</li>
 									<li><Link className="dropdown-item" to="/login">View alerts</Link></li>
-									<li><Link className="dropdown-item" to="/login">View alerts</Link></li>
 								</ul>
 							</div>
 						</div>
 					</div>
 				</div>
-				<Chart initData={initData} lastData={lastData}  chartType={selectedChartType} interval={selectedInterval}/>
+				<Chart initData={initData} lastData={lastData}  chartType={selectedChartType} interval={selectedInterval} tradingPair={selectedTradingPair}/>
 			</section>
 			<section>
 				<Modal show={show} onHide={handleClose}>

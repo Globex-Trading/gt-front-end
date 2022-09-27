@@ -24,8 +24,9 @@ export async function register(data) {
 
 //save user
 function saveUser(response) {
+	console.log('saveUser', response);
 	if (response.data?.token) {
-		localStorage.setItem('token', response.data.token);
+		localStorage.setItem('user_token', response.data.token);
 		return true;
 	} else {
 		return false;

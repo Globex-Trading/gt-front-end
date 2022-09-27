@@ -14,6 +14,9 @@ const Header = (props) => {
 		setState(!state);
 	};
 
+	const user = localStorage.getItem('user_token');
+	console.log('user++++++++++++++++++++++++++++++++++++', user);
+
 	if(pathsToAvoid.includes(window.location.pathname)) {
 		return null;
 	}
@@ -131,11 +134,13 @@ const Header = (props) => {
 							</li>
 						</ul>
 						{/* Navbar Action Button */}
-						<ul className="navbar-nav action">
-							<li className="nav-item ml-3">
-								<Link to='/login' className='btn ml-lg-auto btn-bordered-white' onClick={() => updateComponent()}>Login</Link>
-							</li>
-						</ul>
+						{!user && (
+							<ul className="navbar-nav action">
+								<li className="nav-item ml-3">
+									<Link to='/login' className='btn ml-lg-auto btn-bordered-white' onClick={() => updateComponent()}>Login</Link>
+								</li>
+							</ul>
+						)}
 					</div>
 				</nav>
 			</header>

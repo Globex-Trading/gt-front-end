@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import PreLoader from '../common/loader';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Joi from 'joi';
 import InputField from '../common/inputField';
 import {register} from '../../services/authService';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Register = () => {
 	const [isLoading, setIsLoading] = React.useState(true);
@@ -16,6 +17,8 @@ const Register = () => {
 	const [userType, setUserType] = React.useState('USER');
 
 	const [errors, setErrors] = React.useState({firstname: null, lastname: null, email: null, password: null, confirmPassword: null});
+
+	const navigate = useNavigate();
 
 	const functionMap = {
 		'firstname': setFirstname,
@@ -39,7 +42,7 @@ const Register = () => {
 	});
 
 	useEffect(() => {
-
+		console.log('useEffect');
 		setInterval(() => {
 			setIsLoading(false);
 		}, 2000);
@@ -60,6 +63,7 @@ const Register = () => {
 	};
 
 	const handleSubmit = async() => {
+		setIsLoading(true);
 		const {error} = validateSchema.validate({firstname, lastname, email, password, confirmPassword});
 		if (error) {
 			error.details.forEach((item) => {
@@ -67,9 +71,17 @@ const Register = () => {
 			});
 		}else {
 			const response = await register({first_name: firstname, last_name: lastname, email: email, password: password, user_type: userType});
-			if (response) console.log('success');
-			else console.log('error');
+			if (response) {
+				toast.success('Registration successful');
+				console.log('success');
+				navigate('/login');
+			}
+			else {
+				toast.error('Registration failed');
+				console.log('error');
+			}
 		}
+		setIsLoading(false);
 	};
 
 	return (

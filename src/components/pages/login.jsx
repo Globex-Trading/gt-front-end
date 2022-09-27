@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import PreLoader from '../common/loader';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import InputField from '../common/inputField';
 import Joi from 'joi';
 import {login} from '../../services/authService';
+import toast from 'react-hot-toast';
 
 const Login = () => {
 	const [isLoading, setIsLoading] = React.useState(true);
@@ -13,6 +14,7 @@ const Login = () => {
 
 	const [errors, setErrors] = React.useState({email: null, password: null});
 
+	const navigate = useNavigate();
 	const functionMap = {
 		'email': setEmail,
 		'password': setPassword,
@@ -53,7 +55,11 @@ const Login = () => {
 		}else {
 			console.log('---------------------login---------------------');
 			const response = await login({email: email, password: password});
-			if (response) console.log('success');
+			if (response){
+				toast.success('Login successfully');
+				console.log('success');
+				navigate('/');
+			}
 			else console.log('error');
 		}
 	};

@@ -4,11 +4,13 @@ import config from '../config.json';
 const apiUrl = config.apiURL;
 
 //calling endpoint to get token
-export async function login(username, password) {
-	return await axios.post(
-		apiUrl + 'users/login',
-		{username, password});
+export async function login(data) {
+	console.log('login');
+	const response = await axios.post(
+		apiUrl + '/users/login',
+		data);
 
+	return saveUser(response);
 }
 
 //registering user
@@ -17,10 +19,15 @@ export async function register(data) {
 		apiUrl + '/users',
 		data
 	);
-	if(response.data?.token) {
+	return saveUser(response);
+}
+
+//save user
+function saveUser(response) {
+	if (response.data?.token) {
 		localStorage.setItem('token', response.data.token);
 		return true;
-	}else {
+	} else {
 		return false;
 	}
 }

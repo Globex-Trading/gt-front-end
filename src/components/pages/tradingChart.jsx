@@ -5,6 +5,7 @@ import {over} from 'stompjs';
 import {Link} from 'react-router-dom';
 import {Modal, Button} from 'react-bootstrap';
 import {getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/trader/chartService';
+import PreLoader from '../common/loader';
 
 let stompClient = null;
 
@@ -25,6 +26,9 @@ const TradingChart = () => {
 	const [lastData, setLastData] = useState(null);
 
 	const [show, setShow] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+
+	const [isUpdated, setIsUpdated] = useState(false);
 
 
 	useEffect(() => {
@@ -38,8 +42,10 @@ const TradingChart = () => {
 
 
 	useEffect(() => {
+		setIsLoading(true);
 		const fetchPastData = async () => {
 			await getPastData();
+			setIsUpdated(true);
 		};
 
 		if(stompClient)  stompClient.disconnect();
@@ -48,7 +54,8 @@ const TradingChart = () => {
 			fetchPastData();
 			connectToServer();
 		}
-	}, [selectedTradingPair, selectedInterval]);
+		setIsLoading(false);
+	}, [selectedTradingPair, selectedInterval, selectedChartType]);
 
 
 
@@ -140,6 +147,7 @@ const TradingChart = () => {
 
 	return (
 		<Fragment>
+			<PreLoader isLoading={isLoading} />
 			<section
 				id="chart"
 				className="section bg-overlay overflow-hidden"
@@ -265,7 +273,15 @@ const TradingChart = () => {
 						</div>
 					</div>
 				</div>
-				<Chart initData={initData} lastData={lastData}  chartType={selectedChartType} interval={selectedInterval} tradingPair={selectedTradingPair}/>
+				<Chart
+					initData={initData}
+					lastData={lastData}
+					chartType={selectedChartType}
+					interval={selectedInterval}
+					tradingPair={selectedTradingPair}
+					isUpdate={isUpdated}
+					setIsUpdate={setIsUpdated}
+				/>
 			</section>
 			<section>
 				<Modal show={show} onHide={handleClose}>

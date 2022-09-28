@@ -45,25 +45,25 @@ const Chart = (props) => {
 		if (chartInstance) {
 			chart.removeSeries(chartInstance);
 		}
+
 		chartInstance = chart[func]();
 
 
-		if(props.initData) {
-			console.log('^^^^^^^^^^^^^^^^^^^^^^', props.initData);
+		if(props.initData && props.isUpdate) {
 
 			chartInstance.setData(reFormatPastData(props.initData));
+			props.setIsUpdate(false);
 		}
 
-		setInterval(() => {
-			setIsLoading(false);
-		}, 2000);
+		setIsLoading(false);
 
-	}, [props.chartType, props.interval, props.tradinPair, props.initData]);
+
+	}, [props.chartType, props.interval, props.tradingPair, props.initData]);
 
 	useEffect(() => {
 		if (props.lastData) chartInstance.update(reFormatData(props.lastData));
 
-	}, [props]);
+	}, [props.lastData]);
 
 	useEffect(() => {
 		const handler = () => {

@@ -32,3 +32,37 @@ function saveUser(response) {
 		return false;
 	}
 }
+
+//check user is expired
+export function isUserExpired() {
+	console.log('isUserExpired');
+	const token = localStorage.getItem('user_token');
+	if (!token) {
+		logout();
+		return null;
+	}
+
+	const payload = JSON.parse(atob(token.split('.')[1]));
+	if( payload.exp > Date.now() / 1000) {
+		return getUser(token);
+	}
+
+}
+
+//logout user
+export function logout() {
+	localStorage.removeItem('user_token');
+}
+
+//get user details
+export async function getUser(token) {
+	const res = await axios.get(
+		apiUrl + '/users/me',
+		{
+			'headers': {'Authorization': `Bearer ${token}`}
+		}
+	);
+	console.log('getUser', res);
+	return res.data;
+
+}

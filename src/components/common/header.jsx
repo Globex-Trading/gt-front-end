@@ -1,25 +1,14 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useContext, useEffect} from 'react';
 import AOS from 'aos';
 import {Link} from 'react-router-dom';
+import {UserContext} from '../../App';
 
 AOS.init();
 
-const Header = (props) => {
-
-	const [state, setState] = React.useState(false);
-
-	const pathsToAvoid = [];
-
-	const updateComponent = () => {
-		setState(!state);
-	};
-
-	const user = localStorage.getItem('user_token');
-	console.log('user++++++++++++++++++++++++++++++++++++', user);
-
-	if(pathsToAvoid.includes(window.location.pathname)) {
-		return null;
-	}
+const Header = () => {
+	
+	const user = useContext(UserContext);
+	
 	return (
 		<Fragment>
 			<header id="header">
@@ -31,7 +20,7 @@ const Header = (props) => {
 				>
 					<div className="container header">
 						{/* Navbar Brand*/}
-						<Link className="navbar-brand" to="/" onClick={() => updateComponent()}>
+						<Link className="navbar-brand" to="/">
 							<img
 								className="navbar-brand-regular h-50 w-50"
 								src="assets/img/logo/gt-logo-white.png"
@@ -48,12 +37,12 @@ const Header = (props) => {
 
 						<ul className="navbar-nav items">
 							<li className="nav-item">
-								<Link className="nav-link" to="/" onClick={() => updateComponent()}>
+								<Link className="nav-link" to="/" >
 									Home
 								</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" to="/" onClick={() => updateComponent()}>
+								<Link className="nav-link" to="/" >
 									About Us
 								</Link>
 							</li>
@@ -89,7 +78,7 @@ const Header = (props) => {
 							{/*		</ul>*/}
 							{/*	</li>*/}
 							<li className="nav-item">
-								<Link to='/chart' className='nav-link' onClick={() => updateComponent()}>Charts</Link>
+								<Link to='/chart' className='nav-link' >Charts</Link>
 							</li>
 							<li className="nav-item">
 								<a href="services.html" className="nav-link">
@@ -137,7 +126,14 @@ const Header = (props) => {
 						{!user && (
 							<ul className="navbar-nav action">
 								<li className="nav-item ml-3">
-									<Link to='/login' className='btn ml-lg-auto btn-bordered-white' onClick={() => updateComponent()}>Login</Link>
+									<Link to='/login' className='btn ml-lg-auto btn-bordered-white'>Login</Link>
+								</li>
+							</ul>
+						)}
+						{user && (
+							<ul className="navbar-nav action">
+								<li className="nav-item ml-3">
+									<Link to='/logout' className='btn ml-lg-auto btn-bordered-white'>Logout</Link>
 								</li>
 							</ul>
 						)}

@@ -131,7 +131,7 @@ const Chart = (props) => {
 
 	return (
 		<Fragment>
-			<PreLoader isLoading={isLoading} />
+			<PreLoader isLoading={isLoading}  data-testid="chart-loarder"/>
 			<div ref={chartContainerRef}/>
 		</Fragment>
 

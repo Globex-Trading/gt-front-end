@@ -21,6 +21,5 @@ test('check loader gives right output when isloading fales ', () => {
     // render the component on virtual dom
     const { container }=render(<PreLoader isLoading={false}/>);
     
-        
         expect(container).toBeEmptyDOMElement();
     });

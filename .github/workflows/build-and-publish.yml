@@ -43,6 +43,12 @@ jobs:
           push: true
           tags: ghcr.io/globex-trading/gt-front-end:latest,ghcr.io/globex-trading/gt-front-end:1.0.0
 
+      - name: Invoke the EC2 frontend-restart webhook to redeploy the UI
+        uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_url: ${{ secrets.FRONTEND_RESTART_WEBHOOK_URL }}
+          webhook_secret: ${{ secrets.FRONTEND_RESTART_WEBHOOK_SECRET }}
+
 #      - name: Compress the Build
 #        run: zip -r gt-frontend-build.zip build
 #

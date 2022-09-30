@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useReducer, useState} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
@@ -7,31 +7,48 @@ import Home from './components/pages/home';
 import PushNotification from './components/common/pushNotification';
 import TradingChart from './components/pages/tradingChart';
 import Login from './components/pages/login';
-import PreLoader from './components/common/loader';
 import Header from './components/common/header';
 import Register from './components/pages/register';
-import {isUserExpired} from './services/authService';
+import {getUser} from './services/authService';
 import Logout from './components/pages/logout';
 
+//setup store - globally accessible
+const getUserDetails = async () => {
+	return await getUser();
+};
 
 
-export const UserContext = createContext(null);
+const initialState = {user: getUserDetails()};
+
+export const store = createContext(initialState);
+
+const {Provider} = store;
+
+const StateProvider = ({children}) => {
+	const [state, dispatch] = useReducer((state, action) => {
+		switch (action.type) {
+		case 'SAVE_USER':
+			return {
+				user: action.payload
+			};
+		case 'REMOVE_USER':
+			return {
+				user: null
+			};
+		}
+	}, initialState);
+
+	return <Provider value={{state, dispatch}}>{children}</Provider>;
+};
+
 
 function App() {
 
 	const [user, setUser] = useState(null);
 
-	useEffect(() => {
-		getUser();
-	}, []);
-
-	const getUser = async () => {
-		const user = await isUserExpired();
-		setUser(user);
-	};
 
 	return (
-		<UserContext.Provider value={user}>
+		<StateProvider>
 			<BrowserRouter>
 				<div className="App">
 					<div className="main overflow-hidden">
@@ -47,7 +64,7 @@ function App() {
 					<PushNotification/>
 				</div>
 			</BrowserRouter>
-		</UserContext.Provider>
+		</StateProvider>
 	);
 }
 

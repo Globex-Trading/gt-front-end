@@ -5,6 +5,7 @@ import PreLoader from './loader';
 
 let chart;
 let chartInstance;
+console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STARTING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
 const Chart = (props) => {
 	const [isLoading, setIsLoading] = React.useState(true);
@@ -28,6 +29,10 @@ const Chart = (props) => {
 			}
 		);
 
+		return () => {
+			chart = null;
+			chartInstance = null;
+		};
 
 	},[]);
 
@@ -42,7 +47,10 @@ const Chart = (props) => {
 
 		const func = addSeriesFunction[props.chartType];
 
+		console.log('################################# CHART DATA #################################', props.initData);
+
 		if (chartInstance) {
+			console.log('@@@@@@@@@@@ CHART @@@@@@@@@', chart, chartInstance);
 			chart.removeSeries(chartInstance);
 		}
 
@@ -57,10 +65,10 @@ const Chart = (props) => {
 
 		setIsLoading(false);
 
-
 	}, [props.chartType, props.interval, props.tradingPair, props.initData]);
 
 	useEffect(() => {
+		console.log('################## UPDATING ######################');
 		if (props.lastData) chartInstance.update(reFormatData(props.lastData));
 
 	}, [props.lastData]);

@@ -61,7 +61,7 @@ function App() {
 							<Route path="/" element={<Home/>}/>
 						</Routes>
 					</div>
-					<PushNotification/>
+					{/*<PushNotification/>*/}
 				</div>
 			</BrowserRouter>
 		</StateProvider>

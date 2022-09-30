@@ -1,14 +1,8 @@
-FROM node:14-alpine AS development
-ENV NODE_ENV development
-# Add a work directory
+FROM nginx:1.23.1-alpine
+# RUN addgroup app && adduser -S -G app app
+USER root
+LABEL org.opencontainers.image.source="https://github.com/Globex-Trading/gt-front-end"
 WORKDIR /app
-# Cache and Install dependencies
-COPY package.json .
-COPY package-lock.json .
-RUN npm install
-# Copy app files
-COPY . .
-# Expose port
-EXPOSE 3000
-# Start the app
-CMD [ "npm", "start" ]
+COPY ./build /usr/share/nginx/html
+EXPOSE 80
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

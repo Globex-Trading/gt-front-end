@@ -69,7 +69,7 @@ const TradingChart = () => {
 
 	//function for connecting to WebSocket server
 	const connectToServer = () => {
-		let sock = new SockJS('http://ec2-54-82-7-139.compute-1.amazonaws.com:8080/ws');
+		let sock = new SockJS('https://www.teamone.shop:8080/ws');
 		stompClient = over(sock);
 		stompClient.connect({}, onConnected, onError);
 		console.log('stompClient', stompClient);

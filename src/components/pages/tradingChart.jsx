@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 import {over} from 'stompjs';
 import {Link} from 'react-router-dom';
 import {Modal, Button} from 'react-bootstrap';
-import {getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/trader/chartService';
+import {getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/chartService';
 import PreLoader from '../common/loader';
 import {store} from '../../App';
 

@@ -1,20 +1,9 @@
-import axios from 'axios';
-import {apiURL} from '../config.json';
-
-const bearerToken = localStorage.getItem('access_token');
-
-const axiosInstance = axios.create({
-	baseURL: apiURL,
-	headers: {
-		'Content-Type': 'application/json',
-		'Authorization': `Bearer ${bearerToken}`
-	}
-});
-
-axiosInstance.interceptors.response.use(async (req) => {
-	//TODO: check access token is expired or not
-
-});
+export function isTokenExpired() {
+	const token = localStorage.getItem('user_token');
+	if (!token) return  true;
+	const payload = JSON.parse(atob(token.split('.')[1]));
+	return payload.exp < Date.now() / 1000;
+}
 
 
 

@@ -137,7 +137,7 @@ const Chart = (props) => {
 		case('line'):
 			tradingDataList.map(tradingData => {
 				let data = {
-					time: tradingData.open_time,
+					time: tradingData.open_time/1000 + 19800,
 					value: tradingData.close_price
 				};
 

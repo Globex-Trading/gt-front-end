@@ -39,7 +39,7 @@ const Home = () => {
 								</p>
 								{/* Buttons */}
 								<div className="button-group">
-									<Link to="/charts" className="btn btn-bordered-white font-weight-bold">
+									<Link to="/chart" className="btn btn-bordered-white font-weight-bold">
                                                 Charts
 									</Link>
 									<Link

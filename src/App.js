@@ -1,4 +1,4 @@
-import React, {createContext, useReducer, useState} from 'react';
+import React, {createContext, useEffect, useReducer, useState} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
@@ -12,39 +12,49 @@ import Register from './components/pages/register';
 import {getUser} from './services/authService';
 import Logout from './components/pages/logout';
 
-//setup store - globally accessible
-const getUserDetails = async () => {
-	return await getUser();
-};
-
-
-const initialState = {user: getUserDetails()};
-
-export const store = createContext(initialState);
-
-const {Provider} = store;
-
-const StateProvider = ({children}) => {
-	const [state, dispatch] = useReducer((state, action) => {
-		switch (action.type) {
-		case 'SAVE_USER':
-			return {
-				user: action.payload
-			};
-		case 'REMOVE_USER':
-			return {
-				user: null
-			};
-		}
-	}, initialState);
-
-	return <Provider value={{state, dispatch}}>{children}</Provider>;
-};
-
+let user;
+let store;
 
 function App() {
 
-	const [user, setUser] = useState(null);
+	useEffect(() => {
+		user = getUserDetails();
+	}, []);
+
+	//get user details if user is logged in
+	const getUserDetails = async () => {
+		const user = await getUser();
+		console.log(user);
+		return user;
+	};
+
+	//set up a context store
+	const initialState = {user: user};
+
+	console.log('App.js', initialState);
+
+	store = createContext(initialState);
+
+	const {Provider} = store;
+
+	//set up a reducer
+	const StateProvider = ({children}) => {
+		const [state, dispatch] = useReducer((state, action) => {
+			switch (action.type) {
+			case 'SAVE_USER':
+				return {
+					user: action.payload
+				};
+			case 'REMOVE_USER':
+				return {
+					user: null
+				};
+			}
+		}, initialState);
+
+		return <Provider value={{state, dispatch}}>{children}</Provider>;
+	};
+
 
 
 	return (
@@ -69,3 +79,4 @@ function App() {
 }
 
 export default App;
+export {store};

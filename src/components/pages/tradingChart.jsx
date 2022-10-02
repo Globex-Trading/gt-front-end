@@ -7,6 +7,9 @@ import {Modal, Button} from 'react-bootstrap';
 import {getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/chartService';
 import PreLoader from '../common/loader';
 import {store} from '../../App';
+import config from '../../config.json';
+
+const {wsURL} = config;
 
 let stompClient = null;
 
@@ -69,7 +72,7 @@ const TradingChart = () => {
 
 	//function for connecting to WebSocket server
 	const connectToServer = () => {
-		let sock = new SockJS('https://www.teamone.shop:8080/ws');
+		let sock = new SockJS(wsURL);
 		stompClient = over(sock);
 		stompClient.connect({}, onConnected, onError);
 		console.log('stompClient', stompClient);

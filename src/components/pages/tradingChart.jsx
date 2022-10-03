@@ -1,11 +1,15 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import Chart from '../common/chart';
 import SockJS from 'sockjs-client';
 import {over} from 'stompjs';
 import {Link} from 'react-router-dom';
 import {Modal, Button} from 'react-bootstrap';
-import {getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/trader/chartService';
+import {getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/chartService';
 import PreLoader from '../common/loader';
+import {store} from '../../App';
+import config from '../../config.json';
+
+const {wsURL} = config;
 
 let stompClient = null;
 
@@ -30,9 +34,14 @@ const TradingChart = () => {
 
 	const [isUpdated, setIsUpdated] = useState(false);
 
+	const {state} = useContext(store);
+	const {user} = state;
+
 
 	useEffect(() => {
+		console.log('useEffect 1 - set isloading to true');
 		const fetchdata = async () => {
+			setIsLoading(true);
 			await getProviders();
 		};
 		fetchdata();
@@ -42,7 +51,6 @@ const TradingChart = () => {
 
 
 	useEffect(() => {
-		setIsLoading(true);
 		const fetchPastData = async () => {
 			await getPastData();
 			setIsUpdated(true);
@@ -54,14 +62,17 @@ const TradingChart = () => {
 			fetchPastData();
 			connectToServer();
 		}
-		setIsLoading(false);
+
+		return () => {
+			if(stompClient)  stompClient.disconnect();
+		};
 	}, [selectedTradingPair, selectedInterval, selectedChartType]);
 
 
 
 	//function for connecting to WebSocket server
 	const connectToServer = () => {
-		let sock = new SockJS('http://ec2-54-82-7-139.compute-1.amazonaws.com:8080/ws');
+		let sock = new SockJS(wsURL);
 		stompClient = over(sock);
 		stompClient.connect({}, onConnected, onError);
 		console.log('stompClient', stompClient);
@@ -92,6 +103,7 @@ const TradingChart = () => {
 	};
 
 	const getPastData = async () => {
+		setIsLoading(true);
 		const data = {
 			symbol: selectedTradingPair._id,
 			interval: selectedInterval,
@@ -101,6 +113,7 @@ const TradingChart = () => {
 		const {data: tradingData} = await getPastTradingData(data);
 		console.log('tradingData', tradingData);
 		setInitData(tradingData);
+		setIsLoading(false);
 		// setInitData();
 	};
 
@@ -289,15 +302,18 @@ const TradingChart = () => {
 						<Modal.Title>Add Alert</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
+
+						{!user && <div className="text-danger text-center">You need to login to add alerts.</div>}
+
 						<form>
 							<div className="mb-3">
 								<label htmlFor="price" className="form-label">Price</label>
-								<input type="price" className="form-control" id="price" aria-describedby="emailHelp"/>
+								<input type="price" className="form-control" id="price" aria-describedby="emailHelp" disabled={!user}/>
 							</div>
 
 							<div className="mb-3">
 								<label htmlFor="type" className="form-label">Type</label>
-								<select className="form-control" id="type" aria-label="Default select example">
+								<select className="form-control" id="type" aria-label="Default select example" disabled={!user}>
 									<option selected>Open this select menu</option>
 									<option value="1">Crossing</option>
 								</select>
@@ -308,7 +324,7 @@ const TradingChart = () => {
 						<Button variant="secondary" onClick={handleClose}>
 							Close
 						</Button>
-						<Button variant="primary" onClick={handleClose}>
+						<Button variant="primary" onClick={handleClose} disabled={!user}>
 							Add Alert
 						</Button>
 					</Modal.Footer>

@@ -5,32 +5,47 @@ import PreLoader from './loader';
 
 let chart;
 let chartInstance;
+console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STARTING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
 const Chart = (props) => {
 	const [isLoading, setIsLoading] = React.useState(true);
 
 	const chartContainerRef = useRef();
 
+	//useEffect for create the chart
 	useEffect(() => {
 		console.log('useEffect 1');
 
 		chart = createChart(chartContainerRef.current,
 			{
-				width:1500,
-				height:600,
+				width:0,
+				height:550,
+				localizationOptions: {
+					locale: 'si-LK',
+				},
 				timeScale: {
 					timeVisible: true,
-					secondsVisible: false,
+					secondsVisible: true,
 				},
 				rightPriceScale: {
 					autoScale: true,
+				},
+				baseLineOptions: {
+					lastPriceAnimation: true,
 				}
 			}
 		);
 
+		chart.timeScale().fitContent();
+
+		return () => {
+			chart = null;
+			chartInstance = null;
+		};
 
 	},[]);
 
+	//useEffect for create the chart type and set initial data
 	useEffect(() => {
 
 		setIsLoading(true);
@@ -48,7 +63,6 @@ const Chart = (props) => {
 
 		chartInstance = chart[func]();
 
-
 		if(props.initData && props.isUpdate) {
 
 			chartInstance.setData(reFormatPastData(props.initData));
@@ -57,31 +71,36 @@ const Chart = (props) => {
 
 		setIsLoading(false);
 
-
 	}, [props.chartType, props.interval, props.tradingPair, props.initData]);
 
+
+	//useEffect for update the chart data for realtime data
 	useEffect(() => {
+		console.log('#################', chart.timeScale().getVisibleLogicalRange());
+
 		if (props.lastData) chartInstance.update(reFormatData(props.lastData));
 
 	}, [props.lastData]);
 
-	useEffect(() => {
-		const handler = () => {
-			chart.resize(chartContainerRef.current.offsetWidth, 500);
-		};
-		window.addEventListener('resize', handler);
-		return () => {
-			window.removeEventListener('resize', handler);
-		};
-	}, );
+	// useEffect(() => {
+	// 	const handler = () => {
+	// 		chart.resize(chartContainerRef.current.offsetWidth, 500);
+	// 	};
+	// 	window.addEventListener('resize', handler);
+	// 	return () => {
+	// 		window.removeEventListener('resize', handler);
+	// 	};
+	// }, );
 
-
+	//reformat the incoming data to match the chart data format
 	const reFormatData = (tradingData) => {
 		let chartData = {};
 		switch (props.chartType) {
 		case('candleStick'):
+
+
 			chartData = {
-				time: tradingData.openTime,
+				time: tradingData.openTime/1000 + 19800,
 				open: tradingData.openPrice,
 				high: tradingData.highPrice,
 				low: tradingData.lowPrice,
@@ -90,7 +109,7 @@ const Chart = (props) => {
 			break;
 		case('line'):
 			chartData = {
-				time: tradingData.openTime,
+				time: tradingData.openTime/1000 + 19800,
 				value: tradingData.closePrice
 			};
 			break;
@@ -98,7 +117,7 @@ const Chart = (props) => {
 		return chartData;
 	};
 
-
+	//reformat the incoming data to match the chart data format
 	const reFormatPastData = (tradingDataList) => {
 		let chartData = [];
 
@@ -106,7 +125,7 @@ const Chart = (props) => {
 		case('candleStick'):
 			tradingDataList.map(tradingData => {
 				let data = {
-					time: tradingData.open_time,
+					time: tradingData.open_time/1000 + 19800,
 					open: tradingData.open_price,
 					high: tradingData.high_price,
 					low: tradingData.low_price,
@@ -118,7 +137,7 @@ const Chart = (props) => {
 		case('line'):
 			tradingDataList.map(tradingData => {
 				let data = {
-					time: tradingData.open_time,
+					time: tradingData.open_time/1000 + 19800,
 					value: tradingData.close_price
 				};
 
@@ -131,8 +150,8 @@ const Chart = (props) => {
 
 	return (
 		<Fragment>
-			<PreLoader isLoading={isLoading}  data-testid="chart-loarder"/>
-			<div ref={chartContainerRef}/>
+			<PreLoader isLoading={isLoading} />
+			<div style={{bottom: '0', right: '0'}} ref={chartContainerRef}/>
 		</Fragment>
 
 	);

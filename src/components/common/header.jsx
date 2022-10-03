@@ -1,13 +1,15 @@
 import React, {Fragment, useContext, useEffect} from 'react';
 import AOS from 'aos';
 import {Link} from 'react-router-dom';
-import {UserContext} from '../../App';
+import {store} from '../../App';
 
 AOS.init();
 
 const Header = () => {
 	
-	const user = useContext(UserContext);
+	const {state} = useContext(store);
+	const {user} = state;
+	console.log(state, '###############');
 	
 	return (
 		<Fragment>

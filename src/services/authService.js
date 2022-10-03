@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../config.json';
+import {isTokenExpired} from './httpService';
 
 const apiUrl = config.apiURL;
 
@@ -33,21 +34,6 @@ function saveUser(response) {
 	}
 }
 
-//check user is expired
-export function isUserExpired() {
-	console.log('isUserExpired');
-	const token = localStorage.getItem('user_token');
-	if (!token) {
-		logout();
-		return null;
-	}
-
-	const payload = JSON.parse(atob(token.split('.')[1]));
-	if( payload.exp > Date.now() / 1000) {
-		return getUser(token);
-	}
-
-}
 
 //logout user
 export function logout() {
@@ -55,7 +41,14 @@ export function logout() {
 }
 
 //get user details
-export async function getUser(token) {
+export async function getUser() {
+	const token = localStorage.getItem('user_token');
+
+	if (!token || isTokenExpired()) {
+		logout();
+		return null;
+	}
+
 	const res = await axios.get(
 		apiUrl + '/users/me',
 		{

@@ -1,3 +1,4 @@
 {
-  "apiURL": "http://ec2-54-82-7-139.compute-1.amazonaws.com:3000"
+  "apiURL": "https://www.teamone.shop:3000",
+  "wsURL": "https://www.teamone.shop:8080/ws"
 }

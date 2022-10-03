@@ -1,12 +1,17 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import PreLoader from '../common/loader';
 import {Link, useNavigate} from 'react-router-dom';
 import InputField from '../common/inputField';
 import Joi from 'joi';
-import {login} from '../../services/authService';
+import {getUser, login} from '../../services/authService';
 import toast from 'react-hot-toast';
+import {store} from '../../App';
 
 const Login = () => {
+
+	const {dispatch} = useContext(store);
+
+
 	const [isLoading, setIsLoading] = React.useState(true);
 
 	const [email, setEmail] = React.useState('');
@@ -21,7 +26,6 @@ const Login = () => {
 	};
 
 	useEffect(() => {
-
 		setInterval(() => {
 			setIsLoading(false);
 		}, 3000);
@@ -47,17 +51,18 @@ const Login = () => {
 	};
 
 	const handleSubmit = async() => {
+		setIsLoading(true);
 		const {error} = validateSchema.validate({email, password});
 		if (error) {
 			error.details.forEach((item) => {
 				setErrors({...errors, [item.path[0]]: item.message});
 			});
 		}else {
-			console.log('---------------------login---------------------');
 			const response = await login({email: email, password: password});
 			if (response){
-				toast.success('Login successfully');
-				console.log('success');
+				toast.success('Logged in successfully');
+				const user = await getUser();
+				dispatch({type: 'SAVE_USER', payload: user});
 				navigate('/');
 			}
 			else console.log('error');

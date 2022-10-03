@@ -9,7 +9,7 @@ const Home = () => {
 	useEffect(() => {
 		setInterval(() => {
 			setIsLoading(false);
-		}, 3000);
+		}, 500);
 	});
 	return (
 		<React.Fragment>
@@ -32,14 +32,14 @@ const Home = () => {
                                             We Visualize. <br/> You Make <span className='color-3'>Decisions</span>.
 								</h1>
 								<p className="text-white my-4">
-                                            Globex Trading is a market data exploration application that helps trader to
+                                            Globex Trading is a market data exploration application that helps traders to
 									make their decisions on trading pairs. Globex Trading make that easy with technical indicators which
-									calculate based on the traing data and price alerts which notify you when the price of a trading pair
+									are calculated based on the trading data and price alerts which notify you when the price of a trading pair
 									reaches a certain level.
 								</p>
 								{/* Buttons */}
 								<div className="button-group">
-									<Link to="/charts" className="btn btn-bordered-white font-weight-bold">
+									<Link to="/chart" className="btn btn-bordered-white font-weight-bold">
                                                 Charts
 									</Link>
 									<Link

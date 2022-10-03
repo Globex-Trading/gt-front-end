@@ -1,5 +1,7 @@
 import axios from 'axios';
 import config from '../config.json';
+import {isTokenExpired} from './httpService';
+import {logout} from './authService';
 
 const apiUrl = config.apiURL;
 
@@ -37,10 +39,18 @@ export async function getAvailableProviders() {
 
 //add new alert
 export async function addNewAlert(alert) {
+	const token = localStorage.getItem('user_token');
 
+	if (!token || isTokenExpired()) {
+		logout();
+		return null;
+	}
 	const response = await axios.post(
 		apiUrl + '/alerts',
-		alert
+		alert,
+		{
+			'headers': {'Authorization': `Bearer ${token}`}
+		}
 	);
 	console.log(response);
 	return response;

@@ -4,10 +4,11 @@ import SockJS from 'sockjs-client';
 import {over} from 'stompjs';
 import {Link} from 'react-router-dom';
 import {Modal, Button} from 'react-bootstrap';
-import {getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/chartService';
+import {addNewAlert, getAvailableProviders, getAvailableSymbols, getPastTradingData} from '../../services/chartService';
 import PreLoader from '../common/loader';
 import {store} from '../../App';
 import config from '../../config.json';
+import toast from 'react-hot-toast';
 
 const {wsURL} = config;
 
@@ -33,6 +34,7 @@ const TradingChart = () => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const [isUpdated, setIsUpdated] = useState(false);
+	const [alertPrice, setAlertPrice] = useState(0);
 
 	const {state} = useContext(store);
 	const {user} = state;
@@ -140,10 +142,6 @@ const TradingChart = () => {
 		setSelectedInterval(value);
 	};
 
-	const handleAddAlert = () => {
-		console.log('handleAddAlert');
-	};
-
 	const handleShow = () => setShow(true);
 
 	const handleClose = () => setShow(false);
@@ -154,6 +152,31 @@ const TradingChart = () => {
 		setIntervals(value.providedTimeFrames);
 		setSelectedTradingPair(value.symbols[0]);
 		setSelectedInterval(value.providedTimeFrames[0]);
+	};
+
+	//adding new alert
+	const handleAddNewAlert = async () => {
+		setIsLoading(true);
+		const alert = {
+			trigger_price: alertPrice,
+			symbol: selectedTradingPair._id,
+			user: user._id,
+			alert_type: 'Crossing'
+		};
+		const response = await addNewAlert(alert);
+		if(response.status === 200) {
+			setShow(false);
+			toast.success('Alert added successfully');
+		}else {
+			toast.error('Something went wrong');
+		}
+
+		setIsLoading(false);
+
+	};
+
+	const handleAlertPriceChange = (e) => {
+		setAlertPrice(e.target.value);
 	};
 
 
@@ -179,7 +202,7 @@ const TradingChart = () => {
 								</button>
 								<ul className="dropdown-menu">
 									{providers.map(provider => (
-										<li key={provider.slug} className="dropdown-item"
+										<li key={provider.slug} className={selectedProvider === provider ? 'dropdown-item bg-warning': 'dropdown-item'}
 											onClick={() => handleChangeProvider(provider)}>
 											{provider.name}
 										</li>
@@ -200,7 +223,7 @@ const TradingChart = () => {
 								<ul className="dropdown-menu">
 									{tradingPairs.map((pair) => (
 										<li
-											className="dropdown-item"
+											className={selectedTradingPair === pair ? 'dropdown-item bg-warning': 'dropdown-item'}
 											onClick={() => handleChangeTradingPair(pair)}
 											key={pair._id}>{pair.name}
 										</li>
@@ -219,7 +242,7 @@ const TradingChart = () => {
 									Chart Type
 								</button>
 								<ul className="dropdown-menu">
-									{chartTypes.map((type) => (<li className="dropdown-item" onClick={() => handleChangeChartType(type.slug)} key={type.slug}>{type.name}</li>))}
+									{chartTypes.map((type) => (<li className={selectedChartType === type.slug ?'dropdown-item bg-warning': 'dropdown-item'} onClick={() => handleChangeChartType(type.slug)} key={type.slug}>{type.name}</li>))}
 								</ul>
 							</div>
 						</div>
@@ -236,7 +259,7 @@ const TradingChart = () => {
 								<ul className="dropdown-menu">
 									{intervals.map((interval) => (
 										<li
-											className="dropdown-item"
+											className={selectedInterval === interval ? 'dropdown-item bg-warning': 'dropdown-item'}
 											key={interval}
 											onClick={() => handleChangeInterval(interval)}
 										>
@@ -303,12 +326,17 @@ const TradingChart = () => {
 					</Modal.Header>
 					<Modal.Body>
 
-						{!user && <div className="text-danger text-center">You need to login to add alerts.</div>}
-
-						<form>
+						<form className='w-100'>
+							{!user && <div className="text-danger text-center">You need to login to add alerts.</div>}
 							<div className="mb-3">
 								<label htmlFor="price" className="form-label">Price</label>
-								<input type="price" className="form-control" id="price" aria-describedby="emailHelp" disabled={!user}/>
+								<input
+									type="price"
+									className="form-control" id="price"
+									aria-describedby="emailHelp"
+									required value={alertPrice}
+									onChange={handleAlertPriceChange}
+									disabled={!user}/>
 							</div>
 
 							<div className="mb-3">
@@ -324,7 +352,7 @@ const TradingChart = () => {
 						<Button variant="secondary" onClick={handleClose}>
 							Close
 						</Button>
-						<Button variant="primary" onClick={handleClose} disabled={!user}>
+						<Button variant="primary" onClick={handleAddNewAlert} disabled={!user}>
 							Add Alert
 						</Button>
 					</Modal.Footer>

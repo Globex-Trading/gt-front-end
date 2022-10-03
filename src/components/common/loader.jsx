@@ -5,7 +5,7 @@ const PreLoader = (props) => {
 	return(
 		props.isLoading &&
 		<Fragment>
-			<div id="preloader">
+			<div id="preloader" data-testid="preloader">
 				{/*  Preloader */}
 				<div id="digimax-preloader" className="digimax-preloader">
 					{/* Preloader Animation */}

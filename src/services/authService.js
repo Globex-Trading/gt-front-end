@@ -55,7 +55,7 @@ export async function getUser() {
 			'headers': {'Authorization': `Bearer ${token}`}
 		}
 	);
-	localStorage.setItem('user_id', res.data?._id);
+	localStorage.setItem('user_id', res.data?.id);
 	return res.data;
 
 }

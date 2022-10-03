@@ -29,10 +29,24 @@ const Register = () => {
 	};
 
 	const validateSchema = Joi.object({
-		firstname: Joi.string().min(3).max(30).required(),
-		lastname: Joi.string().min(3).max(30).required(),
-		email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-		password: Joi.string().required().regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
+		firstname: Joi.string().min(3).max(30).required().messages({
+			'string.min': 'Firstname must be at least 3 characters long',
+			'string.max': 'Firstname must be at most 30 characters long',
+			'string.empty': 'Firstname is required',
+		}),
+		lastname: Joi.string().min(3).max(30).required().messages({
+			'string.min': 'Lastname must be at least 3 characters long',
+			'string.max': 'Lastname must be at most 30 characters long',
+			'string.empty': 'Lastname is required',
+		}),
+		email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).messages({
+			'string.empty':'Email not allowed to be empty',
+			'string.email':'Email must be a valid email',
+		}),
+		password: Joi.string().required().regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/).messages({
+			'string.empty':'Password not allowed to be empty',
+			'string.pattern.base':'Password must contain at least one uppercase letter, one lowercase letter, one number and be longer than or equal to 8 characters',
+		}),
 		confirmPassword: Joi.string().required().custom((value, helpers) => {
 			if (value !== password) {
 				return helpers.message('Password isn\'t match');
@@ -95,7 +109,8 @@ const Register = () => {
 					<div className="card bg-glass" style={{borderRadius: '3%'}}>
 						<div className="card-body px-3 px-md-5">
 							<form>
-								<h2 className="fw-bold mb-3 text-uppercase" style={{textAlign: 'center'}}>Register</h2>
+								<h2 className="fw-bold mb-4 text-uppercase font-weight-bold" style={{textAlign: 'center', color:'#502570'}}>Register</h2>
+
 								<div className="row">
 									<div className="col-md-6">
 										<InputField
@@ -123,9 +138,8 @@ const Register = () => {
 										/>
 									</div>
 								</div>
-
 								<div className="row">
-									<div className="col-md-6">
+									<div className="col-md-12">
 
 										<InputField
 											type="email"
@@ -140,7 +154,7 @@ const Register = () => {
 									</div>
 								</div>
 								<div className="row">
-									<div className="col-md-6">
+									<div className="col-md-12">
 										<InputField
 											type="password"
 											name="password"
@@ -152,7 +166,7 @@ const Register = () => {
 											inputStyle=''
 										/>
 									</div>
-									<div className="col-md-6">
+									<div className="col-md-12">
 										<InputField
 											type="password"
 											name="confirmPassword"
@@ -165,13 +179,14 @@ const Register = () => {
 										/>
 									</div>
 								</div>
+
 								<Link to="/login" className="link-secondary text-danger">Already have an account? <span className="text-secondary">Login</span></Link>
 
 							</form>
 							<div className="d-flex justify-content-center mt-2">
 								<button
 									type="submit"
-									className="btn btn-primary btn-block mb-3 mt-1 w-25"
+									className="btn btn-primary btn-block mb-3 mt-1 w-50"
 									onClick={handleSubmit}
 								>
 									Register

@@ -24,7 +24,7 @@ function App() {
 	//get user details if user is logged in
 	const getUserDetails = async () => {
 		const user = await getUser();
-		console.log(user);
+		console.log(user, '+++++++++++++++++++++++++++++++++');
 		return user;
 	};
 

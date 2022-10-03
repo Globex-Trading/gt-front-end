@@ -74,13 +74,13 @@ const Login = () => {
 			<PreLoader isLoading={isLoading} />
 			<section
 				id="home"
-				className="section welcome-area bg-overlay overflow-hidden d-flex align-items-center"
+				className="section welcome-area login-styles overflow-hidden d-flex align-items-center"
 			>
 				<div className="container login-container">
 					<div className="card bg-glass" style={{borderRadius: '3%'}}>
 						<div className="card-body px-4 py-5 px-md-5">
 							<form>
-								<h2 className="fw-bold mb-4 text-uppercase" style={{textAlign: 'center'}}>Login</h2>
+								<h2 className="fw-bold mb-4 text-uppercase font-weight-bold" style={{textAlign: 'center', color:'#502570'}}>Login</h2>
 
 								<InputField
 									type="email"
@@ -91,6 +91,7 @@ const Login = () => {
 									error={errors.email}
 									labelStyle=''
 									inputStyle=''
+									disabled={false}
 								/>
 
 								<InputField
@@ -102,6 +103,7 @@ const Login = () => {
 									error={errors.password}
 									labelStyle=''
 									inputStyle=''
+									disabled={false}
 								/>
 								
 								
@@ -110,7 +112,8 @@ const Login = () => {
 							</form>
 							<button
 								type="submit"
-								className="btn btn-primary btn-block mb-3 mt-1"
+								className="btn btn-primary btn-block mb-3 mt-1 border border-white "
+								style={{backgroundColor: '#ec6850'}}
 								onClick={handleSubmit}
 							>
 								Login

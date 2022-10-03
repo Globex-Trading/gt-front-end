@@ -20,9 +20,6 @@ const Chart = (props) => {
 			{
 				width:0,
 				height:550,
-				localizationOptions: {
-					locale: 'si-LK',
-				},
 				timeScale: {
 					timeVisible: true,
 					secondsVisible: true,

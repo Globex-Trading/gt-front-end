@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import Header from '../common/header';
 import PreLoader from '../common/loader';
 import {Link} from 'react-router-dom';
 
@@ -27,15 +26,13 @@ const Home = () => {
 					<div className="row align-items-center">
 						{/* Welcome Intro Start */}
 						<div className="col-12 col-md-7">
-							<div className="welcome-intro">
+							<div className="welcome-intro text-left">
 								<h1 className="text-white">
                                             We Visualize. <br/> You Make <span className='color-3'>Decisions</span>.
 								</h1>
 								<p className="text-white my-4">
                                             Globex Trading is a market data exploration application that helps traders to
-									make their decisions on trading pairs. Globex Trading make that easy with technical indicators which
-									are calculated based on the trading data and price alerts which notify you when the price of a trading pair
-									reaches a certain level.
+									make their decisions on trading pairs. Globex Trading make that easy with technical indicators and price alerts.
 								</p>
 								{/* Buttons */}
 								<div className="button-group">
@@ -119,7 +116,7 @@ const Home = () => {
 			</section>
 			{/* ***** Welcome Area End ***** */}
 			{/* ***** Promo Area Start ***** */}
-			<section className="section promo-area ptb_100">
+			<section className="section promo-area ptb_50">
 				<div className="container">
 					<div className="row">
 						<div className="col-12 col-md-6 col-lg-4 res-margin">
@@ -127,13 +124,11 @@ const Home = () => {
 							<div className="single-promo color-1 bg-hover hover-bottom text-center p-5">
 								<div className="mb-3 h1 font-weight-bold">Visualize Trading Data</div>
 								<p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-									<strong>Aspernatur provident unde</strong> ex eligendi magni sit
-                                            impedit iusto, sed ad fuga minima, dignissimos ducimus autem
-                                            molestias, nostrum nesciunt enim? Ea, non hic voluptates dolorum
-                                            impedit eveniet dolorem temporibus illo incidunt quis minima
-                                            facere doloribus sit maiores, blanditiis labore quasi,
-                                            accusantium quaerat!
+									<strong>Visualizing</strong> the data is the best way to understand the data,
+											and make decisions on the data. We provide a variety of ways to
+											visualize the trading data, including candlestick charts, and line charts.
+											As a trader you can use these charts to make decisions on your trades.
+											And it will help you to understand the data better. Happy Trading!
 								</p>
 							</div>
 						</div>
@@ -854,7 +849,7 @@ const Home = () => {
 								{/* Copyright Area */}
 								<div className="copyright-area d-flex flex-wrap justify-content-center justify-content-sm-between text-center py-4">
 									{/* Copyright Left */}
-									<div className="copyright-left">
+									<div className="copyright-left font-weight-bold">
                                                 © Copyrights 2022 Globex Trading All rights reserved.
 									</div>
 									{/* Copyright Right */}

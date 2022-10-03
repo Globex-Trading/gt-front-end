@@ -42,11 +42,12 @@ export async function addNewAlert(alert) {
 	const token = localStorage.getItem('user_token');
 
 	if (!token || isTokenExpired()) {
+		console.log('token expired');
 		logout();
 		return null;
 	}
 	const response = await axios.post(
-		apiUrl + '/alerts',
+		apiUrl + '/alerts/add-alert',
 		alert,
 		{
 			'headers': {'Authorization': `Bearer ${token}`}

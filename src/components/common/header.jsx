@@ -22,15 +22,15 @@ const Header = () => {
 				>
 					<div className="container header">
 						{/* Navbar Brand*/}
-						<Link className="navbar-brand" to="/">
+						<Link className="navbar-brand p-2" to="/">
 							<img
-								className="navbar-brand-regular h-50 w-50"
-								src="assets/img/logo/gt-logo-white.png"
+								className="navbar-brand-regular globex-logo"
+								src="assets/img/logo/GLOBEX-1.png"
 								alt="brand-logo"
 							/>
 							<img
-								className="navbar-brand-sticky h-50 w-50"
-								src="assets/img/logo/gt-logo.png"
+								className="navbar-brand-sticky globex-logo"
+								src="assets/img/logo/GLOBEX-1-white.png"
 								alt="sticky brand-logo"
 							/>
 						</Link>

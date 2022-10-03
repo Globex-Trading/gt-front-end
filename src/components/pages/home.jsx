@@ -137,13 +137,11 @@ const Home = () => {
 							<div className="single-promo color-2 bg-hover active hover-bottom text-center p-5">
 								<div className="mb-3 h1 font-weight-bold">Technical Indicators</div>
 								<p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                            Aspernatur provident unde ex eligendi magni sit impedit iusto,
-                                            sed ad fuga minima,
-									<strong>dignissimos ducimus autem</strong> molestias, nostrum
-                                            nesciunt enim? Ea, non hic voluptates dolorum impedit eveniet
-                                            dolorem temporibus illo incidunt quis minima facere doloribus
-                                            sit maiores, blanditiis labore quasi, accusantium quaerat!
+									Technical indicators are used by traders to gain insight into the supply
+									and demand of securities and market psychology. Together, these indicators
+									form the basis of technical analysis. Metrics, such as trading volume, provide
+									clues as to whether a price move will continue. In this way, indicators can be used
+									to generate buy and sell signals.
 								</p>
 							</div>
 						</div>
@@ -152,13 +150,11 @@ const Home = () => {
 							<div className="single-promo color-3 bg-hover hover-bottom text-center p-5">
 								<div className="mb-3 h1 font-weight-bold">Price <br/>Alerts</div>
 								<p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                            Aspernatur provident unde ex eligendi magni sit impedit iusto,
-                                            sed ad fuga minima, dignissimos ducimus autem molestias, nostrum
-                                            nesciunt enim? Ea, non hic voluptates
-									<strong>dolorum impedit eveniet dolorem temporibus</strong>
-                                            illo incidunt quis minima facere doloribus sit maiores,
-                                            blanditiis labore quasi, accusantium quaerat!
+                                           We provide the functionality to set price alerts for any cryptocurrency
+											trading data. Once you add a price alert it checks with the actual price
+											then notify using notification you if the price is reached. This feature helps you to
+											keep touch in with the your trades and doing some another work without any worry!. To use
+											the feature you have to register first.
 								</p>
 							</div>
 						</div>

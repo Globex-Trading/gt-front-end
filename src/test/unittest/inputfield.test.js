@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { render, fireEvent, screen } from '@testing-library/react';
-import InputField from '../../common/inputField';
+import InputField from '../../components/common/inputField';
 
 
 //test block

@@ -1,6 +1,6 @@
 /* eslint-disable */ 
 import { render, fireEvent, screen } from '@testing-library/react';
-import Counter from '../common/Counter';
+import Counter from '../components/common/Counter';
 import {shallow} from 'enzyme';
 
 

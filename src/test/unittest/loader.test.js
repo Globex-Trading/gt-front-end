@@ -1,6 +1,6 @@
 /* eslint-disable */ 
 import { render, fireEvent, screen } from '@testing-library/react';
-import PreLoader from '../../common/loader';
+import PreLoader from '../../components/common/loader';
 
 
 

@@ -9,8 +9,7 @@ const Header = () => {
 	
 	const {state} = useContext(store);
 	const {user} = state;
-	console.log(state, '###############');
-	
+
 	return (
 		<Fragment>
 			<header id="header" data-testid="hd">

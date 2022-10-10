@@ -78,11 +78,14 @@ const Register = () => {
 
 	const handleSubmit = async() => {
 		setIsLoading(true);
-		const {error} = validateSchema.validate({firstname, lastname, email, password, confirmPassword});
+		const {error} = validateSchema.validate({firstname, lastname, email, password, confirmPassword}, {abortEarly: false});
 		if (error) {
+			console.log('erros', error.details);
+			let tempErrors = {};
 			error.details.forEach((item) => {
-				setErrors({...errors, [item.path[0]]: item.message});
+				tempErrors[item.path[0]] = item.message;
 			});
+			setErrors({...errors, ...tempErrors});
 		}else {
 			const response = await register({first_name: firstname, last_name: lastname, email: email, password: password, user_type: userType});
 			if (response) {

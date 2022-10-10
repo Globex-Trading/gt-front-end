@@ -24,17 +24,12 @@ function App() {
 	//get user details if user is logged in
 	const getUserDetails = async () => {
 		const user = await getUser();
-		console.log(user, '+++++++++++++++++++++++++++++++++');
 		return user;
 	};
 
 	//set up a context store
 	const initialState = {user: user};
-
-	console.log('App.js', initialState);
-
 	store = createContext(initialState);
-
 	const {Provider} = store;
 
 	//set up a reducer

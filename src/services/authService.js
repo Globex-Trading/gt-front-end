@@ -38,6 +38,7 @@ function saveUser(response) {
 //logout user
 export function logout() {
 	localStorage.removeItem('user_token');
+	localStorage.removeItem('user');
 }
 
 //get user details

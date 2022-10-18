@@ -1,9 +1,12 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import PreLoader from '../common/loader';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { StoreContext } from '../common/stateProvider';
 
 const Home = () => {
 	const [isLoading, setIsLoading] = React.useState(true);
+
+	const { state, dispatch } = React.useContext(StoreContext);
 
 	useEffect(() => {
 		setInterval(() => {
@@ -28,22 +31,28 @@ const Home = () => {
 						<div className="col-12 col-md-7">
 							<div className="welcome-intro text-left">
 								<h1 className="text-white">
-                                            We Visualize. <br/> You Make <span className='color-3'>Decisions</span>.
+                  We Visualize. <br /> You Make{' '}
+									<span className="color-3">Decisions</span>.
 								</h1>
 								<p className="text-white my-4">
-                                            Globex Trading is a market data exploration application that helps traders to
-									make their decisions on trading pairs. Globex Trading make that easy with technical indicators and price alerts.
+                  Globex Trading is a market data exploration application that
+                  helps traders to make their decisions on trading pairs. Globex
+                  Trading make that easy with technical indicators and price
+                  alerts.
 								</p>
 								{/* Buttons */}
 								<div className="button-group">
-									<Link to="/chart" className="btn btn-bordered-white font-weight-bold">
-                                                Charts
+									<Link
+										to="/chart"
+										className="btn btn-bordered-white font-weight-bold"
+									>
+                    Charts
 									</Link>
 									<Link
 										to="/register"
 										className="btn btn-bordered-white d-none d-sm-inline-block font-weight-bold"
 									>
-                                                Register
+                    Register
 									</Link>
 								</div>
 							</div>
@@ -122,39 +131,50 @@ const Home = () => {
 						<div className="col-12 col-md-6 col-lg-4 res-margin">
 							{/* Single Promo */}
 							<div className="single-promo color-1 bg-hover hover-bottom text-center p-5">
-								<div className="mb-3 h1 font-weight-bold">Visualize Trading Data</div>
+								<div className="mb-3 h1 font-weight-bold">
+                  Visualize Trading Data
+								</div>
 								<p>
-									<strong>Visualizing</strong> the data is the best way to understand the data,
-											and make decisions on the data. We provide a variety of ways to
-											visualize the trading data, including candlestick charts, and line charts.
-											As a trader you can use these charts to make decisions on your trades.
-											And it will help you to understand the data better. Happy Trading!
+									<strong>Visualizing</strong> the data is the best way to
+                  understand the data, and make decisions on the data. We
+                  provide a variety of ways to visualize the trading data,
+                  including candlestick charts, and line charts. As a trader you
+                  can use these charts to make decisions on your trades. And it
+                  will help you to understand the data better. Happy Trading!
 								</p>
 							</div>
 						</div>
 						<div className="col-12 col-md-6 col-lg-4 res-margin">
 							{/* Single Promo */}
 							<div className="single-promo color-2 bg-hover active hover-bottom text-center p-5">
-								<div className="mb-3 h1 font-weight-bold">Technical Indicators</div>
+								<div className="mb-3 h1 font-weight-bold">
+                  Technical Indicators
+								</div>
 								<p>
-									Technical indicators are used by traders to gain insight into the supply
-									and demand of securities and market psychology. Together, these indicators
-									form the basis of technical analysis. Metrics, such as trading volume, provide
-									clues as to whether a price move will continue. In this way, indicators can be used
-									to generate buy and sell signals.
+                  Technical indicators are used by traders to gain insight into
+                  the supply and demand of securities and market psychology.
+                  Together, these indicators form the basis of technical
+                  analysis. Metrics, such as trading volume, provide clues as to
+                  whether a price move will continue. In this way, indicators
+                  can be used to generate buy and sell signals.
 								</p>
 							</div>
 						</div>
 						<div className="col-12 col-md-6 col-lg-4">
 							{/* Single Promo */}
 							<div className="single-promo color-3 bg-hover hover-bottom text-center p-5">
-								<div className="mb-3 h1 font-weight-bold">Price <br/>Alerts</div>
+								<div className="mb-3 h1 font-weight-bold">
+                  Price <br />
+                  Alerts
+								</div>
 								<p>
-                                           We provide the functionality to set price alerts for any cryptocurrency
-											trading data. Once you add a price alert it checks with the actual price
-											then notify using notification you if the price is reached. This feature helps you to
-											keep touch in with the your trades and doing some another work without any worry!. To use
-											the feature you have to register first.
+                  We provide the functionality to set price alerts for any
+                  cryptocurrency trading data. Once you add a price alert it
+                  checks with the actual price then notify using notification
+                  you if the price is reached. This feature helps you to keep
+                  touch in with the your trades and doing some another work
+                  without any worry!. To use the feature you have to register
+                  first.
 								</p>
 							</div>
 						</div>
@@ -162,10 +182,8 @@ const Home = () => {
 				</div>
 			</section>
 
-
 			{/* ***** Promo Area End ***** */}
 			{/* ***** Content Area Start ***** */}
-
 
 			{/*		<section className="section content-area bg-grey ptb_150">*/}
 			{/*			/!* Shape Top *!/*/}
@@ -283,11 +301,9 @@ const Home = () => {
 			{/*				</svg>*/}
 			{/*			</div>*/}
 			{/*		</section>*/}
-			
 
 			{/* ***** Content Area End ***** */}
 			{/* ***** Content Area Start ***** */}
-
 
 			{/*<section className="section content-area ptb_150">*/}
 			{/*	<div className="container">*/}
@@ -447,10 +463,8 @@ const Home = () => {
 			{/*	</div>*/}
 			{/*</section>*/}
 
-
 			{/* ***** Content Area End ***** */}
 			{/* ***** Service Area End ***** */}
-
 
 			{/*		<section id="service" className="section service-area bg-grey ptb_150">*/}
 			{/*			/!* Shape Top *!/*/}
@@ -592,10 +606,8 @@ const Home = () => {
 			{/*			</div>*/}
 			{/*		</section>*/}
 
-			
 			{/* ***** Service Area End ***** */}
 			{/*====== Contact Area Start ======*/}
-
 
 			{/*<section id="contact" className="contact-area ptb_100">*/}
 			{/*	<div className="container">*/}
@@ -651,10 +663,8 @@ const Home = () => {
 			{/*	</div>*/}
 			{/*</section>*/}
 
-
 			{/*====== Contact Area End ======*/}
 			{/*====== Call To Action Area Start ======*/}
-
 
 			{/*<section className="section cta-area bg-overlay ptb_100">*/}
 			{/*	<div className="container">*/}
@@ -683,10 +693,8 @@ const Home = () => {
 			{/*	</div>*/}
 			{/*</section>*/}
 
-
 			{/*====== Call To Action Area End ======*/}
 			{/*====== Footer Area Start ======*/}
-
 
 			<footer className="section footer-area">
 				{/* Footer Top */}
@@ -846,7 +854,7 @@ const Home = () => {
 								<div className="copyright-area d-flex flex-wrap justify-content-center justify-content-sm-between text-center py-4">
 									{/* Copyright Left */}
 									<div className="copyright-left font-weight-bold">
-                                                © Copyrights 2022 Globex Trading All rights reserved.
+                    © Copyrights 2022 Globex Trading All rights reserved.
 									</div>
 									{/* Copyright Right */}
 									{/*<div className="copyright-right">*/}
@@ -865,7 +873,7 @@ const Home = () => {
 				<div className="modal-dialog dialog-animated">
 					<div className="modal-content h-100">
 						<div className="modal-header" data-dismiss="modal">
-                                    Search <i className="far fa-times-circle icon-close" />
+              Search <i className="far fa-times-circle icon-close" />
 						</div>
 						<div className="modal-body">
 							<form className="row">
@@ -873,11 +881,11 @@ const Home = () => {
 									<div className="row">
 										<div className="col-12 pb-3">
 											<h2 className="search-title mb-3">
-                                                        What are you looking for?
+                        What are you looking for?
 											</h2>
 											<p>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                        Praesent diam lacus, dapibus sed imperdiet consectetur.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Praesent diam lacus, dapibus sed imperdiet consectetur.
 											</p>
 										</div>
 									</div>
@@ -907,7 +915,7 @@ const Home = () => {
 				<div className="modal-dialog dialog-animated">
 					<div className="modal-content h-100">
 						<div className="modal-header" data-dismiss="modal">
-                                    Menu <i className="far fa-times-circle icon-close" />
+              Menu <i className="far fa-times-circle icon-close" />
 						</div>
 						<div className="menu modal-body">
 							<div className="row w-100">
@@ -917,8 +925,6 @@ const Home = () => {
 					</div>
 				</div>
 			</div>
-
-
 		</React.Fragment>
 	);
 };

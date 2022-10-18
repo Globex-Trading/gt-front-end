@@ -5,12 +5,21 @@ import PreLoader from './loader';
 
 let chart;
 let chartInstance;
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STARTING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+let volumeInstance;
 
 const Chart = (props) => {
 	const [isLoading, setIsLoading] = React.useState(true);
 
+	const [TACarts, setTACarts] = React.useState({});
+
+	const [currPane, setCurrPane] = React.useState(0);
+
 	const chartContainerRef = useRef();
+
+	const addSeriesFunction = {
+		candleStick: 'addCandlestickSeries',
+		line: 'addLineSeries'
+	};
 
 	//useEffect for create the chart
 	useEffect(() => {
@@ -24,16 +33,15 @@ const Chart = (props) => {
 					timeVisible: true,
 					secondsVisible: true,
 				},
-				rightPriceScale: {
-					autoScale: true,
+				layout: {
+					backgroundColor: '#f3f3f3',
+					textColor: '#0e416b',
 				},
-				baseLineOptions: {
-					lastPriceAnimation: true,
-				}
+				pane: 0
 			}
 		);
 
-		chart.timeScale().fitContent();
+		// chart.timeScale().fitContent();
 
 		return () => {
 			chart = null;
@@ -47,22 +55,29 @@ const Chart = (props) => {
 
 		setIsLoading(true);
 
-		const addSeriesFunction = {
-			candleStick: 'addCandlestickSeries',
-			line: 'addLineSeries'
-		};
 
 		const func = addSeriesFunction[props.chartType];
 
 		if (chartInstance) {
 			chart.removeSeries(chartInstance);
+			chart.removeSeries(volumeInstance);
 		}
 
 		chartInstance = chart[func]();
+		volumeInstance = chart.addHistogramSeries({
+			priceFormat: {
+				type: 'volume',
+			},
+			priceScaleId: '',
+			scaleMargins: {
+				top: 0.8,
+				bottom: 0,
+			},
+		});
 
 		if(props.initData && props.isUpdate) {
-
-			chartInstance.setData(reFormatPastData(props.initData));
+			chartInstance.setData(reFormatPastData(props.initData, props.chartType));
+			volumeInstance.setData(reFormatPastData(props.initData, 'volume'));
 			props.setIsUpdate(false);
 		}
 
@@ -70,34 +85,77 @@ const Chart = (props) => {
 
 	}, [props.chartType, props.interval, props.tradingPair, props.initData]);
 
+	useEffect(() => {
+
+
+		props.TIdata.forEach((item) => {
+			if(!(item in TACarts)) {
+				const TA = findTA(item.name);
+				if(TA) {
+					let pane = currPane;
+					if (TA.newPane) pane = pane + 1;
+					setCurrPane(pane);
+					const chartFunc = addSeriesFunction[TA.chartType];
+					const TAInstance = chart[chartFunc]({
+						color: 'green',
+						lineWidth: 1,
+						pane: 1
+
+					});
+					const data = reFormatPastData(item.data, TA.chartType, TA.name);
+					data.filter((item) => item.value !== '');
+					TAInstance.setData(data);
+					setTACarts({...TACarts, [item.name]: TAInstance});
+					console.log('chart added');
+				}
+			}
+		});
+
+
+	}, [props.TIdata]);
+
+	useEffect(() => {
+		const keyList = TACarts ? Object.keys(TACarts) : [];
+		keyList.forEach((key) => {
+			if(!(key in props.TIdata)) {
+				chart.removeSeries(TACarts[key]);
+				delete TACarts[key];
+			}
+		});
+	}, [props.selectedTAs]);
+
 
 	//useEffect for update the chart data for realtime data
 	useEffect(() => {
-		console.log('#################', chart.timeScale().getVisibleLogicalRange());
 
-		if (props.lastData) chartInstance.update(reFormatData(props.lastData));
+		if (props.lastData) {
+			chartInstance.update(reFormatData(props.lastData, props.chartType));
+			volumeInstance.update(reFormatData(props.lastData, 'volume'));
+		}
 
 	}, [props.lastData]);
 
-	// useEffect(() => {
-	// 	const handler = () => {
-	// 		chart.resize(chartContainerRef.current.offsetWidth, 500);
-	// 	};
-	// 	window.addEventListener('resize', handler);
-	// 	return () => {
-	// 		window.removeEventListener('resize', handler);
-	// 	};
-	// }, );
+	const findTA = (name) => {
+
+		for (let i = 0 ; i < props.techIndicators.length; i++) {
+			if(props.techIndicators[i].name === name) {
+				console.log('adding tech indicators', props.techIndicators[i], name);
+				return props.techIndicators[i];
+			}
+		}
+
+		return null;
+
+	};
 
 	//reformat the incoming data to match the chart data format
-	const reFormatData = (tradingData) => {
+	const reFormatData = (tradingData, chartType) => {
 		let chartData = {};
-		switch (props.chartType) {
+		switch (chartType) {
 		case('candleStick'):
 
-
 			chartData = {
-				time: tradingData.openTime/1000 + 19800,
+				time: tradingData.openTime / 1000 + 19800,
 				open: tradingData.openPrice,
 				high: tradingData.highPrice,
 				low: tradingData.lowPrice,
@@ -106,23 +164,28 @@ const Chart = (props) => {
 			break;
 		case('line'):
 			chartData = {
-				time: tradingData.openTime/1000 + 19800,
+				time: tradingData.openTime / 1000 + 19800,
 				value: tradingData.closePrice
 			};
 			break;
+		case('volume'):
+			chartData = {
+				time: tradingData.openTime / 1000 + 19800,
+				value: tradingData.volume
+			};
 		}
 		return chartData;
 	};
 
 	//reformat the incoming data to match the chart data format
-	const reFormatPastData = (tradingDataList) => {
+	const reFormatPastData = (tradingDataList, chartType, dataType = 'normal') => {
 		let chartData = [];
 
-		switch (props.chartType) {
+		switch (chartType) {
 		case('candleStick'):
 			tradingDataList.map(tradingData => {
 				let data = {
-					time: tradingData.open_time/1000 + 19800,
+					time: tradingData.open_time / 1000 + 19800,
 					open: tradingData.open_price,
 					high: tradingData.high_price,
 					low: tradingData.low_price,
@@ -133,14 +196,30 @@ const Chart = (props) => {
 			break;
 		case('line'):
 			tradingDataList.map(tradingData => {
-				let data = {
-					time: tradingData.open_time/1000 + 19800,
-					value: tradingData.close_price
-				};
-
+				let data = {};
+				if (dataType !== 'normal') {
+					data = {
+						time: tradingData.doc.open_time / 1000 + 19800,
+						value: tradingData[dataType]
+					};
+				} else {
+					data = {
+						time: tradingData.open_time / 1000 + 19800,
+						value: tradingData.close_price
+					};
+				}
 				chartData.push(data);
 			});
 			break;
+		case('volume'):
+			tradingDataList.map(tradingData => {
+				let data = {
+					time: tradingData.open_time / 1000 + 19800,
+					value: tradingData.volume,
+					color: tradingData.open_price < tradingData.close_price ? '#26a69a' : '#ef5350'
+				};
+				chartData.push(data);
+			});
 		}
 		return chartData;
 	};
@@ -148,7 +227,10 @@ const Chart = (props) => {
 	return (
 		<Fragment>
 			<PreLoader isLoading={isLoading} />
-			<div style={{bottom: '0', right: '0'}} ref={chartContainerRef}/>
+			<div className="px-5
+			">
+				<div style={{bottom: '0', right: '0'}} ref={chartContainerRef}/>
+			</div>
 		</Fragment>
 
 	);

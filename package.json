@@ -12,6 +12,7 @@
     "joi": "^17.6.1",
     "json-loader": "^0.5.7",
     "lightweight-charts": "^3.8.0",
+    "material-icons": "^1.12.0",
     "net": "^1.0.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",

@@ -1,17 +1,16 @@
-import React, {useContext, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {logout} from '../../services/authService';
-import {store} from '../../App';
+import React, { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../services/authService';
+import { StoreContext } from '../common/stateProvider';
 
 const Logout = () => {
-
-	const {dispatch} = useContext(store);
+	const {state, setState } = useContext(StoreContext);
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		logout();
-		dispatch({type: 'REMOVE_USER'});
+		setState({...state, ['user']: null});
 		navigate('/');
 	}, []);
 

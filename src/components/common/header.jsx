@@ -1,14 +1,15 @@
-import React, {Fragment, useContext, useEffect} from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import AOS from 'aos';
-import {Link} from 'react-router-dom';
-import {store} from '../../App';
+import { Link } from 'react-router-dom';
+import { StoreContext } from './stateProvider';
+import 'material-icons/iconfont/material-icons.css';
 
 AOS.init();
 
 const Header = () => {
-	
-	const {state} = useContext(store);
-	const {user} = state;
+	const { state, setState } = useContext(StoreContext);
+	let user = null;
+	if (state) user = state.user;
 
 	return (
 		<Fragment>
@@ -24,12 +25,14 @@ const Header = () => {
 						<Link className="navbar-brand p-2" to="/">
 							<img
 								className="navbar-brand-regular globex-logo"
-								src="assets/img/logo/GLOBEX-1.png"
+								src={process.env.PUBLIC_URL + '/assets/img/logo/GLOBEX-1.png'}
 								alt="brand-logo"
 							/>
 							<img
 								className="navbar-brand-sticky globex-logo"
-								src="assets/img/logo/GLOBEX-1-white.png"
+								src={
+									process.env.PUBLIC_URL + '/assets/img/logo/GLOBEX-1-white.png'
+								}
 								alt="sticky brand-logo"
 							/>
 						</Link>
@@ -38,13 +41,13 @@ const Header = () => {
 
 						<ul className="navbar-nav items">
 							<li className="nav-item">
-								<Link className="nav-link" to="/" >
-									Home
+								<Link className="nav-link" to="/">
+                  Home
 								</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" to="/" >
-									About Us
+								<Link className="nav-link" to="/">
+                  About Us
 								</Link>
 							</li>
 							{/*	<li className="nav-item dropdown">*/}
@@ -79,13 +82,36 @@ const Header = () => {
 							{/*		</ul>*/}
 							{/*	</li>*/}
 							<li className="nav-item">
-								<Link to='/chart' className='nav-link' >Charts</Link>
+								<Link to="/chart" className="nav-link">
+                  Charts
+								</Link>
 							</li>
 							<li className="nav-item">
-								<a href="services.html" className="nav-link">
-                                    Services
-								</a>
+								<Link to="/services" className="nav-link">
+                  Services
+								</Link>
 							</li>
+
+							{!user &&
+							<li className="nav-item dropdown">
+								<div className="nav-link cursor-1">
+									Profile
+								</div>
+								<ul className='dropdown-menu'>
+									<li className="nav-item">
+										<Link to="/" className="nav-link">
+											Profile Details
+										</Link>
+									</li>
+									<hr/>
+									<li className="nav-item">
+										<Link to="/profile/watchlist" className="nav-link">
+											Watchlist
+										</Link>
+									</li>
+								</ul>
+							</li>
+							}
 						</ul>
 						{/* Navbar Icons */}
 						{/*<ul className="navbar-nav icons">*/}
@@ -124,20 +150,20 @@ const Header = () => {
 							</li>
 						</ul>
 						{/* Navbar Action Button */}
-						{!user && (
+						{user && (
 							<ul className="navbar-nav action">
 								<li className="nav-item ml-3">
 									<Link to='/login' className='btn ml-lg-auto btn-bordered-white'>Login</Link>
 								</li>
 							</ul>
 						)}
-						{user && (
-							<ul className="navbar-nav action">
-								<li className="nav-item ml-3">
-									<Link to='/logout' className='btn ml-lg-auto btn-bordered-white'>Logout</Link>
-								</li>
-							</ul>
-						)}
+						{/*{user && (*/}
+						{/*	<ul className="navbar-nav action">*/}
+						{/*		<li className="nav-item ml-3">*/}
+						{/*			<Link to='/logout' className='btn ml-lg-auto btn-bordered-white'>Logout</Link>*/}
+						{/*		</li>*/}
+						{/*	</ul>*/}
+						{/*)}*/}
 					</div>
 				</nav>
 			</header>

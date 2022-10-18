@@ -20,12 +20,15 @@ export async function getPastTradingData(data) {
 //get available symbols
 export async function getAvailableSymbols() {
 	console.log(apiUrl);
+	try{
+		return await axios.get(
+			apiUrl + '/symbols'
+		);
+	}catch (error) {
+		console.log(error);
+		return null;
+	}
 
-	const response = await axios.get(
-		apiUrl + '/symbols'
-	);
-	console.log(response, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
-	return response;
 }
 
 //get available provider
@@ -65,4 +68,18 @@ export async function getExistingAlertsByUserID(userID) {
 	);
 	console.log(response);
 	return response;
+}
+
+//get technical indicators
+export async function getTechnicalIndicators(data) {
+	return await axios.post(
+		apiUrl + '/indicators/',
+		data
+	);
+}
+//get indicator list
+export async function getIndicatorList() {
+	return await axios.get(
+		apiUrl + '/indicators'
+	);
 }

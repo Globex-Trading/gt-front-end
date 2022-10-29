@@ -19,6 +19,7 @@ export const requestToken = async() => {
 			vapidKey: 'BC9YjcLJcCIpYizlPHB-GiiBPGQp4y_D9ir-NVioliklQjZRJIP84rVhPl48-jLSdenBHf4uCpSevJ7SbUE1w-8',
 		});
 		localStorage.setItem('fcm_token', token);
+		console.log('firebase-token', token);
 		console.log('[firebase-config.js] Token: ', token);
 	} catch (error) {
 		console.log(error);

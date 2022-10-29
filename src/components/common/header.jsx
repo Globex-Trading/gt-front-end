@@ -92,7 +92,7 @@ const Header = () => {
 								</Link>
 							</li>
 
-							{!user &&
+							{user &&
 							<li className="nav-item dropdown">
 								<div className="nav-link cursor-1">
 									Profile
@@ -150,7 +150,7 @@ const Header = () => {
 							</li>
 						</ul>
 						{/* Navbar Action Button */}
-						{user && (
+						{!user && (
 							<ul className="navbar-nav action">
 								<li className="nav-item ml-3">
 									<Link to='/login' className='btn ml-lg-auto btn-bordered-white'>Login</Link>

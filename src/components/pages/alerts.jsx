@@ -10,7 +10,7 @@ import InputField from '../common/inputField';
 
 let watchListData = {};
 
-const Watchlist = () => {
+const Alerts = () => {
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [isUpdate, setIsUpdate] = useState(false);
@@ -54,7 +54,7 @@ const Watchlist = () => {
 
 	setInterval(() => setIsUpdate(!isUpdate), 1000);
 
-	
+
 	useEffect(() => {
 		if (stompClient) {
 			watchlist.forEach((item) => {
@@ -137,19 +137,19 @@ const Watchlist = () => {
 					<div className='container'>
 						<div className='row p-5 text-white'>
 							<div className='col-6 d-flex d-flex justify-content-end'>
-								<div className='font-weight-bold h6 bg-color-3 rounded p-2 cursor-1 w-50' onClick={()=> handleShow({type: 'add', name: 'Add Symbol'})}>Add Symbol</div>
+								<div className='font-weight-bold h6 bg-color-3 rounded p-2 cursor-1 w-50' onClick={()=> handleShow({type: 'add', name: 'Add Symbol'})}>Add Alert</div>
 							</div>
 							<div className='col-6'>
-								<div className='font-weight-bold h6	bg-color-3 rounded p-2 cursor-1 w-50' onClick={()=> handleShow({type: 'remove', name: 'Remove Symbol'})}>Remove Symbol</div>
+								<div className='font-weight-bold h6	bg-color-3 rounded p-2 cursor-1 w-50' onClick={()=> handleShow({type: 'remove', name: 'Remove Symbol'})}>Remove Alert</div>
 							</div>
 						</div>
 						<Table striped bordered hover>
 							<thead>
 								<tr>
 									<th>Symbol</th>
-									<th>Last value</th>
-									<th>Change</th>
-									<th>Change %</th>
+									<th>Alert Price</th>
+									<th>Current Price</th>
+									<th>Status</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -198,7 +198,7 @@ const Watchlist = () => {
 					</Modal.Body>
 					<Modal.Footer>
 						<Button variant="secondary" onClick={handleClose}>
-							Close
+                            Close
 						</Button>
 						<Button
 							variant="primary"
@@ -213,4 +213,4 @@ const Watchlist = () => {
 	);
 };
 
-export default Watchlist;
+export default Alerts;

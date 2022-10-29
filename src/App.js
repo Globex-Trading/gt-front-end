@@ -14,6 +14,8 @@ import StateProvider from './components/common/stateProvider';
 import Watchlist from './components/pages/watchlist';
 import Page404 from './components/pages/404';
 import ProtectedRoute from './components/common/protectedRoute';
+import Profile from './components/pages/profile';
+import Alerts from './components/pages/alerts';
 
 // let user;
 // let store;
@@ -63,8 +65,14 @@ function App() {
 						<Header/>
 						<Routes>
 							<Route path="/register" element={<Register/>}/>
+							<Route path="/profile/alerts" element={<ProtectedRoute/>}>
+								<Route path="/profile/alerts" element={<Alerts/>}/>
+							</Route>
 							<Route path="/profile/watchlist" element={<ProtectedRoute/>}>
 								<Route path="/profile/watchlist" element={<Watchlist/>}/>
+							</Route>
+							<Route path="/profile" element={<ProtectedRoute/>}>
+								<Route path="/profile" element={<Profile/>}/>
 							</Route>
 							<Route path="/logout" element={<Logout/>}/>
 							<Route path="/login" element={<Login/>}/>
@@ -73,7 +81,7 @@ function App() {
 							<Route path="*" element={<Page404/>}/>
 						</Routes>
 					</div>
-					{/*<PushNotification/>*/}
+					<PushNotification/>
 				</div>
 			</BrowserRouter>
 		</StateProvider>

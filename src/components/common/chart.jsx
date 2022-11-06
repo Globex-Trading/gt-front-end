@@ -227,7 +227,7 @@ const Chart = (props) => {
 	return (
 		<Fragment>
 			<PreLoader isLoading={isLoading} />
-			<div className="px-5
+			<div data-testid={'chart'} className="px-5
 			">
 				<div style={{bottom: '0', right: '0'}} ref={chartContainerRef}/>
 			</div>

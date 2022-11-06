@@ -13,7 +13,7 @@ const Header = () => {
 
 	return (
 		<Fragment>
-			<header id="header" data-testid="hd">
+			<header data-testid='header' id="header">
 				{/* Navbar */}
 				<nav
 					data-aos="zoom-out"

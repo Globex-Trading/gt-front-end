@@ -34,6 +34,7 @@ const PushNotification = () => {
 	return(
 		<Fragment>
 			<Toaster
+				data-testid="toaster"
 				position="top-right"
 				reverseOrder={false}
 			/>

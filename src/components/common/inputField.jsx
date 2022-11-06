@@ -3,7 +3,7 @@ import {FloatingLabel, Form} from 'react-bootstrap';
 
 const InputField = (props) => {
 	return (
-		<div className="form-outline mb-4">
+		<div className="form-outline mb-4" data-testid='input-field'>
 			<label data-testid="label" className={'form-label text-left label-font' + props.labelStyle} htmlFor={props.name}>{props.label}</label>
 			<input data-testid="inputs"
 				type={props.type}

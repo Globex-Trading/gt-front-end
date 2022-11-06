@@ -4,6 +4,7 @@ const Page404 = () => {
 	return (
 		<Fragment>
 			<section
+				data-testid={'page404'}
 				id="login"
 				className="section welcome-area login-styles overflow-hidden d-flex align-items-center"
 			>

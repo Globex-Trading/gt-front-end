@@ -75,7 +75,7 @@ const Alerts = () => {
 				setSubscriptions({...subscriptions, [symbol]: message.headers.subscription});
 			}
 			watchListData = {...watchListData, [symbol]: tradingData};
-			console.log(tradingData);
+			// console.log(tradingData);
 		});
 	};
 
@@ -83,7 +83,7 @@ const Alerts = () => {
 		const userId = localStorage.getItem('userId');
 		try{
 			const watchlist = await getWatchList(userId);
-			console.log(watchlist);
+			// console.log(watchlist);
 		}catch (e) {
 			console.log(e);
 		}
@@ -122,7 +122,7 @@ const Alerts = () => {
 	const handleSubmit = () => {
 		setShow(false);
 		setSelectedValue([]);
-		console.log('ddddd');
+		// console.log('ddddd');
 	};
 
 
@@ -132,6 +132,7 @@ const Alerts = () => {
 			<section
 				id="watchlist"
 				className="section bg-overlay overflow-hidden"
+				data-testid={'alerts'}
 			>
 				<div className='watchlist-container d-flex justify-content-center'>
 					<div className='container'>

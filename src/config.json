@@ -1,4 +1,4 @@
 {
-  "apiURL": "https://www.teamone.shop:3000",
+  "apiURL": "http://localhost:3000",
   "wsURL": "https://www.teamone.shop:8080/ws"
 }

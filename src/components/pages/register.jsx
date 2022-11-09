@@ -98,13 +98,14 @@ const Register = () => {
 					console.log('error-------------', response);
 					toast.error('Registration failed');
 					console.log('error');
+					setIsLoading(false);
 				}
 			}catch(err){
 				console.log('err', err);
 				toast.error('Registration failed');
+				setIsLoading(false);
 			}
 		}
-		setIsLoading(false);
 	};
 
 	return (

@@ -92,14 +92,14 @@ const Header = () => {
 								</Link>
 							</li>
 
-							{user &&
+							{!user &&
 							<li className="nav-item dropdown">
 								<div className="nav-link cursor-1">
 									Profile
 								</div>
 								<ul className='dropdown-menu'>
 									<li className="nav-item">
-										<Link to="/" className="nav-link">
+										<Link to="/profile" className="nav-link">
 											Profile Details
 										</Link>
 									</li>

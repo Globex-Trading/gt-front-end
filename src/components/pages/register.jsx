@@ -87,15 +87,21 @@ const Register = () => {
 			});
 			setErrors({...errors, ...tempErrors});
 		}else {
-			const response = await register({first_name: firstname, last_name: lastname, email: email, password: password, user_type: userType});
-			if (response) {
-				toast.success('Registration successful');
-				console.log('success');
-				navigate('/login');
-			}
-			else {
+			try{
+				const response = await register({first_name: firstname, last_name: lastname, email: email, password: password, user_type: userType});
+				if (response.status === 201) {
+					toast.success('Registration successful');
+					console.log('success');
+					navigate('/login');
+				}
+				else {
+					console.log('error-------------', response);
+					toast.error('Registration failed');
+					console.log('error');
+				}
+			}catch(err){
+				console.log('err', err);
 				toast.error('Registration failed');
-				console.log('error');
 			}
 		}
 		setIsLoading(false);

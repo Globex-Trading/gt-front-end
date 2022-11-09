@@ -9,6 +9,7 @@ import {Button, Modal} from 'react-bootstrap';
 import InputField from '../common/inputField';
 
 let watchListData = {};
+let subs = [];
 
 const Watchlist = () => {
 
@@ -19,11 +20,13 @@ const Watchlist = () => {
 			_id: 1,
 			name: 'BTCUSDT',
 			provider: 'binance',
+			symbol: 'BTCUSDT',
 		},
 		{
 			_id: 2,
 			name: 'ETHUSDT',
 			provider: 'binance',
+			symbol: 'ETHUSDT',
 		},
 	]);
 	// const [watchListData, setWatchListData] = useState({});
@@ -32,6 +35,7 @@ const Watchlist = () => {
 	const [show, setShow] = useState(false);
 	const [modalType, setModalType] = useState({});
 	const [selectedValue, setSelectedValue] = useState([]);
+	// const [subs, setSubs] = useState([]);
 
 	const {state} = useContext(StoreContext);
 
@@ -49,6 +53,13 @@ const Watchlist = () => {
 		setTimeout(() => {
 			setIsLoading(false);
 		}, 2000);
+
+		return () => {
+			console.log('unmounting---------------------------------------------------------------', subs);
+			subs.forEach( (sub) => {
+				sub.unsubscribe();
+			});
+		};
 
 	}, []);
 
@@ -69,7 +80,7 @@ const Watchlist = () => {
 	}, [stompClient, watchlist]);
 
 	const subscribeToTopic = (topic, symbol) => {
-		stompClient?.subscribe(topic, (message) => {
+		const sub = stompClient?.subscribe(topic, (message) => {
 			const tradingData = JSON.parse(message.body);
 			if (!(symbol in subscriptions)) {
 				setSubscriptions({...subscriptions, [symbol]: message.headers.subscription});
@@ -77,6 +88,8 @@ const Watchlist = () => {
 			watchListData = {...watchListData, [symbol]: tradingData};
 			console.log(tradingData);
 		});
+
+		subs.push(sub);
 	};
 
 	const getWatchlist = async () => {
@@ -158,9 +171,9 @@ const Watchlist = () => {
 									return (
 										<tr key={item.id}>
 											<td className='text-black-50'>{item.name}</td>
-											<td className={data?.lastPrice < data?.openPrice ? 'text-success': 'text-danger'}>{data?.lastPrice}</td>
-											<td>{data?.priceChange}</td>
-											<td>{data?.priceChangePercent}</td>
+											<td>{data?.lastPrice}</td>
+											<td className={data?.priceChange < 0 ? 'text-danger': 'text-success'}>{data?.priceChange}</td>
+											<td className={data?.priceChange < 0 ? 'text-danger': 'text-success'}>{data?.priceChangePercent}</td>
 										</tr>
 									);
 								}

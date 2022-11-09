@@ -93,6 +93,7 @@ const Alerts = () => {
 		try {
 			const {data} = await getAvailableSymbols();
 			setTradingPairs(data);
+			console.log('trading pairs', data);
 		}catch (e) {
 			console.log(e);
 		}

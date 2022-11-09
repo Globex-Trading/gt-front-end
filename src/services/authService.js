@@ -20,7 +20,8 @@ export async function register(data) {
 		apiUrl + '/users',
 		data
 	);
-	return saveUser(response);
+	console.log('register', response);
+	return response;
 }
 
 //save user

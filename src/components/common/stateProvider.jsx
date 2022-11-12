@@ -3,14 +3,17 @@ import SockJS from 'sockjs-client';
 import config from '../../config.json';
 import { over } from 'stompjs';
 import { getUser } from '../../services/authService';
+import toast from 'react-hot-toast';
 
 const { wsURL } = config;
 const StoreContext = createContext({});
 
 const StateProvider = ({ children }) => {
-	const [state, setState] = useState({ user: null, stompClient: null });
+	// const [state, setState] = useState({ user: null, stompClient: null });
+	const [user, setUser] = useState(null);
+	const [stompClient, setStompClient] = useState(null);
 
-	console.log('state', state);
+	console.log('state--------------', user, stompClient);
 
 	// useEffect for create the websocket connection and fetch data
 	useEffect(() => {
@@ -21,21 +24,31 @@ const StateProvider = ({ children }) => {
 	}, []);
 
 	const onConnected = (client) => {
-		setState({ ...state, ['stompClient']: client });
+		// setState({ ...state, ['stompClient']: client });
+		setStompClient(client);
 	};
 
 	const onError = (error) => {
 		console.log('error occured', error);
-		setState({ ...state, ['stompClient']: null });
+		// setState({ ...state, ['stompClient']: null });
+		setStompClient(null);
 	};
 
 	const getUserDetails = async () => {
-		const user = await getUser();
-		setState({ ...state, [user]: user });
+		try{
+			const user = await getUser();
+			console.log('adding user details--------------------------------', user);
+			// setState({ ...state, ['user']: user });
+			setUser(user);
+		}catch(error){
+			console.log('error occured', error);
+			toast.error('Error occured!');
+		}
 	};
 
 	return (
-		<StoreContext.Provider value={{ state, setState }}>
+		// <StoreContext.Provider value={{ state, setState }}>
+		<StoreContext.Provider value={{ user, stompClient, setUser, setStompClient }}>
 			{children}
 		</StoreContext.Provider>
 	);

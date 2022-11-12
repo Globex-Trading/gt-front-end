@@ -62,10 +62,7 @@ const TradingChart = () => {
 
 	const [subscription, setSubscription] = useState(null);
 
-	const { state } = useContext(StoreContext);
-
-	const stompClient = state?.stompClient;
-	const user = state?.user;
+	const { stompClient, user } = useContext(StoreContext);
 
 	//useEffect for get initial data
 	useEffect(() => {
@@ -188,6 +185,9 @@ const TradingChart = () => {
 	const handleAddNewAlert = async () => {
 		setIsLoading(true);
 		const userID = localStorage.getItem('user_id');
+		if(!userID) {
+			toast.error('Somthing Went Wrong!, Please Login Again');
+		}
 		const alert = {
 			trigger_price: alertPrice,
 			symbol: selectedTradingPair._id,
@@ -389,7 +389,7 @@ const TradingChart = () => {
                     Alerts
 									</button>
 									<ul className="dropdown-menu">
-										<li className="dropdown-item" onClick={handleShow}>
+										<li className="dropdown-item" style={{cursor: 'pointer'}} onClick={handleShow}>
                       Add alert
 										</li>
 										<li>

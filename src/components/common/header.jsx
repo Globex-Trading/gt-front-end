@@ -7,9 +7,7 @@ import 'material-icons/iconfont/material-icons.css';
 AOS.init();
 
 const Header = () => {
-	const { state, setState } = useContext(StoreContext);
-	let user = null;
-	if (state) user = state.user;
+	const { user } = useContext(StoreContext);
 
 	return (
 		<Fragment>
@@ -18,11 +16,12 @@ const Header = () => {
 				<nav
 					data-aos="zoom-out"
 					data-aos-delay={800}
-					className="navbar navbar-expand"
+					className="navbar navbar-expand navbar-background"
+					// style={{backgroundColor: 'rgba(0, 0, 0, 0.25)'}}
 				>
 					<div className="container header">
 						{/* Navbar Brand*/}
-						<Link className="navbar-brand p-2" to="/">
+						<Link className="navbar-brand" to="/">
 							<img
 								className="navbar-brand-regular globex-logo"
 								src={process.env.PUBLIC_URL + '/assets/img/logo/GLOBEX-1.png'}
@@ -46,7 +45,7 @@ const Header = () => {
 								</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" to="/">
+								<Link className="nav-link" to="#about-us">
                   About Us
 								</Link>
 							</li>
@@ -86,16 +85,18 @@ const Header = () => {
                   Charts
 								</Link>
 							</li>
+							{user?.user_type === 'ADMIN' &&
 							<li className="nav-item">
-								<Link to="/services" className="nav-link">
-                  Services
+								<Link to="/stock-data" className="nav-link">
+									Upload
 								</Link>
 							</li>
+							}
 
-							{!user &&
+							{user &&
 							<li className="nav-item dropdown">
 								<div className="nav-link cursor-1">
-									Profile
+									Profile <i className="fas fa-angle-down ml-1" />
 								</div>
 								<ul className='dropdown-menu'>
 									<li className="nav-item">
@@ -107,6 +108,18 @@ const Header = () => {
 									<li className="nav-item">
 										<Link to="/profile/watchlist" className="nav-link">
 											Watchlist
+										</Link>
+									</li>
+									<hr/>
+									<li className="nav-item">
+										<Link to="/profile/alerts" className="nav-link">
+											Alerts
+										</Link>
+									</li>
+									<hr/>
+									<li className="nav-item">
+										<Link to="/logout" className="nav-link">
+											Logout
 										</Link>
 									</li>
 								</ul>

@@ -4,13 +4,14 @@ import { logout } from '../../services/authService';
 import { StoreContext } from '../common/stateProvider';
 
 const Logout = () => {
-	const {state, setState } = useContext(StoreContext);
+	const {setUser } = useContext(StoreContext);
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		logout();
-		setState({...state, ['user']: null});
+		// setState({...state, ['user']: null});
+		setUser(null);
 		navigate('/');
 	}, []);
 

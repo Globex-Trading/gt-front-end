@@ -78,10 +78,12 @@
 	$window.on('scroll', function () {
 		if ($(window).scrollTop() > 100) {
 			$('.navbar').addClass('navbar-sticky');
+			$('.navbar').removeClass('navbar-background');
 			$('.navbar .navbar-nav.action .btn').addClass('btn-bordered');
 			$('.navbar .navbar-nav.action .btn').removeClass('btn-bordered-white');
 		} else {
 			$('.navbar').removeClass('navbar-sticky');
+			$('.navbar').addClass('navbar-background');
 			$('.navbar .navbar-nav.action .btn').removeClass('btn-bordered');
 			$('.navbar .navbar-nav.action .btn').addClass('btn-bordered-white');
 		}

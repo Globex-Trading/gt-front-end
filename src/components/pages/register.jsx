@@ -112,7 +112,8 @@ const Register = () => {
 			<PreLoader isLoading={isLoading} />
 			<section
 				id="home"
-				className="section welcome-area bg-overlay overflow-hidden d-flex align-items-center"
+				className="section welcome-area overflow-hidden d-flex align-items-center"
+				style={{backgroundImage: 'url("assets/img/back3.webp")'}}
 			>
 				<div className="container register-container">
 					<div className="card bg-glass" style={{borderRadius: '3%'}}>

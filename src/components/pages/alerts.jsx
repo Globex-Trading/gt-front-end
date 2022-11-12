@@ -1,63 +1,49 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {getWatchList} from '../../services/profileService';
 import Table from 'react-bootstrap/Table';
 import PreLoader from '../common/loader';
 import {StoreContext} from '../common/stateProvider';
-import {sym} from 'enzyme/build/Utils';
-import {getAvailableSymbols} from '../../services/chartService';
-import {Button, Modal} from 'react-bootstrap';
-import InputField from '../common/inputField';
+import {getExistingAlertsByUserID} from '../../services/chartService';
+import toast from 'react-hot-toast';
 
-let watchListData = {};
+let alertData = {};
+let subs = [];
 
 const Alerts = () => {
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [isUpdate, setIsUpdate] = useState(false);
-	const [watchlist, setWatchlist] = useState([
-		{
-			_id: 1,
-			name: 'BTCUSDT',
-			provider: 'binance',
-		},
-		{
-			_id: 2,
-			name: 'ETHUSDT',
-			provider: 'binance',
-		},
-	]);
-	// const [watchListData, setWatchListData] = useState({});
 	const [subscriptions, setSubscriptions] = useState({});
-	const [tradingPairs, setTradingPairs] = useState([]);
-	const [show, setShow] = useState(false);
-	const [modalType, setModalType] = useState({});
-	const [selectedValue, setSelectedValue] = useState([]);
+	const [alerts, setAlerts] = useState([]);
+	const [isDeleteshow, setIsDeleteshow] = useState(false);
 
-	const {state} = useContext(StoreContext);
+	const {stompClient} = useContext(StoreContext);
 
-	const stompClient = state?.stompClient;
+	const userId = localStorage.getItem('user_id');
 
-	const funcMap = {
-		'add': tradingPairs,
-		'remove': watchlist
-	};
 
 	useEffect(() => {
 		setIsLoading(true);
-		getWatchlist();
-		getAvailableTradingPairs();
+		getExistingAlerts();
 		setTimeout(() => {
 			setIsLoading(false);
 		}, 2000);
 
+		return () => {
+			console.log('unmounting---------------------------------------------------------------', subs);
+			subs.forEach( (sub) => {
+				sub.unsubscribe();
+			});
+		};
+
+
 	}, []);
 
-	setInterval(() => setIsUpdate(!isUpdate), 1000);
+	// setInterval(() => setIsUpdate(!isUpdate), 1000);
 
 
 	useEffect(() => {
 		if (stompClient) {
-			watchlist.forEach((item) => {
+			alerts.forEach((item) => {
 				if (!(item in subscriptions)) {
 					const topic = '/topic/' + item.provider + '_' + item.symbol;
 					subscribeToTopic(topic, item.symbol);
@@ -66,64 +52,34 @@ const Alerts = () => {
 		}
 
 
-	}, [stompClient, watchlist]);
+	}, [stompClient, alerts]);
 
 	const subscribeToTopic = (topic, symbol) => {
-		stompClient?.subscribe(topic, (message) => {
+		const sub = stompClient?.subscribe(topic, (message) => {
 			const tradingData = JSON.parse(message.body);
 			if (!(symbol in subscriptions)) {
 				setSubscriptions({...subscriptions, [symbol]: message.headers.subscription});
 			}
-			watchListData = {...watchListData, [symbol]: tradingData};
-			// console.log(tradingData);
+			alertData = {...alertData, [symbol]: tradingData};
+			// console.log(alertData, '----------------------');
 		});
+
+		subs.push(sub);
 	};
 
-	const getWatchlist = async () => {
-		const userId = localStorage.getItem('userId');
-		try{
-			const watchlist = await getWatchList(userId);
-			// console.log(watchlist);
-		}catch (e) {
-			console.log(e);
-		}
-	};
 
-	const getAvailableTradingPairs = async() => {
+	const getExistingAlerts = async() => {
 		try {
-			const {data} = await getAvailableSymbols();
-			setTradingPairs(data);
-			console.log('trading pairs', data);
+			const {data} = await getExistingAlertsByUserID(userId);
+			if(data.status === 'SUCCESS'){
+				setAlerts(data.data);
+			}else {
+				toast.error(data.data);
+			}
 		}catch (e) {
 			console.log(e);
+			toast.error('Error occurred!');
 		}
-	};
-
-	const handleClose = () => {
-		setShow(false);
-	};
-
-	const handleShow = (value) => {
-		setModalType(value);
-		setShow(true);
-	};
-
-	const handleSelect = (e) => {
-		const checkList = [...selectedValue];
-		const value = e.target.value;
-		if (e.target.checked) {
-			checkList.push(value);
-		}else {
-			const index = checkList.indexOf(value);
-			checkList.splice(index, 1);
-		}
-		setSelectedValue(checkList);
-	};
-
-	const handleSubmit = () => {
-		setShow(false);
-		setSelectedValue([]);
-		// console.log('ddddd');
 	};
 
 
@@ -131,20 +87,12 @@ const Alerts = () => {
 		<Fragment>
 			<PreLoader isLoading={isLoading}/>
 			<section
-				id="watchlist"
+				id="alerts"
 				className="section bg-overlay overflow-hidden"
 				data-testid={'alerts'}
 			>
 				<div className='watchlist-container d-flex justify-content-center'>
 					<div className='container'>
-						<div className='row p-5 text-white'>
-							<div className='col-6 d-flex d-flex justify-content-end'>
-								<div className='font-weight-bold h6 bg-color-3 rounded p-2 cursor-1 w-50' onClick={()=> handleShow({type: 'add', name: 'Add Symbol'})}>Add Alert</div>
-							</div>
-							<div className='col-6'>
-								<div className='font-weight-bold h6	bg-color-3 rounded p-2 cursor-1 w-50' onClick={()=> handleShow({type: 'remove', name: 'Remove Symbol'})}>Remove Alert</div>
-							</div>
-						</div>
 						<Table striped bordered hover>
 							<thead>
 								<tr>
@@ -155,15 +103,20 @@ const Alerts = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{watchlist.map((item) => {
-									const data = watchListData[item.name];
+								{alerts.map((item) => {
+									const data = alertData[item.symbol];
+									// console.log(item);
 									return (
-										<tr key={item.id}>
-											<td className='text-black-50'>{item.name}</td>
-											<td className={data?.lastPrice < data?.openPrice ? 'text-success': 'text-danger'}>{data?.lastPrice}</td>
-											<td>{data?.priceChange}</td>
-											<td>{data?.priceChangePercent}</td>
+										<tr key={item.id} onMouseEnter={()=>setIsDeleteshow(true)} onMouseLeave={()=>setIsDeleteshow(false)}>
+											<td className='text-black-50'>{item.symbol}</td>
+											<td>{item.trigger_price}</td>
+											<td className={data?.priceChange>0 ? 'text-success': 'text-danger'}>{data?.lastPrice}</td>
+											<td >
+												<span className={item.is_triggered? 'bg-danger':'bg-success' + ' p-2 text-white rounded-lg'}>{item.is_triggered?'Triggered': 'Available'}</span>
+											</td>
+											
 										</tr>
+										
 									);
 								}
 								)}
@@ -171,45 +124,6 @@ const Alerts = () => {
 						</Table>
 					</div>
 				</div>
-			</section>
-			<section>
-				<Modal show={show} onHide={handleClose}>
-
-					<Modal.Body>
-						<form className="w-100">
-							{funcMap[modalType.type]?.length === 0 ? <div className='text-center'>No data</div> :
-								funcMap[modalType.type]?.map((item) => (
-									<div className="form-check" key={item._id}>
-										<input
-											type="checkbox"
-											className="form-check-input"
-											id={item._id}
-											name="option1"
-											onChange={handleSelect}
-										/>
-										<label
-											className="form-check-label"
-											htmlFor={item._id}
-										>
-											{item.name}
-										</label>
-									</div>
-								))
-							}
-						</form>
-					</Modal.Body>
-					<Modal.Footer>
-						<Button variant="secondary" onClick={handleClose}>
-                            Close
-						</Button>
-						<Button
-							variant="primary"
-							onClick={handleSubmit}
-						>
-							{modalType.name}
-						</Button>
-					</Modal.Footer>
-				</Modal>
 			</section>
 		</Fragment>
 	);

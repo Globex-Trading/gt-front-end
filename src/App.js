@@ -16,47 +16,9 @@ import Page404 from './components/pages/404';
 import ProtectedRoute from './components/common/protectedRoute';
 import Profile from './components/pages/profile';
 import Alerts from './components/pages/alerts';
-
-// let user;
-// let store;
+import FileUpload from './components/pages/fileUpload';
 
 function App() {
-
-	// useEffect(() => {
-	// 	user = getUserDetails();
-	// }, []);
-	//
-	// //get user details if user is logged in
-	// const getUserDetails = async () => {
-	// 	const user = await getUser();
-	// 	return user;
-	// };
-	//
-	// //set up a context store
-	// const initialState = {user: user};
-	// store = createContext(initialState);
-	// const {Provider} = store;
-	//
-	// //set up a reducer
-	// const StateProvider = ({children}) => {
-	// 	const [state, dispatch] = useReducer((state, action) => {
-	// 		switch (action.type) {
-	// 		case 'SAVE_USER':
-	// 			return {
-	// 				user: action.payload
-	// 			};
-	// 		case 'REMOVE_USER':
-	// 			return {
-	// 				user: null
-	// 			};
-	// 		}
-	// 	}, initialState);
-	//
-	// 	return <Provider value={{state, dispatch}}>{children}</Provider>;
-	// };
-	//
-	//
-
 	return (
 		<StateProvider>
 			<BrowserRouter>
@@ -65,14 +27,17 @@ function App() {
 						<Header/>
 						<Routes>
 							<Route path="/register" element={<Register/>}/>
-							<Route path="/profile/alerts" element={<ProtectedRoute/>}>
+							<Route path="/profile/alerts" element={<ProtectedRoute userType={['USER', 'ADMIN']}/>}>
 								<Route path="/profile/alerts" element={<Alerts/>}/>
 							</Route>
-							<Route path="/profile/watchlist" element={<ProtectedRoute/>}>
+							<Route path="/profile/watchlist" element={<ProtectedRoute userType={['USER', 'ADMIN']}/>}>
 								<Route path="/profile/watchlist" element={<Watchlist/>}/>
 							</Route>
-							<Route path="/profile" element={<ProtectedRoute/>}>
+							<Route path="/profile" element={<ProtectedRoute userType={['USER', 'ADMIN']}/>}>
 								<Route path="/profile" element={<Profile/>}/>
+							</Route>
+							<Route path="/stock-data" element={<ProtectedRoute userType={['ADMIN']}/>}>
+								<Route path="/stock-data" element={<FileUpload/>}/>
 							</Route>
 							<Route path="/logout" element={<Logout/>}/>
 							<Route path="/login" element={<Login/>}/>

@@ -3,10 +3,8 @@ import {getWatchList} from '../../services/profileService';
 import Table from 'react-bootstrap/Table';
 import PreLoader from '../common/loader';
 import {StoreContext} from '../common/stateProvider';
-import {sym} from 'enzyme/build/Utils';
 import {getAvailableSymbols} from '../../services/chartService';
 import {Button, Modal} from 'react-bootstrap';
-import InputField from '../common/inputField';
 
 let watchListData = {};
 let subs = [];
@@ -29,17 +27,14 @@ const Watchlist = () => {
 			symbol: 'ETHUSDT',
 		},
 	]);
-	// const [watchListData, setWatchListData] = useState({});
 	const [subscriptions, setSubscriptions] = useState({});
 	const [tradingPairs, setTradingPairs] = useState([]);
 	const [show, setShow] = useState(false);
 	const [modalType, setModalType] = useState({});
 	const [selectedValue, setSelectedValue] = useState([]);
-	// const [subs, setSubs] = useState([]);
 
-	const {state} = useContext(StoreContext);
+	const {stompClient} = useContext(StoreContext);
 
-	const stompClient = state?.stompClient;
 
 	const funcMap = {
 		'add': tradingPairs,
@@ -138,24 +133,32 @@ const Watchlist = () => {
 		console.log('ddddd');
 	};
 
+	const myStyle1={
+		backgroundImage: 'url("assets/img/white-bg.jpg")',
+		backgroundSize: 'cover',
+		height: '100vh',
+		opacity: '0.9'
+	};
+
+	const myStyle2={
+		backgroundColor:'rgba(255, 255, 255, 0.65)',
+		// backgroundSize: 'cover',
+		// height: '100vh',
+		// opacity: '0.7'
+	};
+
 
 	return (
 		<Fragment>
 			<PreLoader isLoading={isLoading}/>
 			<section
 				id="watchlist"
-				className="section bg-overlay overflow-hidden"
+				className="section overflow-hidden"
+				style={{backgroundImage: 'url("assets/img/back3.webp")'}}
 			>
-				<div className='watchlist-container d-flex justify-content-center'>
+				<div className='watchlist-container d-flex justify-content-center' style={myStyle1}>
 					<div className='container'>
-						<div className='row p-5 text-white'>
-							<div className='col-6 d-flex d-flex justify-content-end'>
-								<div className='font-weight-bold h6 bg-color-3 rounded p-2 cursor-1 w-50' onClick={()=> handleShow({type: 'add', name: 'Add Symbol'})}>Add Symbol</div>
-							</div>
-							<div className='col-6'>
-								<div className='font-weight-bold h6	bg-color-3 rounded p-2 cursor-1 w-50' onClick={()=> handleShow({type: 'remove', name: 'Remove Symbol'})}>Remove Symbol</div>
-							</div>
-						</div>
+						
 						<Table striped bordered hover>
 							<thead>
 								<tr>

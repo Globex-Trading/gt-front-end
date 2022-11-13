@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* #bg1{
+  background-image: 
+  url("assets/img/welcome/welcome1.png");
+  background-size: "cover";
+  height: 100vh;
+
+  background-repeat:no-repeat; 
+} */

@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { StoreContext } from '../common/stateProvider';
 
 const Login = () => {
-	const { state, setState } = useContext(StoreContext);
+	const { setUser } = useContext(StoreContext);
 
 	const [isLoading, setIsLoading] = React.useState(true);
 
@@ -24,9 +24,14 @@ const Login = () => {
 	};
 
 	useEffect(() => {
-		setInterval(() => {
-			setIsLoading(false);
-		}, 3000);
+		const user = localStorage.getItem('user_id');
+		if (user) {
+			navigate('/');
+		} else {
+			setInterval(() => {
+				setIsLoading(false);
+			}, 1500);
+		}
 	}, []);
 
 	const validateSchema = Joi.object({
@@ -61,13 +66,19 @@ const Login = () => {
 				setErrors({ ...errors, [item.path[0]]: item.message });
 			});
 		} else {
-			const response = await login({ email: email, password: password });
-			if (response) {
-				toast.success('Logged in successfully');
-				const user = await getUser();
-				setState({...state, ['user']: user});
-				navigate('/');
-			} else console.log('error');
+			try{
+				const response = await login({ email: email, password: password });
+				if (response) {
+					toast.success('Logged in successfully');
+					const user = await getUser();
+					setUser(user);
+					// setState({...state, ['user']: user});
+					navigate('/');
+				} else console.log('error');
+			}catch(error){
+				console.log('error occured', error);
+				toast.error('Error occured!');
+			}
 		}
 	};
 
@@ -77,6 +88,7 @@ const Login = () => {
 			<section
 				id="login"
 				className="section welcome-area login-styles overflow-hidden d-flex align-items-center"
+				style={{backgroundImage: 'url("assets/img/back3.webp")'}}
 			>
 				<div className="container login-container">
 					<div className="card bg-glass" style={{ borderRadius: '3%' }}>

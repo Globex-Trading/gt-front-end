@@ -39,7 +39,7 @@ function saveUser(response) {
 //logout user
 export function logout() {
 	localStorage.removeItem('user_token');
-	localStorage.removeItem('user');
+	localStorage.removeItem('user_id');
 }
 
 //get user details
@@ -58,6 +58,7 @@ export async function getUser() {
 		}
 	);
 	localStorage.setItem('user_id', res.data?.id);
+	localStorage.setItem('user_type', res.data?.user_type);
 	return res.data;
 
 }

@@ -14,7 +14,6 @@ const Alerts = () => {
 	const [isUpdate, setIsUpdate] = useState(false);
 	const [subscriptions, setSubscriptions] = useState({});
 	const [alerts, setAlerts] = useState([]);
-	const [isDeleteshow, setIsDeleteshow] = useState(false);
 
 	const {stompClient} = useContext(StoreContext);
 
@@ -82,6 +81,12 @@ const Alerts = () => {
 		}
 	};
 
+	const myStyle1={
+		backgroundImage: 'url(/assets/img/white-bg.jpg)',
+		backgroundSize: 'cover',
+		height: '100vh',
+		opacity: '0.9'
+	};
 
 	return (
 		<Fragment>
@@ -91,37 +96,40 @@ const Alerts = () => {
 				className="section bg-overlay overflow-hidden"
 				data-testid={'alerts'}
 			>
-				<div className='watchlist-container d-flex justify-content-center'>
+				<div className='watchlist-container d-flex justify-content-center' style={myStyle1}>
 					<div className='container'>
-						<Table striped bordered hover>
-							<thead>
-								<tr>
-									<th>Symbol</th>
-									<th>Alert Price</th>
-									<th>Current Price</th>
-									<th>Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								{alerts.map((item) => {
-									const data = alertData[item.symbol];
-									// console.log(item);
-									return (
-										<tr key={item.id} onMouseEnter={()=>setIsDeleteshow(true)} onMouseLeave={()=>setIsDeleteshow(false)}>
-											<td className='text-black-50'>{item.symbol}</td>
-											<td>{item.trigger_price}</td>
-											<td className={data?.priceChange>0 ? 'text-success': 'text-danger'}>{data?.lastPrice}</td>
-											<td >
-												<span className={item.is_triggered? 'bg-danger':'bg-success' + ' p-2 text-white rounded-lg'}>{item.is_triggered?'Triggered': 'Available'}</span>
-											</td>
-											
-										</tr>
-										
-									);
-								}
-								)}
-							</tbody>
-						</Table>
+						{alerts.length === 0 ? <h3 className='text-center'>No alerts found</h3> :
+							<Table striped bordered hover>
+								<thead>
+									<tr>
+										<th>Symbol</th>
+										<th>Alert Price</th>
+										<th>Current Price</th>
+										<th>Status</th>
+									</tr>
+								</thead>
+								<tbody>
+									{alerts.map((item) => {
+										const data = alertData[item.symbol];
+										// console.log(item);
+										return (
+											<tr key={item.id}>
+												<td className='text-black-50'>{item.symbol}</td>
+												<td>{item.trigger_price}</td>
+												<td className={data?.priceChange > 0 ? 'text-success' : 'text-danger'}>{data?.lastPrice}</td>
+												<td>
+													<span
+														className={item.is_triggered ? 'bg-danger' : 'bg-success' + ' p-2 text-white rounded-lg'}>{item.is_triggered ? 'Triggered' : 'Available'}</span>
+												</td>
+
+											</tr>
+
+										);
+									}
+									)}
+								</tbody>
+							</Table>
+						}
 					</div>
 				</div>
 			</section>

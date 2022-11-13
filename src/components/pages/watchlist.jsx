@@ -1,10 +1,11 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {getWatchList} from '../../services/profileService';
+import {getWatchList, saveItemToWatchList} from '../../services/profileService';
 import Table from 'react-bootstrap/Table';
 import PreLoader from '../common/loader';
 import {StoreContext} from '../common/stateProvider';
 import {getAvailableSymbols} from '../../services/chartService';
 import {Button, Modal} from 'react-bootstrap';
+import toast from 'react-hot-toast';
 
 let watchListData = {};
 let subs = [];
@@ -14,18 +15,6 @@ const Watchlist = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isUpdate, setIsUpdate] = useState(false);
 	const [watchlist, setWatchlist] = useState([
-		{
-			_id: 1,
-			name: 'BTCUSDT',
-			provider: 'binance',
-			symbol: 'BTCUSDT',
-		},
-		{
-			_id: 2,
-			name: 'ETHUSDT',
-			provider: 'binance',
-			symbol: 'ETHUSDT',
-		},
 	]);
 	const [subscriptions, setSubscriptions] = useState({});
 	const [tradingPairs, setTradingPairs] = useState([]);
@@ -35,11 +24,6 @@ const Watchlist = () => {
 
 	const {stompClient} = useContext(StoreContext);
 
-
-	const funcMap = {
-		'add': tradingPairs,
-		'remove': watchlist
-	};
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -88,10 +72,14 @@ const Watchlist = () => {
 	};
 
 	const getWatchlist = async () => {
-		const userId = localStorage.getItem('userId');
+		const userId = localStorage.getItem('user_id');
 		try{
 			const watchlist = await getWatchList(userId);
-			console.log(watchlist);
+			if(watchlist?.data){
+				setWatchlist(watchlist?.data);
+			}else {
+				setWatchlist([]);
+			}
 		}catch (e) {
 			console.log(e);
 		}
@@ -100,7 +88,8 @@ const Watchlist = () => {
 	const getAvailableTradingPairs = async() => {
 		try {
 			const {data} = await getAvailableSymbols();
-			setTradingPairs(data);
+
+			setTradingPairs(data?.data);
 		}catch (e) {
 			console.log(e);
 		}
@@ -124,17 +113,48 @@ const Watchlist = () => {
 			const index = checkList.indexOf(value);
 			checkList.splice(index, 1);
 		}
+		console.log('++++++++++++++', checkList, value);
 		setSelectedValue(checkList);
 	};
 
-	const handleSubmit = () => {
-		setShow(false);
-		setSelectedValue([]);
-		console.log('ddddd');
+	const handleSubmit = async() => {
+		if(selectedValue.length > 0) {
+			setIsLoading(true);
+			setShow(false);
+			selectedValue?.map(async (item) => {
+				try {
+					const response = await saveItemToWatchList({
+						symbolId: item,
+						userId: localStorage.getItem('user_id')
+					});
+				}catch (e) {
+					console.log(e);
+					toast.error(`Error adding ${item} to watchlist`);
+				}
+			});
+			await getWatchlist();
+			setIsLoading(false);
+			setSelectedValue([]);
+		}
+	};
+
+	const handleDelete = async (item) => {
+		setIsLoading(true);
+		try {
+			const response = await saveItemToWatchList({
+				symbolId: item.symbolId,
+				userId: localStorage.getItem('user_id'),
+				isDeleted: true
+			});
+			await getWatchlist();
+			setIsLoading(false);
+		}catch (e) {
+			console.log(e);
+			toast.error(`Error deleting ${item.symbol} from watchlist`);
+		}
 	};
 
 	const myStyle1={
-		backgroundImage: 'url("assets/img/white-bg.jpg")',
 		backgroundSize: 'cover',
 		height: '100vh',
 		opacity: '0.9'
@@ -157,8 +177,12 @@ const Watchlist = () => {
 				style={{backgroundImage: 'url("assets/img/back3.webp")'}}
 			>
 				<div className='watchlist-container d-flex justify-content-center' style={myStyle1}>
-					<div className='container'>
-						
+					<div className='container font-weight-bolder'>
+						<div className='row justify-content-end m-3'>
+							<button className='btn' onClick={handleShow}>
+								Add symbols
+							</button>
+						</div>
 						<Table striped bordered hover>
 							<thead>
 								<tr>
@@ -166,17 +190,19 @@ const Watchlist = () => {
 									<th>Last value</th>
 									<th>Change</th>
 									<th>Change %</th>
+									<th>Actions</th>
 								</tr>
 							</thead>
 							<tbody>
 								{watchlist.map((item) => {
-									const data = watchListData[item.name];
+									const data = watchListData[item.symbol];
 									return (
 										<tr key={item.id}>
-											<td className='text-black-50'>{item.name}</td>
+											<td className='text-black-50'>{item.symbol}</td>
 											<td>{data?.lastPrice}</td>
 											<td className={data?.priceChange < 0 ? 'text-danger': 'text-success'}>{data?.priceChange}</td>
 											<td className={data?.priceChange < 0 ? 'text-danger': 'text-success'}>{data?.priceChangePercent}</td>
+											<td className={'text-center'}> <i className={'fa fa-trash'}/> </td>
 										</tr>
 									);
 								}
@@ -191,14 +217,15 @@ const Watchlist = () => {
 
 					<Modal.Body>
 						<form className="w-100">
-							{funcMap[modalType.type]?.length === 0 ? <div className='text-center'>No data</div> :
-								funcMap[modalType.type]?.map((item) => (
+							{tradingPairs.length === 0 ? <div className='text-center'>No data</div> :
+								tradingPairs?.map((item) => (
 									<div className="form-check" key={item._id}>
 										<input
 											type="checkbox"
 											className="form-check-input"
 											id={item._id}
 											name="option1"
+											value={item._id}
 											onChange={handleSelect}
 										/>
 										<label
@@ -220,7 +247,7 @@ const Watchlist = () => {
 							variant="primary"
 							onClick={handleSubmit}
 						>
-							{modalType.name}
+							Add
 						</Button>
 					</Modal.Footer>
 				</Modal>

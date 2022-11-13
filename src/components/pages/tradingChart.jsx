@@ -28,25 +28,25 @@ const TradingChart = () => {
 	]);
 	const [intervals, setIntervals] = useState([]);
 	const [techIndicators, setTechIndicators] = useState([
-		{
-			_id: '63467fa36c6e5ed94c0874cf',
-			name: 'sma',
-			newPane: false,
-			chartType: 'line',
-		},
-		{
-			_id: '63467fa36c6e5ed94c0874d0',
-			name: 'ema',
-			newPane: false,
-			chartType: 'line',
-		},
-		{
-
-			_id: '63467fa36c6e5ed94c0874d3',
-			name: 'rsi',
-			newPane: true,
-			chartType: 'line'
-		}
+		// {
+		// 	_id: '63467fa36c6e5ed94c0874cf',
+		// 	name: 'sma',
+		// 	newPane: false,
+		// 	chartType: 'line',
+		// },
+		// {
+		// 	_id: '63467fa36c6e5ed94c0874d0',
+		// 	name: 'ema',
+		// 	newPane: false,
+		// 	chartType: 'line',
+		// },
+		// {
+		//
+		// 	_id: '63467fa36c6e5ed94c0874d3',
+		// 	name: 'rsi',
+		// 	newPane: true,
+		// 	chartType: 'line'
+		// }
 	]);
 	const [providers, setProviders] = useState([]);
 
@@ -67,7 +67,7 @@ const TradingChart = () => {
 	//useEffect for get initial data
 	useEffect(() => {
 		getProviders();
-		// getIndicators();
+		getIndicators();
 	}, []);
 
 	useEffect(() => {
@@ -95,15 +95,18 @@ const TradingChart = () => {
 		});
 	};
 
-	const getPastData = async () => {
+	const getPastData = async (symbol = selectedTradingPair._id, interval = selectedInterval, end = Date.now()) => {
 		setIsLoading(true);
 		const data = {
-			symbol: selectedTradingPair._id,
-			interval: selectedInterval,
-			start: Date.now() - 20000000,
-			end: Date.now(),
+			symbol: symbol,
+			interval: interval,
+			start: end - 20000000,
+			end: end,
 		};
+
+		console.log('!!!!!!!!!!!!!!!!!!!!!STARTING TO FETCH DATA', data);
 		const { data: tradingData } = await getPastTradingData(data);
+		console.log(tradingData, '-----------------trading data', data);
 		setInitData(tradingData);
 		setIsLoading(false);
 	};
@@ -113,11 +116,11 @@ const TradingChart = () => {
 			const { data } = await getAvailableProviders();
 			setProviders(data);
 			setSelectedProvider(data[0]);
-			setTradingPairs(data[0].symbols);
-			setIntervals(data[0].providedTimeFrames);
-			setSelectedTradingPair(data[0].symbols[0]);
-			setSelectedInterval(data[0].providedTimeFrames[0]);
-			console.log('response', data);
+			setTradingPairs(data[0]?.symbols);
+			setIntervals(data[0]?.providedTimeFrames);
+			setSelectedTradingPair(data[0]?.symbols[0]);
+			setSelectedInterval(data[0]?.providedTimeFrames[0]);
+			console.log('response-----------------', data);
 		} catch (ex) {
 			console.log(ex);
 		}
@@ -216,7 +219,7 @@ const TradingChart = () => {
 	return (
 		<Fragment>
 			<PreLoader isLoading={isLoading} />
-			<section id="chart" className="section bg-overlay overflow-hidden">
+			<section id="chart" className="section overflow-hidden">
 				<div className="chart-container">
 					<div className="shadow my-md-2 my-sm-0 top-pad">
 						<div className="row">
@@ -231,11 +234,11 @@ const TradingChart = () => {
 									>
                     Providers |{' '}
 										<span className="font-weight-bold">
-											{selectedProvider.name}
+											{selectedProvider?.name}
 										</span>
 									</button>
 									<ul className="dropdown-menu">
-										{providers.map((provider) => (
+										{providers?.map((provider) => (
 											<li
 												key={provider.slug}
 												className={
@@ -262,11 +265,11 @@ const TradingChart = () => {
 									>
                     Trading Pair |{' '}
 										<span className="font-weight-bold">
-											{selectedTradingPair.name}
+											{selectedTradingPair?.name}
 										</span>
 									</button>
 									<ul className="dropdown-menu">
-										{tradingPairs.map((pair) => (
+										{tradingPairs?.map((pair) => (
 											<li
 												className={
 													selectedTradingPair === pair
@@ -297,7 +300,7 @@ const TradingChart = () => {
 										</span>
 									</button>
 									<ul className="dropdown-menu">
-										{chartTypes.map((type) => (
+										{chartTypes?.map((type) => (
 											<li
 												className={
 													selectedChartType === type.slug
@@ -326,7 +329,7 @@ const TradingChart = () => {
 										<span className="font-weight-bold">{selectedInterval}</span>
 									</button>
 									<ul className="dropdown-menu">
-										{intervals.map((interval) => (
+										{intervals?.map((interval) => (
 											<li
 												className={
 													selectedInterval === interval
@@ -354,7 +357,7 @@ const TradingChart = () => {
                     Technical Indicators
 									</button>
 									<ul className="dropdown-menu">
-										{techIndicators.map((indicator) => (
+										{techIndicators?.map((indicator) => (
 											<li className="dropdown-item" key={indicator._id}>
 												<div className="form-check">
 													<input
@@ -413,6 +416,7 @@ const TradingChart = () => {
 						TIdata={TIData}
 						techIndicators={techIndicators}
 						selectedTAs={selectedTAs}
+						getPastData={getPastData}
 					/>
 				</div>
 			</section>

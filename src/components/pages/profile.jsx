@@ -45,13 +45,12 @@ const Profile = () => {
 		<React.Fragment>
 			<PreLoader isLoading={isLoading}/>
 			<section
-				id="watchlist"
+				id="profile"
 				className="section overflow-hidden"
-				style={{backgroundImage: 'url("assets/img/back3.webp")'}}
 			>
 				<div className='watchlist-container d-flex justify-content-center' style={myStyle1} >
 					<div className='container d-flex justify-content-center'>
-						<div className='mt-5 p-5 rounded-lg w-75 profile-shadow ' style={myStyle2}>
+						<div className='p-5 rounded-lg w-75 profile-shadow ' style={myStyle2}>
 							<div className='mb-4 text-black-100 '>
 								<h2 >Personal Details</h2>
 								<hr/>

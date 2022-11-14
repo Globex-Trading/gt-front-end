@@ -14,6 +14,8 @@ const Chart = (props) => {
 
 	const [currPane, setCurrPane] = React.useState(0);
 
+	const [isMounted, setIsMounted] = React.useState(false);
+
 	const chartContainerRef = useRef();
 
 	const addSeriesFunction = {
@@ -41,7 +43,8 @@ const Chart = (props) => {
 			}
 		);
 
-		// chart.timeScale().fitContent();
+		chart?.timeScale()?.fitContent();
+		chart?.timeScale()?.subscribeVisibleLogicalRangeChange(logicalTimeRangeChangeHandler);
 
 		return () => {
 			chart = null;
@@ -53,7 +56,7 @@ const Chart = (props) => {
 	//useEffect for create the chart type and set initial data
 	useEffect(() => {
 
-		setIsLoading(true);
+		!isMounted && setIsLoading(true);
 
 
 		const func = addSeriesFunction[props.chartType];
@@ -79,9 +82,17 @@ const Chart = (props) => {
 			chartInstance.setData(reFormatPastData(props.initData, props.chartType));
 			volumeInstance.setData(reFormatPastData(props.initData, 'volume'));
 			props.setIsUpdate(false);
+			const logicalRange = chart?.timeScale()?.getVisibleLogicalRange();
+			console.log('logicalRange#################', logicalRange);
+			const timeRange = chart?.timeScale()?.getVisibleRange();
+			if (props.tradingPair._id && props.interval !== '') {
+				console.log('logicalRange#################', props.tradingPair._id, props.interval);
+				// logicalRange?.from < 0 && props.getPastData(props.tradingPair._id, props.interval, timeRange.to);
+			}
 		}
 
 		setIsLoading(false);
+		setIsMounted(true);
 
 	}, [props.chartType, props.interval, props.tradingPair, props.initData]);
 
@@ -127,6 +138,10 @@ const Chart = (props) => {
 
 	//useEffect for update the chart data for realtime data
 	useEffect(() => {
+
+		// const logicalRange = chart.timeScale().getVisibleLogicalRange();
+
+		// console.log('#################' , chart.timeScale().logicalToCoordinate(logicalRange?.from), chart.timeScale().logicalToCoordinate(logicalRange?.to));
 
 		if (props.lastData) {
 			chartInstance.update(reFormatData(props.lastData, props.chartType));
@@ -222,6 +237,20 @@ const Chart = (props) => {
 			});
 		}
 		return chartData;
+	};
+
+	const logicalTimeRangeChangeHandler = (newVisibleLogicalRange) => {
+		if(newVisibleLogicalRange !== null) {
+			console.log('!##@@@@@@@@@@@@@@ starting to get data', props.tradingPair._id, props.interval);
+			const {from, to } = newVisibleLogicalRange;
+			const visibleTime = chart?.timeScale().getVisibleRange();
+			// from < 0 && props.getPastData(visibleTime?.to);
+
+			if (props.tradingPair._id && props.interval !== '') {
+				console.log('logicalRange#################', props.tradingPair._id, props.interval);
+				from < 0 && props.getPastData(props.tradingPair._id, props.interval, visibleTime.to);
+			}
+		}
 	};
 
 	return (

@@ -27,16 +27,16 @@ function App() {
 						<Header/>
 						<Routes>
 							<Route path="/register" element={<Register/>}/>
-							<Route path="/profile/alerts" element={<ProtectedRoute userType={['USER', 'ADMIN']}/>}>
+							<Route path="/profile/alerts" element={<ProtectedRoute userTypes={['USER', 'ADMIN']}/>}>
 								<Route path="/profile/alerts" element={<Alerts/>}/>
 							</Route>
-							<Route path="/profile/watchlist" element={<ProtectedRoute userType={['USER', 'ADMIN']}/>}>
+							<Route path="/profile/watchlist" element={<ProtectedRoute userTypes={['USER', 'ADMIN']}/>}>
 								<Route path="/profile/watchlist" element={<Watchlist/>}/>
 							</Route>
-							<Route path="/profile" element={<ProtectedRoute userType={['USER', 'ADMIN']}/>}>
+							<Route path="/profile" element={<ProtectedRoute userTypes={['USER', 'ADMIN']}/>}>
 								<Route path="/profile" element={<Profile/>}/>
 							</Route>
-							<Route path="/stock-data" element={<ProtectedRoute userType={['ADMIN']}/>}>
+							<Route path="/stock-data" element={<ProtectedRoute userTypes={['ADMIN']}/>}>
 								<Route path="/stock-data" element={<FileUpload/>}/>
 							</Route>
 							<Route path="/logout" element={<Logout/>}/>

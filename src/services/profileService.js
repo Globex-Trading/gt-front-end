@@ -17,3 +17,16 @@ export async function getWatchList(userId) {
 		return null;
 	}
 }
+
+export async function saveItemToWatchList(item) {
+	try {
+		return await axios.post(
+			apiURL + '/watchlist/saveitem',
+			item,
+			{headers: {'Authorization': `Bearer ${access_token}`}}
+		);
+	}catch (e) {
+		console.log(e);
+		return null;
+	}
+}

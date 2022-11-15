@@ -76,7 +76,7 @@ const TradingChart = () => {
 		});
 	};
 
-	const getPastData = async (start= Date.now() - 2000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
+	const getPastData = async (start= Date.now() - 20000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
 
 		const data = {
 			symbol: symbol,

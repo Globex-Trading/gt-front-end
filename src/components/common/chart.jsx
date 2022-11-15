@@ -85,11 +85,12 @@ const Chart = (props) => {
 		});
 
 		if(props.initData && props.isUpdate) {
-			console.log('init data', props.initData);
-			console.log('+++++++++++++++isInitialLoad++++++++++', reFormatPastData(props.initData, props.chartType));
 			chartInstance.setData(reFormatPastData(props.initData, props.chartType));
 			volumeInstance.setData(reFormatPastData(props.initData, 'volume'));
 			props.setIsUpdate(false);
+			//check whether the visible range is filled with data or otherwise get data from the server to fill the visible range.
+			const logicalRange = chart.timeScale().getVisibleLogicalRange();
+			findTimeRangeAndGetData(logicalRange);
 
 		}
 
@@ -149,7 +150,7 @@ const Chart = (props) => {
 
 	}, [props.lastData]);
 
-	const findTimeRange = (logicalRange) => {
+	const findTimeRangeAndGetData = (logicalRange) => {
 		const timeRange = chart?.timeScale().getVisibleRange();
 		if (logicalRange && logicalRange.from < 0 && timeRange) {
 			const  {from, to} = logicalRange;
@@ -157,9 +158,9 @@ const Chart = (props) => {
 			const timeInterval = (toTime - fromTime)/ to;
 			const startTime = fromTime - (Math.ceil(Math.abs(from)) * timeInterval);
 			const endTime = fromTime;
-			return {startTime, endTime};
+			props.getPastData(Math.floor((startTime - 19800)*1000), (endTime - 19800)*1000);
+
 		}
-		return {startTime: null, endTime: null};
 	};
 
 	const findTA = (name) => {
@@ -257,11 +258,7 @@ const Chart = (props) => {
 	};
 
 	const handleOnClick = () => {
-		console.log('clicked----------------------------------------------------');
-		const {startTime, endTime} = findTimeRange(newLogicalRange);
-		if (startTime && endTime ) {
-			props.getPastData(Math.floor((startTime - 19800)*1000), (endTime - 19800)*1000);
-		}
+		findTimeRangeAndGetData(newLogicalRange);
 	};
 
 	return (

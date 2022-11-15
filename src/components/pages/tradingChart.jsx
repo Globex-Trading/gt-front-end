@@ -27,27 +27,7 @@ const TradingChart = () => {
 		{ name: 'Line', slug: 'line' },
 	]);
 	const [intervals, setIntervals] = useState([]);
-	const [techIndicators, setTechIndicators] = useState([
-		// {
-		// 	_id: '63467fa36c6e5ed94c0874cf',
-		// 	name: 'sma',
-		// 	newPane: false,
-		// 	chartType: 'line',
-		// },
-		// {
-		// 	_id: '63467fa36c6e5ed94c0874d0',
-		// 	name: 'ema',
-		// 	newPane: false,
-		// 	chartType: 'line',
-		// },
-		// {
-		//
-		// 	_id: '63467fa36c6e5ed94c0874d3',
-		// 	name: 'rsi',
-		// 	newPane: true,
-		// 	chartType: 'line'
-		// }
-	]);
+	const [techIndicators, setTechIndicators] = useState();
 	const [providers, setProviders] = useState([]);
 
 	const [initData, setInitData] = useState([]);
@@ -77,7 +57,7 @@ const TradingChart = () => {
 		}
 
 		if (selectedTradingPair && selectedInterval && stompClient) {
-			// getPastData();
+			getPastData();
 			setIsUpdated(true);
 			const baseURL = '/topic/';
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
@@ -96,30 +76,23 @@ const TradingChart = () => {
 		});
 	};
 
-	const getPastData = async (start=1659977100000, end = 1659977100000, symbol = selectedTradingPair._id, interval = selectedInterval) => {
-		// setIsLoading(true);
+	const getPastData = async (start= Date.now() - 2000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
 
-		// console.log('^^^^^^^^^^^^^^^^^^^^^^^symbol', selectedTradingPair._id, selectedInterval);
 		const data = {
 			symbol: symbol,
 			interval: interval,
-			// start: end - 900000000,
 			start: start,
 			end: Date.now(),
 		};
 
-		// console.log('!!!!!!!!!!!!!!!!!!!!!STARTING TO FETCH DATA', data);
 		try {
 			const {data: tradingData} = await getPastTradingData(data);
-			// console.log(tradingData, '-----------------trading data', data);
+			console.log(tradingData, '-----------------trading data', data);
 			// const tradeData = [...initData];
-			// setInitData([...tradingData, ...tradeData]);
 			setInitData(tradingData);
 			setIsUpdated(true);
-			// setIsLoading(false);
 		} catch (e) {
 			console.log(e);
-			// setIsLoading(false);
 		}
 	};
 

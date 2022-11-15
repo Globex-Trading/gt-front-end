@@ -1,5 +1,5 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {getWatchList, saveItemToWatchList} from '../../services/profileService';
+import {deleteItemFromWatchList, getWatchList, saveItemToWatchList} from '../../services/profileService';
 import Table from 'react-bootstrap/Table';
 import PreLoader from '../common/loader';
 import {StoreContext} from '../common/stateProvider';
@@ -149,13 +149,9 @@ const Watchlist = () => {
 	const handleDelete = async (item) => {
 		setIsLoading(true);
 		try {
-			const response = await saveItemToWatchList({
-				symbolId: item.symbolId,
-				userId: localStorage.getItem('user_id'),
-				isDeleted: true
-			});
-			await getWatchlist();
-			setIsLoading(false);
+			const userId = localStorage.getItem('user_id');
+			const response = await deleteItemFromWatchList(item.id, userId);
+
 		}catch (e) {
 			console.log(e);
 			toast.error(`Error deleting ${item.symbol} from watchlist`);

@@ -30,3 +30,16 @@ export async function saveItemToWatchList(item) {
 		return null;
 	}
 }
+
+export async function deleteItemFromWatchList(item) {
+	try {
+		return await axios.post(
+			apiURL + '/watchlist/removeitem',
+			item,
+			{headers: {'Authorization': `Bearer ${access_token}`}}
+		);
+	}catch (e) {
+		console.log(e);
+		return null;
+	}
+}

@@ -50,7 +50,7 @@ const TradingChart = () => {
 	]);
 	const [providers, setProviders] = useState([]);
 
-	const [initData, setInitData] = useState(null);
+	const [initData, setInitData] = useState([]);
 	const [lastData, setLastData] = useState(null);
 	const [TIData, setTIData] = useState([]);
 
@@ -77,12 +77,13 @@ const TradingChart = () => {
 		}
 
 		if (selectedTradingPair && selectedInterval && stompClient) {
-			getPastData();
+			// getPastData();
 			setIsUpdated(true);
 			const baseURL = '/topic/';
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
 
 			subscribeToTopic(topic);
+			setIsLoading(false);
 		}
 
 	}, [selectedTradingPair, selectedInterval, selectedChartType, stompClient]);
@@ -95,20 +96,31 @@ const TradingChart = () => {
 		});
 	};
 
-	const getPastData = async (symbol = selectedTradingPair._id, interval = selectedInterval, end = Date.now()) => {
-		setIsLoading(true);
+	const getPastData = async (start=1659977100000, end = 1659977100000, symbol = selectedTradingPair._id, interval = selectedInterval) => {
+		// setIsLoading(true);
+
+		// console.log('^^^^^^^^^^^^^^^^^^^^^^^symbol', selectedTradingPair._id, selectedInterval);
 		const data = {
 			symbol: symbol,
 			interval: interval,
-			start: end - 20000000,
-			end: end,
+			// start: end - 900000000,
+			start: start,
+			end: Date.now(),
 		};
 
-		console.log('!!!!!!!!!!!!!!!!!!!!!STARTING TO FETCH DATA', data);
-		const { data: tradingData } = await getPastTradingData(data);
-		console.log(tradingData, '-----------------trading data', data);
-		setInitData(tradingData);
-		setIsLoading(false);
+		// console.log('!!!!!!!!!!!!!!!!!!!!!STARTING TO FETCH DATA', data);
+		try {
+			const {data: tradingData} = await getPastTradingData(data);
+			// console.log(tradingData, '-----------------trading data', data);
+			// const tradeData = [...initData];
+			// setInitData([...tradingData, ...tradeData]);
+			setInitData(tradingData);
+			setIsUpdated(true);
+			// setIsLoading(false);
+		} catch (e) {
+			console.log(e);
+			// setIsLoading(false);
+		}
 	};
 
 	const getProviders = async () => {
@@ -141,10 +153,12 @@ const TradingChart = () => {
 
 	const handleChangeTradingPair = (value) => {
 		setSelectedTradingPair(value);
+		setInitData([]);
 	};
 
 	const handleChangeInterval = (value) => {
 		setSelectedInterval(value);
+		setInitData([]);
 	};
 
 	const handleSelectTAs = async (ta) => {
@@ -182,6 +196,7 @@ const TradingChart = () => {
 		setIntervals(value.providedTimeFrames);
 		setSelectedTradingPair(value.symbols[0]);
 		setSelectedInterval(value.providedTimeFrames[0]);
+		setInitData([]);
 	};
 
 	//adding new alert

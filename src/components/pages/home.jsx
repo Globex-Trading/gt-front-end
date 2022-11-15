@@ -387,17 +387,12 @@ const Home = () => {
 							<div className="content-inner text-center pt-sm-4 pt-lg-0 mt-sm-5 mt-lg-0">
 								{/* Section Heading */}
 								<div className="section-heading text-center mb-3">
-									<h2>Work smarter,
-										<br />not harder.
-									</h2>
+									<div className='h1 font-weight-bolder'>
+										About Us
+									</div>
 									<p className="d-none d-sm-block mt-4">
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-										Laborum obcaecati dignissimos quae quo ad iste ipsum officiis
-										deleniti asperiores sit.
-									</p>
-									<p className="d-block d-sm-none mt-4">
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-										Laborum obcaecati.
+										This is a free visualization tool for people who are interested in Trading in both crypto
+										currencies and stocks.
 									</p>
 								</div>
 								{/* Content List */}
@@ -411,10 +406,8 @@ const Home = () => {
 										</div>
 										<div className="content-text media-body">
 											<span>
-												<b>Digital Agency &amp; Marketing</b>
+												<b> Visualising Trading Data</b>
 												<br />
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-										Veritatis, distinctio.
 											</span>
 										</div>
 									</li>
@@ -427,10 +420,8 @@ const Home = () => {
 										</div>
 										<div className="content-text media-body">
 											<span>
-												<b>Planning To Startup</b>
+												<b>Technical Indicators</b>
 												<br />
-		Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-		Veritatis, distinctio.
 											</span>
 										</div>
 									</li>
@@ -443,17 +434,15 @@ const Home = () => {
 										</div>
 										<div className="content-text media-body">
 											<span>
-												<b>Content Management</b>
+												<b>Price Alerts</b>
 												<br />
-		Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-		Veritatis, distinctio.
 											</span>
 										</div>
 									</li>
 								</ul>
-								<a href="#" className="btn btn-bordered mt-4">
-		Learn More
-								</a>
+								{/*						<a href="#" className="btn btn-bordered mt-4">*/}
+								{/*Learn More*/}
+								{/*						</a>*/}
 							</div>
 						</div>
 					</div>

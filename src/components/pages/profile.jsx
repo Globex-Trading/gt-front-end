@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/Table';
 import {getWatchList} from '../../services/profileService';
 import {getExistingAlertsByUserID} from '../../services/chartService';
 import toast from 'react-hot-toast';
+import {Link} from 'react-router-dom';
 // import bi from 'assets/img/welcome/welcome1.png';
 
 const Profile = () => {
@@ -63,7 +64,7 @@ const Profile = () => {
 	const myStyle1={
 		backgroundImage: 'url(assets/img/white-bg.jpg)',
 		backgroundSize: 'cover',
-		height: '100vh',
+		// height: '100vh',
 		opacity: '0.9'
 	};
 
@@ -87,7 +88,7 @@ const Profile = () => {
 				className="section overflow-hidden"
 			>
 				<div className='watchlist-container d-flex justify-content-center' style={myStyle1} >
-					<div className='container d-flex justify-content-center'>
+					<div className='container d-flex justify-content-center' style={{marginBottom: '100px'}}>
 						<div className='p-5 rounded-lg w-75 profile-shadow ' style={myStyle2}>
 							<div className='mb-4 text-black-100 '>
 								<h2 >Personal Details</h2>
@@ -138,26 +139,32 @@ const Profile = () => {
 								<div className='col-md-6'>
 									<h3 className='text-left '>Watchlist</h3>
 									<hr/>
-									<Table className='font-weight-bolder'>
+									<Table className='font-weight-bolder text-left ml-2'>
 										<thead>
 											<th>
 												Symbol
 											</th>
 										</thead>
 										<tbody>
-											{watchList.map((item) => (
-												<tr key={item.id}>{item.symbol}</tr>
-											))}
+											{watchList.slice(0,3).map((item) => {
+												return (
+													<tr key={item.id}><td>{item.symbol}</td></tr>
+												);
+											})}
 										</tbody>
 
 									</Table>
-									<div className='h6 text-left pb-2'>You can add your favourite symbols into watchlist.</div>
-									<div className='font-weight-bold h6 bg-color-3 rounded p-2 cursor-1 w-50'>See More <i className='fa-external-link-square-alt'/> </div>
+									{/*<div className='h6 text-left pb-2'>You can add your favourite symbols into watchlist.</div>*/}
+									<Link to='/profile/watchlist'>
+										<div className='font-weight-bold h6 bg-color-3 rounded p-2 cursor-1 w-50'>See
+											More...
+										</div>
+									</Link>
 								</div>
 								<div className='col-md-6'>
 									<h3 className='text-left '>Price Alerts</h3>
 									<hr/>
-									<Table className='font-weight-bolder'>
+									<Table className='font-weight-bolder text-left'>
 										<thead>
 											<th>
 											Symbol
@@ -167,7 +174,7 @@ const Profile = () => {
 											</th>
 										</thead>
 										<tbody>
-											{alerts.map((item) => (
+											{alerts.slice(0,3).map((item) => (
 												<tr key={item.id}>
 													<td>{item.symbol}</td>
 													<td>{item.trigger_price}</td>
@@ -177,8 +184,12 @@ const Profile = () => {
 										</tbody>
 
 									</Table>
-									<div className='h6 text-left pb-2'>You can add price alerts for any symbol</div>
-									<div className='font-weight-bold h6 bg-color-3 rounded p-2 cursor-1 w-50'>See More <i className='fa-external-link-square-alt'/> </div>
+									{/*<div className='h6 text-left pb-2'>You can add price alerts for any symbol</div>*/}
+									<Link to={'/profile/alerts'}>
+										<div className='font-weight-bold h6 bg-color-3 rounded p-2 cursor-1 w-50'>See
+											More...
+										</div>
+									</Link>
 								</div>
 							</div>
 						</div>

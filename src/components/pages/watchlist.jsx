@@ -121,15 +121,23 @@ const Watchlist = () => {
 		if(selectedValue.length > 0) {
 			setIsLoading(true);
 			setShow(false);
+
+			const preWatchList = [...watchlist];
+			const selectedTradingPairs = tradingPairs.filter((item) => selectedValue.includes(item.symbol));
+			console.log('selectedTradingPairs', selectedTradingPairs);
+			setWatchlist([...preWatchList, ...selectedTradingPairs]);
+
 			selectedValue?.map(async (item) => {
 				try {
 					const response = await saveItemToWatchList({
 						symbolId: item,
 						userId: localStorage.getItem('user_id')
 					});
+
 				}catch (e) {
 					console.log(e);
 					toast.error(`Error adding ${item} to watchlist`);
+					setWatchlist(preWatchList);
 				}
 			});
 			await getWatchlist();

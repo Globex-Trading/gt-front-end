@@ -8,13 +8,16 @@ let chartInstance;
 let volumeInstance;
 
 const Chart = (props) => {
-	const [isLoading, setIsLoading] = React.useState(true);
+
+	const [isLoading, setIsLoading] = React.useState(false);
 
 	const [TACarts, setTACarts] = React.useState({});
 
 	const [currPane, setCurrPane] = React.useState(0);
 
 	const [isMounted, setIsMounted] = React.useState(false);
+
+	const [newLogicalRange, setNewLogicalRange] = React.useState(null);
 
 	const chartContainerRef = useRef();
 
@@ -25,6 +28,7 @@ const Chart = (props) => {
 
 	//useEffect for create the chart
 	useEffect(() => {
+		setIsLoading(true);
 		console.log('useEffect 1');
 
 		chart = createChart(chartContainerRef.current,
@@ -44,12 +48,13 @@ const Chart = (props) => {
 		);
 
 		chart?.timeScale()?.fitContent();
-		chart?.timeScale()?.subscribeVisibleLogicalRangeChange(logicalTimeRangeChangeHandler);
+		setIsLoading(false);
 
 		return () => {
 			chart = null;
 			chartInstance = null;
 		};
+
 
 	},[]);
 
@@ -79,20 +84,23 @@ const Chart = (props) => {
 		});
 
 		if(props.initData && props.isUpdate) {
+			console.log('init data', props.initData);
 			chartInstance.setData(reFormatPastData(props.initData, props.chartType));
 			volumeInstance.setData(reFormatPastData(props.initData, 'volume'));
 			props.setIsUpdate(false);
-			const logicalRange = chart?.timeScale()?.getVisibleLogicalRange();
-			console.log('logicalRange#################', logicalRange);
-			const timeRange = chart?.timeScale()?.getVisibleRange();
-			if (props.tradingPair._id && props.interval !== '') {
-				console.log('logicalRange#################', props.tradingPair._id, props.interval);
-				// logicalRange?.from < 0 && props.getPastData(props.tradingPair._id, props.interval, timeRange.to);
-			}
+			// const logicalRange = chart?.timeScale()?.getVisibleLogicalRange();
+			// console.log('logicalRange#################', logicalRange);
+			// const timeRange = chart?.timeScale()?.getVisibleRange();
+			// if (props.tradingPair._id && props.interval !== '') {
+			// 	console.log('logicalRange#################', props.tradingPair._id, props.interval);
+			// 	// logicalRange?.from < 0 && props.getPastData(props.tradingPair._id, props.interval, timeRange.to);
+			// }
 		}
 
 		setIsLoading(false);
-		setIsMounted(true);
+		// setIsMounted(true);
+		chart?.timeScale()?.subscribeVisibleLogicalRangeChange((newVisibleTimeRange) => logicalTimeRangeChangeHandler(newVisibleTimeRange, props.tradingPair?._id, props.interval));
+
 
 	}, [props.chartType, props.interval, props.tradingPair, props.initData]);
 
@@ -150,11 +158,31 @@ const Chart = (props) => {
 
 	}, [props.lastData]);
 
+	const findTimeRange = (logicalRange) => {
+		// const logicalRange = chart?.timeScale().getVisibleLogicalRange();
+		const timeRange = chart?.timeScale().getVisibleRange();
+		if (logicalRange && logicalRange.from < 0 && timeRange) {
+			// console.log('logicalRange#################', logicalRange?.from, logicalRange?.from < 0, timeRange);
+			const  {from, to} = logicalRange;
+			const {from: fromTime, to: toTime} = timeRange;
+
+			const timeInterval = (toTime - fromTime)/ to;
+
+			// console.log('timeInterval-------------', timeInterval, to);
+
+			const startTime = fromTime - (Math.ceil(Math.abs(from)) * timeInterval);
+			const endTime = fromTime;
+
+			return {startTime, endTime};
+		}
+		return {startTime: null, endTime: null};
+	};
+
 	const findTA = (name) => {
 
 		for (let i = 0 ; i < props.techIndicators.length; i++) {
 			if(props.techIndicators[i].name === name) {
-				console.log('adding tech indicators', props.techIndicators[i], name);
+				// console.log('adding tech indicators', props.techIndicators[i], name);
 				return props.techIndicators[i];
 			}
 		}
@@ -239,17 +267,16 @@ const Chart = (props) => {
 		return chartData;
 	};
 
-	const logicalTimeRangeChangeHandler = (newVisibleLogicalRange) => {
+	const logicalTimeRangeChangeHandler = (newVisibleLogicalRange, symbol, interval) => {
 		if(newVisibleLogicalRange !== null) {
-			console.log('!##@@@@@@@@@@@@@@ starting to get data', props.tradingPair._id, props.interval);
-			const {from, to } = newVisibleLogicalRange;
-			const visibleTime = chart?.timeScale().getVisibleRange();
-			// from < 0 && props.getPastData(visibleTime?.to);
+			setNewLogicalRange(newVisibleLogicalRange);
+		}
+	};
 
-			if (props.tradingPair._id && props.interval !== '') {
-				console.log('logicalRange#################', props.tradingPair._id, props.interval);
-				from < 0 && props.getPastData(props.tradingPair._id, props.interval, visibleTime.to);
-			}
+	const handleOnClick = () => {
+		const {startTime, endTime} = findTimeRange(newLogicalRange);
+		if (startTime && endTime ) {
+			// props.getPastData(startTime*1000, endTime*1000);
 		}
 	};
 
@@ -258,7 +285,12 @@ const Chart = (props) => {
 			<PreLoader isLoading={isLoading} />
 			<div data-testid={'chart'} className="px-5
 			">
-				<div style={{bottom: '0', right: '0'}} ref={chartContainerRef}/>
+				<div
+					style={{bottom: '0', right: '0'}}
+					ref={chartContainerRef}
+					onClick={handleOnClick}
+					onScroll={handleOnClick}
+				/>
 			</div>
 		</Fragment>
 

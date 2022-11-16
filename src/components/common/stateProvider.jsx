@@ -20,7 +20,8 @@ const StateProvider = ({ children }) => {
 		let sock = new SockJS(wsURL);
 		let stompClient = over(sock);
 		stompClient.connect({}, () => onConnected(stompClient), onError);
-		getUserDetails();
+		const refreshToken = localStorage.getItem('refresh_token');
+		refreshToken && getUserDetails();
 	}, []);
 
 	const onConnected = (client) => {

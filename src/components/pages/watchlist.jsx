@@ -6,6 +6,7 @@ import {StoreContext} from '../common/stateProvider';
 import {getAvailableSymbols} from '../../services/chartService';
 import {Button, Modal} from 'react-bootstrap';
 import toast from 'react-hot-toast';
+import DataTable from 'react-data-table-component';
 
 let watchListData = {};
 let subs = [];
@@ -21,9 +22,50 @@ const Watchlist = () => {
 	const [show, setShow] = useState(false);
 	const [modalType, setModalType] = useState({});
 	const [selectedValue, setSelectedValue] = useState([]);
+	const [isPending, setIsPending] = useState(false);
+
+	const [isDeleteShow, setIsDeleteShow] = useState(false);
+	const [columns, setColumns] = useState([
+		{
+			name: 'Symbol',
+			selector: row=>row.symbol,
+			sortable: true,
+		},
+		{
+			name: 'Last value',
+			selector: row=>row.lastValue,
+			sortable: true,
+		},
+		{
+			name: 'Change',
+			selector: row=>row.priceChange,
+			sortable: true,
+			conditionalCellStyles: [
+				{
+					when: row=>row.priceChange < 0,
+					style: {
+						color: 'red',
+					}
+				}]
+		},
+		{
+			name: 'Change %',
+			selector: row=>row.priceChangePercent,
+			conditionalCellStyles: [
+				{
+					when: row=>row.priceChangePercent < 0,
+					style: {
+						color: 'red',
+					}
+				}]
+		},
+		{
+			name: 'Actions',
+			selector: row=>row.actions,
+		}
+	]);
 
 	const {stompClient} = useContext(StoreContext);
-
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -42,17 +84,19 @@ const Watchlist = () => {
 
 	}, []);
 
-	setInterval(() => setIsUpdate(!isUpdate), 1000);
+	// setInterval(() => setIsUpdate(!isUpdate), 1000);
 
 	
 	useEffect(() => {
 		if (stompClient) {
+			setIsPending(true);
 			watchlist.forEach((item) => {
 				if (!(item in subscriptions)) {
 					const topic = '/topic/' + item.provider + '_' + item.symbol;
 					subscribeToTopic(topic, item.symbol);
 				}
 			});
+			setIsPending(false);
 		}
 
 
@@ -148,6 +192,7 @@ const Watchlist = () => {
 
 	const handleDelete = async (item) => {
 		setIsLoading(true);
+
 		try {
 			const userId = localStorage.getItem('user_id');
 			const response = await deleteItemFromWatchList(item.id, userId);
@@ -171,6 +216,11 @@ const Watchlist = () => {
 		// opacity: '0.7'
 	};
 
+	const handleIsDeleteShow = () => {
+		setIsDeleteShow(!isDeleteShow);
+	};
+
+
 
 	return (
 		<Fragment>
@@ -187,32 +237,28 @@ const Watchlist = () => {
 								Add symbols
 							</button>
 						</div>
-						<Table striped bordered hover>
-							<thead>
-								<tr>
-									<th>Symbol</th>
-									<th>Last value</th>
-									<th>Change</th>
-									<th>Change %</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								{watchlist.map((item) => {
-									const data = watchListData[item.symbol];
+
+						<DataTable 
+							columns={columns} 
+							data={
+								watchlist.map((item, index) => {
 									return (
-										<tr key={item.id}>
-											<td className='text-black-50'>{item.symbol}</td>
-											<td>{data?.lastPrice}</td>
-											<td className={data?.priceChange < 0 ? 'text-danger': 'text-success'}>{data?.priceChange}</td>
-											<td className={data?.priceChange < 0 ? 'text-danger': 'text-success'}>{data?.priceChangePercent}</td>
-											<td className={'text-center'}> <i className={'fa fa-trash'}/> </td>
-										</tr>
+										{
+											id: index,
+											symbol: item.symbol,
+											lastValue: watchListData[item.symbol]?.lastPrice,
+											priceChange: watchListData[item.symbol]?.priceChange,
+											priceChangePercent: watchListData[item.symbol]?.priceChangePercent,
+											actions: <i className={'fa fa-trash'} style={{cursor: 'pointer'}} onClick={() => handleIsDeleteShow(item)}/>
+										}
 									);
-								}
-								)}
-							</tbody>
-						</Table>
+								})}
+							pagination
+							fixedHeader
+							fixedHeaderScrollHeight="300px"
+							progressPending={isPending}
+						/>
+
 					</div>
 				</div>
 			</section>
@@ -255,6 +301,26 @@ const Watchlist = () => {
 						</Button>
 					</Modal.Footer>
 				</Modal>
+			</section>
+
+			<section>
+				<Modal show={isDeleteShow} onHide={handleIsDeleteShow}>
+					<Modal.Body>
+						Are you sure you want to delete this item?
+					</Modal.Body>
+					<Modal.Footer>
+						<Button variant="secondary" onClick={handleClose}>
+							Close
+						</Button>
+						<Button
+							variant="primary"
+							onClick={handleSubmit}
+						>
+							Add
+						</Button>
+					</Modal.Footer>
+				</Modal>
+
 			</section>
 		</Fragment>
 	);

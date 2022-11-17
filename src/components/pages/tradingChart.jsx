@@ -63,7 +63,6 @@ const TradingChart = () => {
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
 
 			subscribeToTopic(topic);
-			setIsLoading(false);
 		}
 
 	}, [selectedTradingPair, selectedInterval, selectedChartType, stompClient]);
@@ -76,8 +75,9 @@ const TradingChart = () => {
 		});
 	};
 
-	const getPastData = async (start= Date.now() - 20000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
-
+	const getPastData = async (initial = true, start= Date.now() - 20000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
+		initial && setIsLoading(true);
+		console.log('---------------------------intial', initial);
 		const data = {
 			symbol: symbol,
 			interval: interval,
@@ -94,6 +94,7 @@ const TradingChart = () => {
 		} catch (e) {
 			console.log(e);
 		}
+		initial && setIsLoading(false);
 	};
 
 	const getProviders = async () => {

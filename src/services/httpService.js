@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from '../config.json';
-import {reNewToken} from './authService';
+import {logout, reNewToken} from './authService';
 
 export function isTokenExpired() {
 	const token = localStorage.getItem('user_token');
@@ -31,13 +31,20 @@ axiosAPIInstance.interceptors.response.use(
 	},
 	async function (error) {
 		const originalRequest = error.config;
-		if (error.response.status === 401 && !originalRequest._retry) {
+		console.log('------retry------------------',originalRequest._retry);
+		if (error.response.status.toString() === '401' && !originalRequest._retry) {
+			originalRequest._retry = true;
 			console.log('-------------error-----------', error);
 			originalRequest._retry = true;
-			const access_token = await reNewToken();
-			axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
-			console.log('-------------access_token-----------', axios.defaults.headers.common['Authorization']);
-			return axiosAPIInstance(originalRequest);
+			try {
+				const access_token = await reNewToken();
+				axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
+				console.log('-------------access_token-----------', axios.defaults.headers.common['Authorization']);
+				return axiosAPIInstance(originalRequest);
+			}catch (e) {
+				logout();
+				return Promise.reject(error);
+			}
 		}
 		return Promise.reject(error);
 	});

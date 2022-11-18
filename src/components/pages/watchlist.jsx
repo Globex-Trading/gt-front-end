@@ -12,6 +12,7 @@ let watchListData = {};
 let subs = [];
 
 const Watchlist = () => {
+	const {user} = useContext(StoreContext);
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [isUpdate, setIsUpdate] = useState(false);
@@ -25,6 +26,7 @@ const Watchlist = () => {
 	const [isPending, setIsPending] = useState(false);
 
 	const [isDeleteShow, setIsDeleteShow] = useState(false);
+	const [selectedToDelete, setSelectedToDelete] = useState({});
 	const [columns, setColumns] = useState([
 		{
 			name: 'Symbol',
@@ -60,8 +62,10 @@ const Watchlist = () => {
 				}]
 		},
 		{
-			name: 'Actions',
-			selector: row=>row.actions,
+			cell: row => <div onClick={() => handleIsDeleteShow(row)}><i className={'fa fa-trash'} style={{cursor: 'pointer'}}/></div>,
+			ignoreRowClick: true,
+			allowOverClick: true,
+			button: true
 		}
 	]);
 
@@ -73,10 +77,9 @@ const Watchlist = () => {
 		getAvailableTradingPairs();
 		setTimeout(() => {
 			setIsLoading(false);
-		}, 2000);
+		}, 1000);
 
 		return () => {
-			console.log('unmounting---------------------------------------------------------------', subs);
 			subs.forEach( (sub) => {
 				sub.unsubscribe();
 			});
@@ -84,7 +87,6 @@ const Watchlist = () => {
 
 	}, []);
 
-	// setInterval(() => setIsUpdate(!isUpdate), 1000);
 
 	
 	useEffect(() => {
@@ -93,7 +95,7 @@ const Watchlist = () => {
 			watchlist.forEach((item) => {
 				if (!(item in subscriptions)) {
 					const topic = '/topic/' + item.provider + '_' + item.symbol;
-					subscribeToTopic(topic, item.symbol);
+					// subscribeToTopic(topic, item.symbol);
 				}
 			});
 			setIsPending(false);
@@ -116,7 +118,10 @@ const Watchlist = () => {
 	};
 
 	const getWatchlist = async () => {
+		setIsLoading(true);
 		const userId = localStorage.getItem('user_id');
+
+		console.log('user_id------------', userId);
 		try{
 			const watchlist = await getWatchList(userId);
 			if(watchlist?.data){
@@ -127,13 +132,16 @@ const Watchlist = () => {
 		}catch (e) {
 			console.log(e);
 		}
+		setIsLoading(false);
 	};
 
 	const getAvailableTradingPairs = async() => {
 		try {
 			const {data} = await getAvailableSymbols();
 
-			setTradingPairs(data?.data);
+			const tradingPairs = data?.data.filter(item => item.provider.slug === 'binance');
+
+			setTradingPairs(tradingPairs);
 		}catch (e) {
 			console.log(e);
 		}
@@ -167,8 +175,7 @@ const Watchlist = () => {
 			setShow(false);
 
 			const preWatchList = [...watchlist];
-			const selectedTradingPairs = tradingPairs.filter((item) => selectedValue.includes(item.symbol));
-			console.log('selectedTradingPairs', selectedTradingPairs);
+			const selectedTradingPairs = tradingPairs.filter((item) => selectedValue.includes(item._id));
 			setWatchlist([...preWatchList, ...selectedTradingPairs]);
 
 			selectedValue?.map(async (item) => {
@@ -177,6 +184,7 @@ const Watchlist = () => {
 						symbolId: item,
 						userId: localStorage.getItem('user_id')
 					});
+					console.log('------------response', response);
 
 				}catch (e) {
 					console.log(e);
@@ -190,17 +198,32 @@ const Watchlist = () => {
 		}
 	};
 
-	const handleDelete = async (item) => {
+	const handleDelete = async () => {
 		setIsLoading(true);
+		setIsDeleteShow(false);
+		const preWatchList = [...watchlist];
+		const remainingWatchlist = watchlist.filter((item) => item.id !== selectedToDelete.id);
+
+		console.log('0000000000000', remainingWatchlist);
+		setWatchlist(remainingWatchlist);
 
 		try {
 			const userId = localStorage.getItem('user_id');
-			const response = await deleteItemFromWatchList(item.id, userId);
+			console.log(selectedToDelete.id, userId, '---------------------------');
+			const response = await deleteItemFromWatchList(selectedToDelete.id, userId);
+
+			if(response.status === 200) {
+				toast.success('Symbol removed successfully');
+			}else {
+				toast.error(`Error occurred when deleting ${selectedToDelete.symbol}`);
+				setWatchlist(preWatchList);
+			}
 
 		}catch (e) {
 			console.log(e);
-			toast.error(`Error deleting ${item.symbol} from watchlist`);
+			toast.error(`Error occurred when deleting ${selectedToDelete.symbol} from watchlist`);
 		}
+		setIsLoading(false);
 	};
 
 	const myStyle1={
@@ -209,15 +232,10 @@ const Watchlist = () => {
 		opacity: '0.9'
 	};
 
-	const myStyle2={
-		backgroundColor:'rgba(255, 255, 255, 0.65)',
-		// backgroundSize: 'cover',
-		// height: '100vh',
-		// opacity: '0.7'
-	};
-
-	const handleIsDeleteShow = () => {
+	const handleIsDeleteShow = (item = null) => {
+		setSelectedToDelete(item);
 		setIsDeleteShow(!isDeleteShow);
+		console.log('handle Is delete show is calling');
 	};
 
 
@@ -244,12 +262,12 @@ const Watchlist = () => {
 								watchlist.map((item, index) => {
 									return (
 										{
-											id: index,
+											id: item.id,
 											symbol: item.symbol,
 											lastValue: watchListData[item.symbol]?.lastPrice,
 											priceChange: watchListData[item.symbol]?.priceChange,
 											priceChangePercent: watchListData[item.symbol]?.priceChangePercent,
-											actions: <i className={'fa fa-trash'} style={{cursor: 'pointer'}} onClick={() => handleIsDeleteShow(item)}/>
+											// actions: <i className={'fa fa-trash'} style={{cursor: 'pointer'}} onClick={() => handleIsDeleteShow(item)}/>
 										}
 									);
 								})}
@@ -268,24 +286,34 @@ const Watchlist = () => {
 					<Modal.Body>
 						<form className="w-100">
 							{tradingPairs.length === 0 ? <div className='text-center'>No data</div> :
-								tradingPairs?.map((item) => (
-									<div className="form-check" key={item._id}>
-										<input
-											type="checkbox"
-											className="form-check-input"
-											id={item._id}
-											name="option1"
-											value={item._id}
-											onChange={handleSelect}
-										/>
-										<label
-											className="form-check-label"
-											htmlFor={item._id}
-										>
-											{item.name}
-										</label>
-									</div>
-								))
+								tradingPairs?.map((item) => {
+									let isContain = false;
+									for(let i = 0; i < watchlist.length; i++) {
+										if(watchlist[i].id === item._id) {
+											isContain = true;
+											break;
+										}
+									}
+
+									return (!isContain ? (
+										<div className="form-check" key={item._id}>
+											<input
+												type="checkbox"
+												className="form-check-input"
+												id={item._id}
+												name="option1"
+												value={item._id}
+												onChange={handleSelect}
+											/>
+											<label
+												className="form-check-label"
+												htmlFor={item._id}
+											>
+												{item.name}
+											</label>
+										</div>
+									): null);
+								})
 							}
 						</form>
 					</Modal.Body>
@@ -309,14 +337,14 @@ const Watchlist = () => {
 						Are you sure you want to delete this item?
 					</Modal.Body>
 					<Modal.Footer>
-						<Button variant="secondary" onClick={handleClose}>
+						<Button variant="secondary" onClick={handleIsDeleteShow}>
 							Close
 						</Button>
 						<Button
 							variant="primary"
-							onClick={handleSubmit}
+							onClick={handleDelete}
 						>
-							Add
+							Delete
 						</Button>
 					</Modal.Footer>
 				</Modal>

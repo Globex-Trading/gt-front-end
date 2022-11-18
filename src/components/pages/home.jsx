@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React, {useContext, useEffect} from 'react';
 import PreLoader from '../common/loader';
 import { Link } from 'react-router-dom';
 import { StoreContext } from '../common/stateProvider';
 
 const Home = () => {
+
 	const [isLoading, setIsLoading] = React.useState(true);
+	const {user} = useContext(StoreContext);
 
 	useEffect(() => {
-		setInterval(() => {
+		setTimeout(() => {
 			setIsLoading(false);
-		}, 500);
+		}, 1000);
 	});
 	return (
 		<React.Fragment>

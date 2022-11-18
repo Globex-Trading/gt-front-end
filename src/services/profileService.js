@@ -31,11 +31,12 @@ export async function saveItemToWatchList(item) {
 	}
 }
 
-export async function deleteItemFromWatchList(item) {
+export async function deleteItemFromWatchList(symbolId, userId) {
+	console.log('-------------', symbolId,userId);
 	try {
 		return await axios.post(
 			apiURL + '/watchlist/removeitem',
-			item,
+			{symbolId: symbolId, userId: userId},
 			{headers: {'Authorization': `Bearer ${access_token}`}}
 		);
 	}catch (e) {

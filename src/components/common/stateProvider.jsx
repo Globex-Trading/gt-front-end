@@ -38,8 +38,6 @@ const StateProvider = ({ children }) => {
 	const getUserDetails = async () => {
 		try{
 			const user = await getUser();
-			console.log('adding user details--------------------------------', user);
-			// setState({ ...state, ['user']: user });
 			setUser(user);
 		}catch(error){
 			console.log('error occured', error);

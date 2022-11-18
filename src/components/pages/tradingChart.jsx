@@ -27,30 +27,10 @@ const TradingChart = () => {
 		{ name: 'Line', slug: 'line' },
 	]);
 	const [intervals, setIntervals] = useState([]);
-	const [techIndicators, setTechIndicators] = useState([
-		// {
-		// 	_id: '63467fa36c6e5ed94c0874cf',
-		// 	name: 'sma',
-		// 	newPane: false,
-		// 	chartType: 'line',
-		// },
-		// {
-		// 	_id: '63467fa36c6e5ed94c0874d0',
-		// 	name: 'ema',
-		// 	newPane: false,
-		// 	chartType: 'line',
-		// },
-		// {
-		//
-		// 	_id: '63467fa36c6e5ed94c0874d3',
-		// 	name: 'rsi',
-		// 	newPane: true,
-		// 	chartType: 'line'
-		// }
-	]);
+	const [techIndicators, setTechIndicators] = useState();
 	const [providers, setProviders] = useState([]);
 
-	const [initData, setInitData] = useState(null);
+	const [initData, setInitData] = useState([]);
 	const [lastData, setLastData] = useState(null);
 	const [TIData, setTIData] = useState([]);
 
@@ -61,6 +41,7 @@ const TradingChart = () => {
 	const [alertPrice, setAlertPrice] = useState(0);
 
 	const [subscription, setSubscription] = useState(null);
+	const [lastTimeValue, setLastTimeValue] = useState(Date.now() - 200000);
 
 	const { stompClient, user } = useContext(StoreContext);
 
@@ -82,7 +63,7 @@ const TradingChart = () => {
 			const baseURL = '/topic/';
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
 
-			subscribeToTopic(topic);
+			// subscribeToTopic(topic);
 		}
 
 	}, [selectedTradingPair, selectedInterval, selectedChartType, stompClient]);
@@ -95,20 +76,24 @@ const TradingChart = () => {
 		});
 	};
 
-	const getPastData = async (symbol = selectedTradingPair._id, interval = selectedInterval, end = Date.now()) => {
-		setIsLoading(true);
+	const getPastData = async (initial = true, start= Date.now() - 20000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
+		initial && setIsLoading(true);
 		const data = {
 			symbol: symbol,
 			interval: interval,
-			start: end - 20000000,
-			end: end,
+			start: start,
+			end: Date.now(),
 		};
 
-		console.log('!!!!!!!!!!!!!!!!!!!!!STARTING TO FETCH DATA', data);
-		const { data: tradingData } = await getPastTradingData(data);
-		console.log(tradingData, '-----------------trading data', data);
-		setInitData(tradingData);
-		setIsLoading(false);
+		try {
+			const {data: tradingData} = await getPastTradingData(data);
+			// const tradeData = [...initData];
+			setInitData(tradingData);
+			setIsUpdated(true);
+		} catch (e) {
+			console.log(e);
+		}
+		initial && setIsLoading(false);
 	};
 
 	const getProviders = async () => {
@@ -120,7 +105,6 @@ const TradingChart = () => {
 			setIntervals(data[0]?.providedTimeFrames);
 			setSelectedTradingPair(data[0]?.symbols[0]);
 			setSelectedInterval(data[0]?.providedTimeFrames[0]);
-			console.log('response-----------------', data);
 		} catch (ex) {
 			console.log(ex);
 		}
@@ -140,11 +124,24 @@ const TradingChart = () => {
 	};
 
 	const handleChangeTradingPair = (value) => {
+		setTIData([]);
 		setSelectedTradingPair(value);
+		setInitData([]);
+		setLastTimeValue(Date.now() - 200000);
+		const tempSelectedTAs = [...selectedTAs];
+		setSelectedTAs([]);
+		// setSelectedTAs(tempSelectedTAs);
+		// tempSelectedTAs.map((ta) => {
+		// 	getTIData(ta, Date.now() - 20000000, []);
+		// });
+
+		const tempTechIndicators = [...techIndicators];
+		setTechIndicators(tempTechIndicators);
 	};
 
 	const handleChangeInterval = (value) => {
 		setSelectedInterval(value);
+		setInitData([]);
 	};
 
 	const handleSelectTAs = async (ta) => {
@@ -155,22 +152,28 @@ const TradingChart = () => {
 			setTIData(TIData.filter((item) => item.name !== value));
 		} else {
 			setSelectedTAs([...selectedTAs, value]);
-			try {
-				const {data} = await getTechnicalIndicators({
-					symbolId: selectedTradingPair._id,
-					timeframe: selectedInterval,
-					TI: value,
-					startTime: Date.now() - 20000000,
-					endTime: Date.now(),
-				});
-
-				setTIData([...TIData, {name: data.TI, data: data.data}]);
-			} catch (ex) {
-				console.log(ex);
-			}
+			await getTIData(value);
 		}
 		setIsLoading(false);
 	};
+
+	const getTIData =async (tiName, startTime = lastTimeValue-200000, TIDataList = TIData) => {
+		try {
+			const {data} = await getTechnicalIndicators({
+				symbolId: selectedTradingPair._id,
+				timeframe: selectedInterval,
+				TI: tiName,
+				startTime: startTime,
+				endTime: Date.now(),
+			});
+
+			setTIData([...TIDataList, {name: data.TI, data: data.data}]);
+		} catch (ex) {
+			console.log(ex);
+		}
+	};
+
+
 
 	const handleShow = () => setShow(true);
 
@@ -182,6 +185,7 @@ const TradingChart = () => {
 		setIntervals(value.providedTimeFrames);
 		setSelectedTradingPair(value.symbols[0]);
 		setSelectedInterval(value.providedTimeFrames[0]);
+		setInitData([]);
 	};
 
 	//adding new alert
@@ -365,6 +369,7 @@ const TradingChart = () => {
 														className="form-check-input"
 														id={indicator._id}
 														name="option1"
+														checked={selectedTAs.includes(indicator.name)}
 														onClick={() => handleSelectTAs(indicator)}
 													/>
 													<label
@@ -417,6 +422,8 @@ const TradingChart = () => {
 						techIndicators={techIndicators}
 						selectedTAs={selectedTAs}
 						getPastData={getPastData}
+						setLastTime={setLastTimeValue}
+						getTIData={getTIData}
 					/>
 				</div>
 			</section>

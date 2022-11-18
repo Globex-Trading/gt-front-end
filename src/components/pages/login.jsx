@@ -6,6 +6,7 @@ import Joi from 'joi';
 import { getUser, login } from '../../services/authService';
 import toast from 'react-hot-toast';
 import { StoreContext } from '../common/stateProvider';
+import {saveFCMToken} from '../../services/pushNotificationService';
 
 const Login = () => {
 	const { setUser } = useContext(StoreContext);
@@ -28,7 +29,8 @@ const Login = () => {
 		if (user) {
 			navigate('/');
 		} else {
-			setInterval(() => {
+			setTimeout(() => {
+				console.log('setting isLoading false-------------------');
 				setIsLoading(false);
 			}, 1500);
 		}
@@ -68,18 +70,26 @@ const Login = () => {
 		} else {
 			try{
 				const response = await login({ email: email, password: password });
+
+				console.log('response', response);
 				if (response) {
+					const userID = localStorage.getItem('user_id');
+					const fcmToken = localStorage.getItem('fcm_token');
+
+					const response = await saveFCMToken(fcmToken, userID);
+					console.log('response from saveFCMToken', response);
+					
 					toast.success('Logged in successfully');
 					const user = await getUser();
 					setUser(user);
-					// setState({...state, ['user']: user});
 					navigate('/');
 				} else console.log('error');
 			}catch(error){
-				console.log('error occured', error);
-				toast.error('Error occured!');
+				toast.error('Error occurred!');
 			}
 		}
+		setIsLoading(false);
+
 	};
 
 	return (

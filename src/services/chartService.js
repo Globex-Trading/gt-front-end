@@ -12,7 +12,7 @@ export async function getPastTradingData(data) {
 		apiUrl + '/trading-data/',
 		data
 	);
-	console.log(response);
+	// console.log(response);
 	return response;
 
 }

@@ -39,6 +39,7 @@ const PushNotification = () => {
 			console.log(error);
 		});
 
+
 	return (
 		<Fragment>
 			<Toaster

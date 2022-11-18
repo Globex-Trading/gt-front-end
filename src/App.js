@@ -17,6 +17,7 @@ import ProtectedRoute from './components/common/protectedRoute';
 import Profile from './components/pages/profile';
 import Alerts from './components/pages/alerts';
 import FileUpload from './components/pages/fileUpload';
+import Notifications from './components/pages/notifications';
 
 function App() {
 	return (
@@ -38,6 +39,9 @@ function App() {
 							</Route>
 							<Route path="/stock-data" element={<ProtectedRoute userTypes={['ADMIN']}/>}>
 								<Route path="/stock-data" element={<FileUpload/>}/>
+							</Route>
+							<Route path="/profile/notifications" element={<ProtectedRoute userTypes={['USER', 'ADMIN']}/>}>
+								<Route path="/profile/notifications" element={<Notifications/>}/>
 							</Route>
 							<Route path="/logout" element={<Logout/>}/>
 							<Route path="/login" element={<Login/>}/>

@@ -30,3 +30,30 @@ export async function saveItemToWatchList(item) {
 		return null;
 	}
 }
+
+export async function deleteItemFromWatchList(symbolId, userId) {
+	console.log('-------------', symbolId,userId);
+	try {
+		return await axios.post(
+			apiURL + '/watchlist/removeitem',
+			{symbolId: symbolId, userId: userId},
+			{headers: {'Authorization': `Bearer ${access_token}`}}
+		);
+	}catch (e) {
+		console.log(e);
+		return null;
+	}
+}
+
+export async function getNotifications(userId) {
+	try {
+		return await axios.post(
+			apiURL + '/notification/getnotification',
+			{userid: userId},
+			{headers: {'Authorization': `Bearer ${access_token}`}}
+		);
+	}catch (e) {
+		console.log(e);
+		return null;
+	}
+}

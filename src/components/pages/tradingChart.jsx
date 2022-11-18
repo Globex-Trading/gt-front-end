@@ -41,6 +41,7 @@ const TradingChart = () => {
 	const [alertPrice, setAlertPrice] = useState(0);
 
 	const [subscription, setSubscription] = useState(null);
+	const [lastTimeValue, setLastTimeValue] = useState(Date.now() - 200000);
 
 	const { stompClient, user } = useContext(StoreContext);
 
@@ -62,7 +63,7 @@ const TradingChart = () => {
 			const baseURL = '/topic/';
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
 
-			subscribeToTopic(topic);
+			// subscribeToTopic(topic);
 		}
 
 	}, [selectedTradingPair, selectedInterval, selectedChartType, stompClient]);
@@ -143,22 +144,30 @@ const TradingChart = () => {
 			setTIData(TIData.filter((item) => item.name !== value));
 		} else {
 			setSelectedTAs([...selectedTAs, value]);
-			try {
-				const {data} = await getTechnicalIndicators({
-					symbolId: selectedTradingPair._id,
-					timeframe: selectedInterval,
-					TI: value,
-					startTime: Date.now() - 20000000,
-					endTime: Date.now(),
-				});
-
-				setTIData([...TIData, {name: data.TI, data: data.data}]);
-			} catch (ex) {
-				console.log(ex);
-			}
+			await getTIData(value);
 		}
 		setIsLoading(false);
 	};
+
+	const getTIData =async (tiName, startTime = lastTimeValue-20000000) => {
+		try {
+			console.log('---------------------LAST TIME VALUE', startTime, lastTimeValue);
+			const {data} = await getTechnicalIndicators({
+				symbolId: selectedTradingPair._id,
+				timeframe: selectedInterval,
+				TI: tiName,
+				startTime: startTime,
+				endTime: Date.now(),
+			});
+			console.log(data, '-----------------TI data');
+
+			setTIData([...TIData, {name: data.TI, data: data.data}]);
+		} catch (ex) {
+			console.log(ex);
+		}
+	};
+
+
 
 	const handleShow = () => setShow(true);
 
@@ -406,6 +415,8 @@ const TradingChart = () => {
 						techIndicators={techIndicators}
 						selectedTAs={selectedTAs}
 						getPastData={getPastData}
+						setLastTime={setLastTimeValue}
+						getTIData={getTIData}
 					/>
 				</div>
 			</section>

@@ -63,7 +63,7 @@ const TradingChart = () => {
 			const baseURL = '/topic/';
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
 
-			// subscribeToTopic(topic);
+			subscribeToTopic(topic);
 		}
 
 	}, [selectedTradingPair, selectedInterval, selectedChartType, stompClient]);
@@ -78,7 +78,6 @@ const TradingChart = () => {
 
 	const getPastData = async (initial = true, start= Date.now() - 20000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
 		initial && setIsLoading(true);
-		console.log('---------------------------intial', initial);
 		const data = {
 			symbol: symbol,
 			interval: interval,
@@ -88,7 +87,6 @@ const TradingChart = () => {
 
 		try {
 			const {data: tradingData} = await getPastTradingData(data);
-			console.log(tradingData, '-----------------trading data', data);
 			// const tradeData = [...initData];
 			setInitData(tradingData);
 			setIsUpdated(true);
@@ -107,7 +105,6 @@ const TradingChart = () => {
 			setIntervals(data[0]?.providedTimeFrames);
 			setSelectedTradingPair(data[0]?.symbols[0]);
 			setSelectedInterval(data[0]?.providedTimeFrames[0]);
-			console.log('response-----------------', data);
 		} catch (ex) {
 			console.log(ex);
 		}
@@ -151,7 +148,6 @@ const TradingChart = () => {
 
 	const getTIData =async (tiName, startTime = lastTimeValue-20000000) => {
 		try {
-			console.log('---------------------LAST TIME VALUE', startTime, lastTimeValue);
 			const {data} = await getTechnicalIndicators({
 				symbolId: selectedTradingPair._id,
 				timeframe: selectedInterval,
@@ -159,7 +155,6 @@ const TradingChart = () => {
 				startTime: startTime,
 				endTime: Date.now(),
 			});
-			console.log(data, '-----------------TI data');
 
 			setTIData([...TIData, {name: data.TI, data: data.data}]);
 		} catch (ex) {

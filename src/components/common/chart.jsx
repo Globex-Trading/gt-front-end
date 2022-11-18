@@ -220,8 +220,15 @@ const Chart = (props) => {
 	useEffect(() => {
 
 		if (props.lastData) {
+			if (props.lastData.klineClosed) {
+				const startTime = chart.timeScale().coordinateToTime(chart.timeScale().logicalToCoordinate(0));
+				props.selectedTAs.map(item => {
+					props.getTIData(item, startTime);
+				});
+			}
 			chartInstance.update(reFormatData(props.lastData, props.chartType));
 			volumeInstance.update(reFormatData(props.lastData, 'volume'));
+
 		}
 
 	}, [props.lastData]);

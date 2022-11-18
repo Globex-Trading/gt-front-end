@@ -63,7 +63,7 @@ const TradingChart = () => {
 			const baseURL = '/topic/';
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
 
-			subscribeToTopic(topic);
+			// subscribeToTopic(topic);
 		}
 
 	}, [selectedTradingPair, selectedInterval, selectedChartType, stompClient]);
@@ -124,8 +124,19 @@ const TradingChart = () => {
 	};
 
 	const handleChangeTradingPair = (value) => {
+		setTIData([]);
 		setSelectedTradingPair(value);
 		setInitData([]);
+		setLastTimeValue(Date.now() - 200000);
+		const tempSelectedTAs = [...selectedTAs];
+		setSelectedTAs([]);
+		// setSelectedTAs(tempSelectedTAs);
+		// tempSelectedTAs.map((ta) => {
+		// 	getTIData(ta, Date.now() - 20000000, []);
+		// });
+
+		const tempTechIndicators = [...techIndicators];
+		setTechIndicators(tempTechIndicators);
 	};
 
 	const handleChangeInterval = (value) => {
@@ -146,7 +157,7 @@ const TradingChart = () => {
 		setIsLoading(false);
 	};
 
-	const getTIData =async (tiName, startTime = lastTimeValue-20000000) => {
+	const getTIData =async (tiName, startTime = lastTimeValue-200000, TIDataList = TIData) => {
 		try {
 			const {data} = await getTechnicalIndicators({
 				symbolId: selectedTradingPair._id,
@@ -156,7 +167,7 @@ const TradingChart = () => {
 				endTime: Date.now(),
 			});
 
-			setTIData([...TIData, {name: data.TI, data: data.data}]);
+			setTIData([...TIDataList, {name: data.TI, data: data.data}]);
 		} catch (ex) {
 			console.log(ex);
 		}
@@ -358,6 +369,7 @@ const TradingChart = () => {
 														className="form-check-input"
 														id={indicator._id}
 														name="option1"
+														checked={selectedTAs.includes(indicator.name)}
 														onClick={() => handleSelectTAs(indicator)}
 													/>
 													<label

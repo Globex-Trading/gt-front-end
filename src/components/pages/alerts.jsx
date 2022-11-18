@@ -4,6 +4,7 @@ import PreLoader from '../common/loader';
 import {StoreContext} from '../common/stateProvider';
 import {getExistingAlertsByUserID} from '../../services/chartService';
 import toast from 'react-hot-toast';
+import DataTable from 'react-data-table-component';
 
 let alertData = {};
 let subs = [];
@@ -11,7 +12,6 @@ let subs = [];
 const Alerts = () => {
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [isUpdate, setIsUpdate] = useState(false);
 	const [subscriptions, setSubscriptions] = useState({});
 	const [alerts, setAlerts] = useState([]);
 
@@ -28,7 +28,6 @@ const Alerts = () => {
 		}, 2000);
 
 		return () => {
-			console.log('unmounting---------------------------------------------------------------', subs);
 			subs.forEach( (sub) => {
 				sub.unsubscribe();
 			});
@@ -38,6 +37,46 @@ const Alerts = () => {
 	}, []);
 
 	// setInterval(() => setIsUpdate(!isUpdate), 1000);
+
+	const columns = [
+		{
+			name: 'Symbol',
+			selector: row=>row.symbol,
+			sortable: true,
+		},
+		{
+			name: 'Alert Price',
+			selector: row=>row.alertPrice,
+			sortable: true,
+		},
+		{
+			name: 'Current Price',
+			selector: row=>row.currentPrice,
+			sortable: true,
+			conditionalCellStyles: [
+				{
+					when: row=>alertData[row.symbol]?.priceChange < 0,
+					style: {
+						color: 'red',
+					}
+				},
+				{
+					when: row=>alertData[row.symbol]?.priceChange > 0,
+					style: {
+						color: 'green',
+					}
+				}
+				
+			]
+		},
+		{
+			name: 'Status',
+			cell: row => <span className={row.isTriggered ? 'bg-danger' : 'bg-success' + ' p-2 text-white rounded-lg'}>{row.isTriggered ? 'Triggered' : 'Available'}</span>,
+			ignoreRowClick: true,
+			allowOverClick: true,
+			button: true
+		}
+	];
 
 
 	useEffect(() => {
@@ -98,38 +137,26 @@ const Alerts = () => {
 			>
 				<div className='watchlist-container d-flex justify-content-center' style={myStyle1}>
 					<div className='container'>
-						{alerts.length === 0 ? <h3 className='text-center'>No alerts found</h3> :
-							<Table striped bordered hover>
-								<thead>
-									<tr>
-										<th>Symbol</th>
-										<th>Alert Price</th>
-										<th>Current Price</th>
-										<th>Status</th>
-									</tr>
-								</thead>
-								<tbody>
-									{alerts.map((item) => {
-										const data = alertData[item.symbol];
-										// console.log(item);
-										return (
-											<tr key={item.id}>
-												<td className='text-black-50'>{item.symbol}</td>
-												<td>{item.trigger_price}</td>
-												<td className={data?.priceChange > 0 ? 'text-success' : 'text-danger'}>{data?.lastPrice}</td>
-												<td>
-													<span
-														className={item.is_triggered ? 'bg-danger' : 'bg-success' + ' p-2 text-white rounded-lg'}>{item.is_triggered ? 'Triggered' : 'Available'}</span>
-												</td>
+						<DataTable
+							columns={columns}
+							data={
+								alerts.map((item) => {
+									return (
+										{
+											id: item.id,
+											symbol: item.symbol,
+											alertPrice: item.trigger_price,
+											currentPrice: alertData[item.symbol]?.lastPrice,
+										}
+									);
+								})
+							}
+							pagination
+							fixedHeader
+							fixedHeaderScrollHeight="300px"
+							// progressPending={isPending}
+						/>
 
-											</tr>
-
-										);
-									}
-									)}
-								</tbody>
-							</Table>
-						}
 					</div>
 				</div>
 			</section>

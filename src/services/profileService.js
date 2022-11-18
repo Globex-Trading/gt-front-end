@@ -44,3 +44,16 @@ export async function deleteItemFromWatchList(symbolId, userId) {
 		return null;
 	}
 }
+
+export async function getNotifications(userId) {
+	try {
+		return await axios.post(
+			apiURL + '/notification/getnotification',
+			{userid: userId},
+			{headers: {'Authorization': `Bearer ${access_token}`}}
+		);
+	}catch (e) {
+		console.log(e);
+		return null;
+	}
+}

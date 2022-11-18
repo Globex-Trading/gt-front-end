@@ -49,12 +49,12 @@ const Home = () => {
 									>
                     Charts
 									</Link>
-									<Link
+									{!user && <Link
 										to="/register"
 										className="btn btn-bordered-white d-none d-sm-inline-block font-weight-bold"
 									>
-                    Register
-									</Link>
+										Register
+									</Link>}
 								</div>
 							</div>
 						</div>

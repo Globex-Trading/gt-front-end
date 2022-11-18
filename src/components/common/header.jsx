@@ -44,11 +44,11 @@ const Header = () => {
                   Home
 								</Link>
 							</li>
-							<li className="nav-item">
-								<Link className="nav-link" to="#about-us">
-                  About Us
-								</Link>
-							</li>
+							{/*		<li className="nav-item">*/}
+							{/*			<Link className="nav-link" to="#about-us">*/}
+							{/*About Us*/}
+							{/*			</Link>*/}
+							{/*		</li>*/}
 							{/*	<li className="nav-item dropdown">*/}
 							{/*		<Link className="nav-link" to="/" onClick={() => updateComponent()}>*/}
 							{/*            Home <i className="fas fa-angle-down ml-1" />*/}
@@ -114,6 +114,12 @@ const Header = () => {
 									<li className="nav-item">
 										<Link to="/profile/alerts" className="nav-link">
 											Alerts
+										</Link>
+									</li>
+									<hr/>
+									<li className="nav-item">
+										<Link to="/profile/notifications" className="nav-link">
+											Notifications
 										</Link>
 									</li>
 									<hr/>

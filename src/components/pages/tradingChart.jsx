@@ -404,7 +404,7 @@ const TradingChart = () => {
                       Add alert
 										</li>
 										<li>
-											<Link className="dropdown-item" to="/login">
+											<Link className="dropdown-item" to="/profile/alerts">
                         View alerts
 											</Link>
 										</li>

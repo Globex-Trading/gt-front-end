@@ -3,10 +3,12 @@ import { render, screen, cleanup } from '@testing-library/react';
 import Alerts from '../alerts';
 import {rest} from 'msw';
 import {setupServer} from 'msw/node';
+import config from '../../../config';
+
+const apiURL = config.apiURL;
 
 const server = setupServer(
-
-	rest.get('https://www.teamone.shop:3000/alerts', (req, res, ctx) => {
+	rest.get(`${apiURL}/alerts/:userID`, (req, res, ctx) => {
 		return res(ctx.json({}));
 	})
 );

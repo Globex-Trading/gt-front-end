@@ -112,6 +112,7 @@ const Register = () => {
 		<div>
 			<PreLoader isLoading={isLoading} />
 			<section
+				data-testid="register"
 				id="home"
 				className="section welcome-area overflow-hidden d-flex align-items-center"
 				style={{backgroundImage: 'url("assets/img/back3.webp")'}}

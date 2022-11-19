@@ -239,6 +239,7 @@ const Watchlist = () => {
 		<Fragment>
 			<PreLoader isLoading={isLoading}/>
 			<section
+				data-testid="watchlist"
 				id="watchlist"
 				className="section overflow-hidden"
 				style={{backgroundImage: 'url("assets/img/back3.webp")'}}

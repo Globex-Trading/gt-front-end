@@ -65,9 +65,9 @@ const Notifications = () => {
 		<Fragment>
 			<PreLoader isLoading={isLoading}/>
 			<section
+			    data-testid="notifications"
 				id="alerts"
 				className="section bg-overlay overflow-hidden"
-				data-testid={'alerts'}
 			>
 				<div className='watchlist-container d-flex justify-content-center' style={myStyle1}>
 					<div className='container'>

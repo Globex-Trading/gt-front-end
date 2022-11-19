@@ -22,6 +22,7 @@ const Home = () => {
 			</div>
 			{/*====== Scroll To Top Area End ======*/}
 			<section
+				data-testid="home"
 				id="home"
 				className="section welcome-area overflow-hidden d-flex align-items-center"
 				style={{backgroundImage: 'url(assets/img/back3.webp)', backgroundSize: 'cover', height: '100vh'}}

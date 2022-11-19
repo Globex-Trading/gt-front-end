@@ -84,6 +84,7 @@ const Profile = () => {
 		<React.Fragment>
 			<PreLoader isLoading={isLoading}/>
 			<section
+			    data-testid="profile"
 				id="profile"
 				className="section overflow-hidden"
 			>
@@ -139,7 +140,7 @@ const Profile = () => {
 								<div className='col-md-6'>
 									<h3 className='text-left '>Watchlist</h3>
 									<hr/>
-									<Table className='font-weight-bolder text-left ml-2'>
+									<Table data-testid='watchlist-table' className='font-weight-bolder text-left ml-2'>
 										<thead>
 											<th>
 												Symbol
@@ -164,7 +165,7 @@ const Profile = () => {
 								<div className='col-md-6'>
 									<h3 className='text-left '>Price Alerts</h3>
 									<hr/>
-									<Table className='font-weight-bolder text-left'>
+									<Table data-testid='alert-table' className='font-weight-bolder text-left'>
 										<thead>
 											<th>
 											Symbol

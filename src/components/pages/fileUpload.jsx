@@ -66,7 +66,8 @@ const FileUpload = () => {
 		<React.Fragment>
 			<PreLoader isLoading={isLoading}/>
 			<section
-				id="watchlist"
+			    data-testid="file-upload"
+				id="fileUploadService"
 				className="section overflow-hidden"
 				style={{backgroundImage: 'url("assets/img/back3.webp")'}}
 			>
@@ -82,16 +83,16 @@ const FileUpload = () => {
 										<div className="mb-2 col-md-6">
 											<label htmlFor="exampleFormControlInput1" className="form-label">
 												Select Symbol</label>
-											<select className='form-control' required onSelect={(e) => setSelectedSymbol(e.target.value)}>
+											<select data-testid='symbol-select' className='form-control' required onSelect={(e) => setSelectedSymbol(e.target.value)}>
 												{symbols.map((item) => (
 													<option key={item._id} value={item}>{item.name}</option>
 												))}
 											</select>
 										</div>
 										<div className="mb-2 col-md-6">
-											<label htmlFor="exampleFormControlInput1" className="form-label">
-												Select Symbol</label>
-											<select className='form-control' required onSelect={(e) => setSelectedTimeInterval(e.target.value)}>
+										    <label htmlFor="exampleFormControlInput1" className="form-label">
+												Select Interval</label>
+											<select data-testid='interval-select' className='form-control' required onSelect={(e) => setSelectedTimeInterval(e.target.value)}>
 												{timeIntervals.map((item) => (
 													<option key={item} value={item}>{item}</option>
 												))}

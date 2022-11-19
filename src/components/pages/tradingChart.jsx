@@ -63,7 +63,7 @@ const TradingChart = () => {
 			const baseURL = '/topic/';
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
 
-			// subscribeToTopic(topic);
+			subscribeToTopic(topic);
 		}
 
 	}, [selectedTradingPair, selectedInterval, selectedChartType, stompClient]);

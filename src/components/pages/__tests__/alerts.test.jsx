@@ -5,11 +5,8 @@ import {rest} from 'msw';
 import {setupServer} from 'msw/node';
 
 const server = setupServer(
-	rest.post('https://www.teamone.shop:3000/watchlist/getitemlist', (req, res, ctx) => {
-		return res(ctx.json({}));
-	}),
 
-	rest.get('https://www.teamone.shop:3000/symbols', (req, res, ctx) => {
+	rest.get('https://www.teamone.shop:3000/alerts', (req, res, ctx) => {
 		return res(ctx.json({}));
 	})
 );
@@ -27,4 +24,11 @@ test('render Alerts', () => {
 	expect(alertsComponent).toBeInTheDocument();
 	//check component has div element
 	expect(alertsComponent).toContainHTML('table');
+});
+
+test('render Loader', () => {
+	render(<Alerts />);
+	const header = screen.getByTestId('preloader');
+	expect(header).toBeInTheDocument();
+	expect(header).toContainHTML('div');
 });

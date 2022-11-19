@@ -204,12 +204,10 @@ const Watchlist = () => {
 		const preWatchList = [...watchlist];
 		const remainingWatchlist = watchlist.filter((item) => item.id !== selectedToDelete.id);
 
-		console.log('0000000000000', remainingWatchlist);
 		setWatchlist(remainingWatchlist);
 
 		try {
 			const userId = localStorage.getItem('user_id');
-			console.log(selectedToDelete.id, userId, '---------------------------');
 			const response = await deleteItemFromWatchList(selectedToDelete.id, userId);
 
 			if(response.status === 200) {
@@ -244,6 +242,7 @@ const Watchlist = () => {
 		<Fragment>
 			<PreLoader isLoading={isLoading}/>
 			<section
+				data-testid="watchlist"
 				id="watchlist"
 				className="section overflow-hidden"
 				style={{backgroundImage: 'url("assets/img/back3.webp")'}}

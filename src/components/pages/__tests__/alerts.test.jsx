@@ -3,13 +3,12 @@ import { render, screen, cleanup } from '@testing-library/react';
 import Alerts from '../alerts';
 import {rest} from 'msw';
 import {setupServer} from 'msw/node';
+import config from '../../../config';
+
+const apiURL = config.apiURL;
 
 const server = setupServer(
-	rest.post('https://www.teamone.shop:3000/watchlist/getitemlist', (req, res, ctx) => {
-		return res(ctx.json({}));
-	}),
-
-	rest.get('https://www.teamone.shop:3000/symbols', (req, res, ctx) => {
+	rest.get(`${apiURL}/alerts/:userID`, (req, res, ctx) => {
 		return res(ctx.json({}));
 	})
 );

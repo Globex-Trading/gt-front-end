@@ -33,6 +33,18 @@ const Chart = (props) => {
 	};
 
 
+	const timeIntervalMap = {
+	    '1m': 60,
+	    '5m': 300,
+	    '15m': 900,
+	    '1h': 3600,
+	    '4h': 14400,
+	    '1d': 86400,
+	    '1w': 604800,
+	    '1M': 2592000
+	};
+
+
 	//useEffect for create the chart
 	useEffect(() => {
 		setIsLoading(true);
@@ -227,6 +239,10 @@ const Chart = (props) => {
 			chartInstance.update(reFormatData(props.lastData, props.chartType));
 			volumeInstance.update(reFormatData(props.lastData, 'volume'));
 
+			if(props.initData.length < 2) {
+			    const logicalRange = chart.timeScale().getVisibleLogicalRange();
+                findTimeRangeAndGetData(logicalRange);
+			}
 		}
 
 	}, [props.lastData]);
@@ -236,7 +252,7 @@ const Chart = (props) => {
 		if (logicalRange && logicalRange.from < 0 && timeRange) {
 			const  {from, to} = logicalRange;
 			const {from: fromTime, to: toTime} = timeRange;
-			const timeInterval = (toTime - fromTime)/ to;
+            const timeInterval = timeIntervalMap[props.interval];
 			const startTime = fromTime - (Math.ceil(Math.abs(from)) * timeInterval);
 			props.getPastData(false, Math.floor((startTime - 19800)*1000), (fromTime - 19800)*1000);
 
@@ -351,6 +367,7 @@ const Chart = (props) => {
 	};
 
 	const handleOnClick = () => {
+	    console.log('handleOnClick--------------------------',newLogicalRange);
 		findTimeRangeAndGetData(newLogicalRange);
 		props.selectedTAs.map((ta) => {
 			handleTI(ta);

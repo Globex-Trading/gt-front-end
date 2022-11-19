@@ -2,8 +2,7 @@ import axios from 'axios';
 import config from '../config.json';
 import {logout, reNewToken} from './authService';
 
-export function isTokenExpired() {
-	const token = localStorage.getItem('user_token');
+export function isTokenExpired(token = localStorage.getItem('user_token')) {
 	if (!token) return  true;
 	const payload = JSON.parse(atob(token.split('.')[1]));
 	return payload.exp < Date.now() / 1000;
@@ -12,11 +11,13 @@ export function isTokenExpired() {
 const apiURL = config.apiURL;
 const axiosAPIInstance = axios.create();
 
+// 'Content-Type': 'application/x-www-form-urlencoded',
+
 axiosAPIInstance.interceptors.request.use(
 	async config => {
 		config.headers = {
 			'Authorization': `Bearer ${localStorage.getItem('user_token')}`,
-			'Content-Type': 'application/x-www-form-urlencoded',
+			'Content-Type': 'application/json',
 			'Accept-Type': 'application/json'
 		};
 		return config;
@@ -27,6 +28,7 @@ axiosAPIInstance.interceptors.request.use(
 
 axiosAPIInstance.interceptors.response.use(
 	(response) => {
+		console.log('response!!!!!!!!!!!!!!!!!!!', response);
 		return response;
 	},
 	async function (error) {

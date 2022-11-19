@@ -40,6 +40,7 @@ function saveUser(response) {
 
 //logout user
 export function logout() {
+	console.log('adding logout-------------------');
 	localStorage.removeItem('user_token');
 	localStorage.removeItem('refresh_token');
 	localStorage.removeItem('user_id');
@@ -53,19 +54,27 @@ export async function getUser() {
 	// 	logout();
 	// 	return null;
 	// }
-
-	const res = await axiosAPIInstance.get(
-		apiUrl + '/users/me',
-		{
-			'headers': {'Authorization': `Bearer ${token}`}
+	try {
+		const res = await axiosAPIInstance.get(
+			apiUrl + '/users/me',
+			{
+				'headers': {'Authorization': `Bearer ${token}`}
+			}
+		);
+		if(res.status === 200) {
+			localStorage.setItem('user_id', res.data?.id);
+			return res.data;
+		}else {
+			return null;
 		}
-	);
-	localStorage.setItem('user_id', res.data?.id);
-	return res.data;
+	} catch (e) {
+		return null;
+	}
 
 }
 
 export async function reNewToken() {
+	localStorage.removeItem('user_token');
 	const refreshToken = localStorage.getItem('refresh_token');
 	try {
 		const res = await axios.post(

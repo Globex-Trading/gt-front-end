@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosAPIInstance from "./httpService";
 
 export async function uploadFile(file, symbolID, timeInterval) {
 	const token = localStorage.getItem('user_token');
@@ -7,7 +8,7 @@ export async function uploadFile(file, symbolID, timeInterval) {
 	formData.append('symbolID', symbolID);
 	formData.append('timeInterval', timeInterval);
 	try {
-		const response = await axios.post('/api/upload', formData, {
+		const response = await axiosAPIInstance.post('/api/upload', formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 				'Authorization': `Bearer ${token}`

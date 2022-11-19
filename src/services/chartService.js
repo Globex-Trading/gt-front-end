@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from '../config.json';
-import {isTokenExpired} from './httpService';
+import axiosAPIInstance, {isTokenExpired} from './httpService';
 import {logout} from './authService';
 
 const apiUrl = config.apiURL;
@@ -49,7 +49,7 @@ export async function addNewAlert(alert) {
 		logout();
 		return null;
 	}
-	const response = await axios.post(
+	const response = await axiosAPIInstance.post(
 		apiUrl + '/alerts/add-alert',
 		alert,
 		{
@@ -63,7 +63,7 @@ export async function addNewAlert(alert) {
 //get existing alerts
 export async function getExistingAlertsByUserID(userID) {
 
-	const response = await axios.get(
+	const response = await axiosAPIInstance.get(
 		apiUrl + '/alerts/' + userID
 	);
 	console.log(response);

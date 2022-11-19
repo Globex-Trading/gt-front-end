@@ -110,7 +110,6 @@ const Chart = (props) => {
 		}
 
 		setIsLoading(false);
-		// setIsMounted(true);
 		chart?.timeScale()?.subscribeVisibleLogicalRangeChange(logicalTimeRangeChangeHandler);
 
 	}, [props.chartType, props.interval, props.tradingPair, props.initData]);
@@ -119,7 +118,6 @@ const Chart = (props) => {
 		props.TIdata.forEach((item) => {
 			const keys = TACarts? Object.keys(TACarts) : [];
 			if(!(keys.includes(item.name))) {
-				console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
 				const TA = findTA(item.name);
 				if(TA) {
 					let chartRef;

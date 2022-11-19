@@ -95,7 +95,7 @@ const Watchlist = () => {
 			watchlist.forEach((item) => {
 				if (!(item in subscriptions)) {
 					const topic = '/topic/' + item.provider + '_' + item.symbol;
-					// subscribeToTopic(topic, item.symbol);
+					subscribeToTopic(topic, item.symbol);
 				}
 			});
 			setIsPending(false);
@@ -121,7 +121,6 @@ const Watchlist = () => {
 		setIsLoading(true);
 		const userId = localStorage.getItem('user_id');
 
-		console.log('user_id------------', userId);
 		try{
 			const watchlist = await getWatchList(userId);
 			if(watchlist?.data){
@@ -165,7 +164,6 @@ const Watchlist = () => {
 			const index = checkList.indexOf(value);
 			checkList.splice(index, 1);
 		}
-		console.log('++++++++++++++', checkList, value);
 		setSelectedValue(checkList);
 	};
 
@@ -184,7 +182,6 @@ const Watchlist = () => {
 						symbolId: item,
 						userId: localStorage.getItem('user_id')
 					});
-					console.log('------------response', response);
 
 				}catch (e) {
 					console.log(e);

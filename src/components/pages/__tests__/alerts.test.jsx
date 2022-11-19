@@ -27,3 +27,10 @@ test('render Alerts', () => {
 	//check component has div element
 	expect(alertsComponent).toContainHTML('table');
 });
+
+test('render Loader', () => {
+	render(<Alerts />);
+	const header = screen.getByTestId('preloader');
+	expect(header).toBeInTheDocument();
+	expect(header).toContainHTML('div');
+});

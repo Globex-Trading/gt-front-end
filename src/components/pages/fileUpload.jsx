@@ -103,8 +103,8 @@ const FileUpload = () => {
 										<label className="form-label" htmlFor="customFile">Upload file below</label>
 										<input type="file" required accept=".text/csv" className="form-control" id="customFile" onChange={handleFileChange}/>
 									</div>
-									<button className="btn btn-primary mt-3" onClick={handleSubmit}>Submit</button>
 								</form>
+								<button className="btn btn-primary mt-3" onClick={handleSubmit}>Submit</button>
 							</div>
 						</div>
 

@@ -2,8 +2,9 @@ import React, {Fragment, useContext, useEffect, useState} from 'react';
 import Table from 'react-bootstrap/Table';
 import PreLoader from '../common/loader';
 import {StoreContext} from '../common/stateProvider';
-import {getExistingAlertsByUserID} from '../../services/chartService';
+import {getExistingAlertsByUserID, removeAlert} from '../../services/chartService';
 import toast from 'react-hot-toast';
+import {Button, Modal} from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
 
 let alertData = {};
@@ -14,6 +15,8 @@ const Alerts = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [subscriptions, setSubscriptions] = useState({});
 	const [alerts, setAlerts] = useState([]);
+	const [isDeleteShow, setIsDeleteShow] = useState(false);
+    const [selectedToDelete, setSelectedToDelete] = useState({});
 
 	const {stompClient} = useContext(StoreContext);
 
@@ -75,7 +78,14 @@ const Alerts = () => {
 			ignoreRowClick: true,
 			allowOverClick: true,
 			button: true
-		}
+		},
+		{
+            cell: row => <div onClick={() => handleIsDeleteShow(row)}><i className={'fa fa-trash'} style={{cursor: 'pointer'}}/></div>,
+            ignoreRowClick: true,
+            allowOverClick: true,
+            button: true
+        }
+
 	];
 
 
@@ -84,7 +94,7 @@ const Alerts = () => {
 			alerts.forEach((item) => {
 				if (!(item in subscriptions)) {
 					const topic = '/topic/' + item.provider + '_' + item.symbol;
-					subscribeToTopic(topic, item.symbol);
+// 					subscribeToTopic(topic, item.symbol);
 				}
 			});
 		}
@@ -120,6 +130,40 @@ const Alerts = () => {
 		}
 	};
 
+	const handleDelete = async () => {
+// 	    TODO: test deleting alert
+        setIsDeleteShow(false);
+        const preAlerts = [...alerts];
+        const remainingAlerts = alerts.filter((item) => item._id !== selectedToDelete.id);
+
+        setAlerts(remainingAlerts);
+
+        try {
+            console.log('selectedToDelete', selectedToDelete);
+            const response = await removeAlert(selectedToDelete.id);
+
+            if(response.status === 200) {
+                toast.success('Symbol removed successfully');
+            }else {
+                toast.error(`Error occurred when deleting ${selectedToDelete.symbol}`);
+                setAlerts(preAlerts);
+            }
+
+        }catch (e) {
+            console.log(e);
+            toast.error(`Error occurred when deleting ${selectedToDelete.symbol} from watchlist`);
+            setAlerts(preAlerts);
+        }
+    };
+
+    const handleIsDeleteShow = (item = null) => {
+            setSelectedToDelete(item);
+            setIsDeleteShow(!isDeleteShow);
+            console.log('handle Is delete show is calling');
+        };
+
+
+
 	const myStyle1={
 		backgroundImage: 'url(/assets/img/white-bg.jpg)',
 		backgroundSize: 'cover',
@@ -143,7 +187,7 @@ const Alerts = () => {
 								alerts.map((item) => {
 									return (
 										{
-											id: item.id,
+											id: item._id,
 											symbol: item.symbol,
 											alertPrice: item.trigger_price,
 											currentPrice: alertData[item.symbol]?.lastPrice,
@@ -160,6 +204,24 @@ const Alerts = () => {
 					</div>
 				</div>
 			</section>
+			<section>
+                <Modal show={isDeleteShow} onHide={handleIsDeleteShow}>
+                    <Modal.Body>
+                        Are you sure you want to delete this item?
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleIsDeleteShow}>
+                            Close
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleDelete}
+                        >
+                            Delete
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </section>
 		</Fragment>
 	);
 };

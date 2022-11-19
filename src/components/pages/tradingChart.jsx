@@ -62,8 +62,10 @@ const TradingChart = () => {
 			setIsUpdated(true);
 			const baseURL = '/topic/';
 			const topic = baseURL + selectedProvider.slug  + '_' + selectedTradingPair.providedName + '_' + selectedInterval;
+            if(selectedProvider.slug === 'binance'){
+                subscribeToTopic(topic);
+            }
 
-			subscribeToTopic(topic);
 		}
 
 	}, [selectedTradingPair, selectedInterval, selectedChartType, stompClient]);
@@ -77,6 +79,7 @@ const TradingChart = () => {
 	};
 
 	const getPastData = async (initial = true, start= Date.now() - 20000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
+		console.log('adding new data', selectedProvider, start, end);
 		initial && setIsLoading(true);
 		const data = {
 			symbol: symbol,
@@ -401,7 +404,7 @@ const TradingChart = () => {
                       Add alert
 										</li>
 										<li>
-											<Link className="dropdown-item" to="/login">
+											<Link className="dropdown-item" to="/profile/alerts">
                         View alerts
 											</Link>
 										</li>

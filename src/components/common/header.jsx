@@ -44,42 +44,6 @@ const Header = () => {
                   Home
 								</Link>
 							</li>
-							{/*		<li className="nav-item">*/}
-							{/*			<Link className="nav-link" to="#about-us">*/}
-							{/*About Us*/}
-							{/*			</Link>*/}
-							{/*		</li>*/}
-							{/*	<li className="nav-item dropdown">*/}
-							{/*		<Link className="nav-link" to="/" onClick={() => updateComponent()}>*/}
-							{/*            Home <i className="fas fa-angle-down ml-1" />*/}
-							{/*		</Link>*/}
-							{/*		<ul className="dropdown-menu">*/}
-							{/*			<li className="nav-item dropdown">*/}
-							{/*				<a className="nav-link" href="#">*/}
-							{/*                    Multi-Page <i className="fas fa-angle-right ml-1" />*/}
-							{/*				</a>*/}
-							{/*				<ul className="dropdown-menu">*/}
-							{/*					<li className="nav-item">*/}
-							{/*						<a href="index.html" className="nav-link">*/}
-							{/*                            Homepage 1*/}
-							{/*						</a>*/}
-							{/*					</li>*/}
-							{/*				</ul>*/}
-							{/*			</li>*/}
-							{/*			<li className="nav-item dropdown">*/}
-							{/*				<a className="nav-link" href="#">*/}
-							{/*                    One-Page <i className="fas fa-angle-right ml-1" />*/}
-							{/*				</a>*/}
-							{/*				<ul className="dropdown-menu">*/}
-							{/*					<li className="nav-item">*/}
-							{/*						<a href="index-one-page.html" className="nav-link">*/}
-							{/*                            Homepage 1*/}
-							{/*						</a>*/}
-							{/*					</li>*/}
-							{/*				</ul>*/}
-							{/*			</li>*/}
-							{/*		</ul>*/}
-							{/*	</li>*/}
 							<li className="nav-item">
 								<Link to="/chart" className="nav-link">
                   Charts
@@ -132,31 +96,7 @@ const Header = () => {
 							</li>
 							}
 						</ul>
-						{/* Navbar Icons */}
-						{/*<ul className="navbar-nav icons">*/}
-						{/*	<li className="nav-item">*/}
-						{/*		<a*/}
-						{/*			href="#"*/}
-						{/*			className="nav-link"*/}
-						{/*			data-toggle="modal"*/}
-						{/*			data-target="#search"*/}
-						{/*		>*/}
-						{/*			<i className="fas fa-search" />*/}
-						{/*		</a>*/}
-						{/*	</li>*/}
-						{/*	<li className="nav-item social">*/}
-						{/*		<a href="#" className="nav-link">*/}
-						{/*			<i className="fab fa-facebook-f" />*/}
-						{/*		</a>*/}
-						{/*	</li>*/}
-						{/*	<li className="nav-item social">*/}
-						{/*		<a href="#" className="nav-link">*/}
-						{/*			<i className="fab fa-twitter" />*/}
-						{/*		</a>*/}
-						{/*	</li>*/}
-						{/*</ul>*/}
-						{/* Navbar Toggler */}
-						<ul className="navbar-nav toggle">
+												<ul className="navbar-nav toggle">
 							<li className="nav-item">
 								<a
 									href="#"
@@ -176,13 +116,7 @@ const Header = () => {
 								</li>
 							</ul>
 						)}
-						{/*{user && (*/}
-						{/*	<ul className="navbar-nav action">*/}
-						{/*		<li className="nav-item ml-3">*/}
-						{/*			<Link to='/logout' className='btn ml-lg-auto btn-bordered-white'>Logout</Link>*/}
-						{/*		</li>*/}
-						{/*	</ul>*/}
-						{/*)}*/}
+
 					</div>
 				</nav>
 			</header>

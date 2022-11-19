@@ -83,3 +83,18 @@ export async function getIndicatorList() {
 		apiUrl + '/indicators'
 	);
 }
+
+//remove alert
+export async function removeAlert(alertID) {
+	console.log('service', alertID);
+	try {
+		return await axiosAPIInstance.post(
+			apiUrl + '/alerts/removealert',
+			{alertID: alertID},
+			{headers: {'Authorization': `Bearer ${localStorage.getItem('user_token')}`}}
+		);
+	}catch (e) {
+		console.log(e);
+		return null;
+	}
+}

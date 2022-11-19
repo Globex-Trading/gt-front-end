@@ -95,7 +95,7 @@ const Watchlist = () => {
             watchlist.forEach((item) => {
                 if (!(item in subscriptions)) {
                     const topic = '/topic/' + item.provider + '_' + item.symbol;
-                    // 					subscribeToTopic(topic, item.symbol);
+                    subscribeToTopic(topic, item.symbol);
                 }
             });
             setIsPending(false);

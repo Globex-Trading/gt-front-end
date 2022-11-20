@@ -81,6 +81,7 @@ const TradingChart = () => {
 	const getPastData = async (initial = true, start= Date.now() - 20000000, end = Date.now(), symbol = selectedTradingPair._id, interval = selectedInterval) => {
 		console.log('adding new data', selectedProvider, start, end);
 		initial && setIsLoading(true);
+		if(selectedTradingPair.slug !== 'binance') start = 0;
 		const data = {
 			symbol: symbol,
 			interval: interval,

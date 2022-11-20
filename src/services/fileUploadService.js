@@ -6,9 +6,9 @@ const apiURL = config.apiURL;
 export async function uploadFile(file, symbolID, timeInterval) {
 	const token = localStorage.getItem('user_token');
 	const formData = new FormData();
-	formData.append('file', file);
-	formData.append('symbolID', symbolID);
-	formData.append('timeInterval', timeInterval);
+	formData.append('price_data_file', file);
+	formData.append('symbol_id', symbolID);
+	formData.append('interval', timeInterval);
 	try {
 		const response = await axiosAPIInstance.post(`${apiURL}/price-data-store/upload`, formData, {
 			headers: {

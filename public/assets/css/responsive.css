@@ -159,6 +159,16 @@
     }
 }
 
+.modal-body {
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: start;
+}
+
+.search-title {
+    font-size: 40px;
+}
+
 @media (max-width: 575px) {
     .modal-body {
         -webkit-box-align: start;
@@ -168,6 +178,12 @@
 
     .search-title {
         font-size: 40px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .view-login {
+        display: none;
     }
 }
 

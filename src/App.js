@@ -18,6 +18,7 @@ import Profile from './components/pages/profile';
 import Alerts from './components/pages/alerts';
 import FileUpload from './components/pages/fileUpload';
 import Notifications from './components/pages/notifications';
+import MenuModel from './components/common/menuModel';
 
 function App() {
 	return (
@@ -49,6 +50,7 @@ function App() {
 							<Route path="/" exact element={<Home/>}/>
 							<Route path="*" element={<Page404/>}/>
 						</Routes>
+						<MenuModel/>
 					</div>
 					<PushNotification/>
 				</div>

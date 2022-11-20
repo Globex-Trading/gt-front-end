@@ -1,4 +1,4 @@
-name: Build and Publish GT Frontend Docker Image
+name: Build and Publish GT Frontend Docker Image for Local
 
 on:
   push:
@@ -40,7 +40,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: {context}/Dockerfile.local
+          file: "{context}/Dockerfile.local"
           push: true
           tags: ghcr.io/globex-trading/gt-front-end:1.0.0.local
 

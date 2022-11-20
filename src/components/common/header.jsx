@@ -49,6 +49,11 @@ const Header = () => {
                   Charts
 								</Link>
 							</li>
+							{user && <li className="nav-item">
+								<Link to="/profile/notifications" className="nav-link">
+									Notifications
+								</Link>
+							</li>}
 							{user?.user_type === 'ADMIN' &&
 							<li className="nav-item">
 								<Link to="/stock-data" className="nav-link">
@@ -82,12 +87,6 @@ const Header = () => {
 									</li>
 									<hr/>
 									<li className="nav-item">
-										<Link to="/profile/notifications" className="nav-link">
-											Notifications
-										</Link>
-									</li>
-									<hr/>
-									<li className="nav-item">
 										<Link to="/logout" className="nav-link">
 											Logout
 										</Link>
@@ -98,19 +97,19 @@ const Header = () => {
 						</ul>
 												<ul className="navbar-nav toggle">
 							<li className="nav-item">
-								<a
-									href="#"
+								<div
+// 									href="#"
 									className="nav-link"
 									data-toggle="modal"
 									data-target="#menu"
 								>
 									<i className="fas fa-bars toggle-icon m-0" />
-								</a>
+								</div>
 							</li>
 						</ul>
 						{/* Navbar Action Button */}
 						{!user && (
-							<ul className="navbar-nav action">
+							<ul className="action view-login">
 								<li className="nav-item ml-3">
 									<Link to='/login' className='btn ml-lg-auto btn-bordered-white'>Login</Link>
 								</li>

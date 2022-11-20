@@ -75,9 +75,10 @@ const Login = () => {
                 if (response) {
                     const userID = localStorage.getItem('user_id');
                     const fcmToken = localStorage.getItem('fcm_token');
+                    const access_token = response.data.token;
 
-                    const response = await saveFCMToken(fcmToken, userID);
-                    console.log('response from saveFCMToken', response);
+                    const res = await saveFCMToken(fcmToken, userID, access_token);
+                    console.log('response from saveFCMToken', res);
 					
                     toast.success('Logged in successfully');
                     const user = await getUser();
@@ -86,6 +87,7 @@ const Login = () => {
                 } else console.log('error');
             }catch(error){
                 toast.error('Error occurred!');
+                console.log(error);
             }
         }
         setIsLoading(false);

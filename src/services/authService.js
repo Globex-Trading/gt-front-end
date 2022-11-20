@@ -11,7 +11,12 @@ export async function login(data) {
 		apiUrl + '/users/login',
 		data);
 
-	return saveUser(response);
+	const isValidResponse = saveUser(response);
+	if(isValidResponse) {
+		return response;
+	}else {
+		return null;
+	}
 }
 
 //registering user

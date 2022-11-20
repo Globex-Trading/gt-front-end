@@ -228,7 +228,7 @@ const TradingChart = () => {
 			<PreLoader isLoading={isLoading} />
 			<section id="chart" className="section overflow-hidden">
 				<div className="chart-container">
-					<div className="shadow my-md-2 my-sm-0 top-pad">
+					<div className="shadow my-md-2 my-sm-0">
 						<div className="row">
 							<div className="col-lg-2 col-md-4 col-sm-6 p-1">
 								<div className="dropdown drop-item">

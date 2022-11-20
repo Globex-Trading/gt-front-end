@@ -56,9 +56,13 @@ const Profile = () => {
 
 
 	const getUserDetails = async () => {
-		const response = await getUser();
-		console.log(response);
-		//TODO: set user details
+		try {
+			const response = await getUser();
+			console.log(response);
+			if (response) setUser(response);
+		}catch (error){
+			toast.error('Error occurred!')
+		}
 	};
 
 	const myStyle1={
@@ -111,7 +115,7 @@ const Profile = () => {
 												<div> First Name </div>
 											</div>
 											<div className='col-8 text-left'>
-												<div>: Dasun </div>
+												<div>: {user?.first_name} </div>
 											</div>
 										</div>
 										<div className='row p-1'>
@@ -119,7 +123,7 @@ const Profile = () => {
 												<div> Last Name </div>
 											</div>
 											<div className='col-8 text-left'>
-												<div>: Nimantha </div>
+												<div>: {user?.last_name} </div>
 											</div>
 										</div>
 										<div className='row p-1 bg-grey'>
@@ -127,7 +131,7 @@ const Profile = () => {
 												<div> Email </div>
 											</div>
 											<div className='col-8 text-left'>
-												<div>: hgdnimantha@gmail.com </div>
+												<div>: {user?.email} </div>
 											</div>
 										</div>
 										

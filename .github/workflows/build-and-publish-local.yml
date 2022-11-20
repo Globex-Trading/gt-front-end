@@ -7,7 +7,7 @@ on:
       - dev
 
 jobs:
-  publish:
+  build-local:
     runs-on: ubuntu-latest
 
     steps:

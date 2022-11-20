@@ -74,7 +74,7 @@ const Alerts = () => {
 		},
 		{
 			name: 'Status',
-			cell: row => <span className={row.isTriggered ? 'bg-danger' : 'bg-success' + ' p-2 text-white rounded-lg'}>{row.isTriggered ? 'Triggered' : 'Available'}</span>,
+			cell: row => <span className={row.isTriggered ? 'bg-danger p-2 text-white rounded-lg' : 'bg-success' + ' p-2 text-white rounded-lg'}>{row.isTriggered ? 'Triggered' : 'Available'}</span>,
 			ignoreRowClick: true,
 			allowOverClick: true,
 			button: true
@@ -94,7 +94,7 @@ const Alerts = () => {
 			alerts.forEach((item) => {
 				if (!(item in subscriptions)) {
 					const topic = '/topic/' + item.provider + '_' + item.symbol;
-// 					subscribeToTopic(topic, item.symbol);
+					subscribeToTopic(topic, item.symbol);
 				}
 			});
 		}
@@ -191,6 +191,7 @@ const Alerts = () => {
 											symbol: item.symbol,
 											alertPrice: item.trigger_price,
 											currentPrice: alertData[item.symbol]?.lastPrice,
+											isTriggered: item.is_triggered
 										}
 									);
 								})

@@ -22,6 +22,11 @@ jobs:
       - name: Install NPM packages
         run: npm install
 
+      - name: Update config.json
+        run: |
+          rm -f -- ./src/config.json
+          echo "{\"apiURL\": \"http://localhost:3000\",\"wsURL\": \"http://localhost:8080/ws\"}" >> ./src/config.json
+
       - name: Build the React Application
         run: CI=false DISABLE_ESLINT_PLUGIN=true npm run build --if-present 
 
@@ -40,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: "{context}/Dockerfile.local"
+          file: ./Dockerfile.local
           push: true
           tags: ghcr.io/globex-trading/gt-front-end:1.0.0.local
 

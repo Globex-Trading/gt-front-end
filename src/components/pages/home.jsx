@@ -263,7 +263,6 @@ const Home = () => {
 										<div className="content-text media-body">
 											<span>
 												<div className='h5'><b> Technical Indicators</b></div>
-												<br />
 												<p>We are providing 10+ indicators to analyze charts. There is no restriction to using multiple indicators</p>
 											</span>
 										</div>
@@ -278,7 +277,6 @@ const Home = () => {
 										<div className="content-text media-body">
 											<span>
 												<div className='h5'><b> Price Alerts</b></div>
-												<br />
 												<p>You will never miss the price target again with our push notification feature</p>
 											</span>
 										</div>

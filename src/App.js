@@ -19,6 +19,7 @@ import Alerts from './components/pages/alerts';
 import FileUpload from './components/pages/fileUpload';
 import Notifications from './components/pages/notifications';
 import MenuModel from './components/common/menuModel';
+import ScrollButton from "./components/common/back2top";
 
 function App() {
 	return (
@@ -51,6 +52,7 @@ function App() {
 							<Route path="*" element={<Page404/>}/>
 						</Routes>
 						<MenuModel/>
+						<ScrollButton/>
 					</div>
 					<PushNotification/>
 				</div>

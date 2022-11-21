@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import PreLoader from '../common/loader';
 import {uploadFile} from '../../services/fileUploadService';
 import {getAvailableProviders} from '../../services/chartService';
+import toast from "react-hot-toast";
 
 const FileUpload = () => {
 
@@ -57,6 +58,11 @@ const FileUpload = () => {
 		console.log('submit');
 		try {
 			const response = await uploadFile(file, selectedSymbol?._id, selectedTimeInterval);
+			if(response.status === 200) {
+				toast.success('Successfully Added');
+			}else {
+				toast.error('Error Occurred');
+			}
 		}catch (e) {
 			console.log(e);
 		}
